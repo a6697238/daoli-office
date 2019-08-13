@@ -35,3 +35,4 @@ tags
 $*
 out/*
 /mage-recommend-mr-algorithm/src/main/datafile/
+/out/

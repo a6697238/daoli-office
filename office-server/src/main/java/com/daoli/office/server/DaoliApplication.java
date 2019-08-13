@@ -1,13 +1,13 @@
-package com.office.server;
+package com.daoli.office.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DemoApplication {
+public class DaoliApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(DaoliApplication.class, args);
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.office.server;
+package com.daoli.office.server;
 
 
 import org.springframework.context.annotation.Bean;
@@ -27,14 +27,14 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.office.server"))
+                .apis(RequestHandlerSelectors.basePackage("com.daoli.office.server"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("rec api")
+                .title("daoli api")
                 .description("open recommendation api server")
                 .termsOfServiceUrl(String.format("http://localhost:8080/"))
                 .version("1.0")

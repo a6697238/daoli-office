@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.daoli.ze.ren.mapper.ZerenUserEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.daoli.ze.ren.entity.ZerenUserEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="md5" property="md5" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="bank_card_no" property="bankCardNo" jdbcType="VARCHAR" />
+    <result column="id_card_no" property="idCardNo" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="auth_result" property="authResult" jdbcType="VARCHAR" />
+    <result column="auth_time" property="authTime" jdbcType="TIMESTAMP" />
+    <result column="ctime" property="ctime" jdbcType="TIMESTAMP" />
+    <result column="valid" property="valid" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, md5, name, bank_card_no, id_card_no, phone, bank_name, auth_result, 
+    auth_time, ctime, valid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ze_ren_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ze_ren_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.daoli.ze.ren.entity.ZerenUserEntity" >
+    insert into ze_ren_user (id, user_id, md5, 
+      name, bank_card_no, id_card_no, 
+      phone, bank_name, auth_result, 
+      auth_time, ctime, valid
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{md5,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{bankCardNo,jdbcType=VARCHAR}, #{idCardNo,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, #{authResult,jdbcType=VARCHAR}, 
+      #{authTime,jdbcType=TIMESTAMP}, #{ctime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.daoli.ze.ren.entity.ZerenUserEntity" >
+    insert into ze_ren_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="md5 != null" >
+        md5,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="bankCardNo != null" >
+        bank_card_no,
+      </if>
+      <if test="idCardNo != null" >
+        id_card_no,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="authResult != null" >
+        auth_result,
+      </if>
+      <if test="authTime != null" >
+        auth_time,
+      </if>
+      <if test="ctime != null" >
+        ctime,
+      </if>
+      <if test="valid != null" >
+        valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="md5 != null" >
+        #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardNo != null" >
+        #{bankCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardNo != null" >
+        #{idCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="authResult != null" >
+        #{authResult,jdbcType=VARCHAR},
+      </if>
+      <if test="authTime != null" >
+        #{authTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ctime != null" >
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="valid != null" >
+        #{valid,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.daoli.ze.ren.entity.ZerenUserEntity" >
+    update ze_ren_user
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="md5 != null" >
+        md5 = #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardNo != null" >
+        bank_card_no = #{bankCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardNo != null" >
+        id_card_no = #{idCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="authResult != null" >
+        auth_result = #{authResult,jdbcType=VARCHAR},
+      </if>
+      <if test="authTime != null" >
+        auth_time = #{authTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ctime != null" >
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="valid != null" >
+        valid = #{valid,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.daoli.ze.ren.entity.ZerenUserEntity" >
+    update ze_ren_user
+    set user_id = #{userId,jdbcType=INTEGER},
+      md5 = #{md5,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      bank_card_no = #{bankCardNo,jdbcType=VARCHAR},
+      id_card_no = #{idCardNo,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      auth_result = #{authResult,jdbcType=VARCHAR},
+      auth_time = #{authTime,jdbcType=TIMESTAMP},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      valid = #{valid,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

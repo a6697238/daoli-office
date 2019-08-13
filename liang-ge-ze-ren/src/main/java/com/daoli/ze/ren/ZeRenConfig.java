@@ -1,4 +1,4 @@
-package com.office.server;
+package com.daoli.ze.ren;
 
 
 //import org.springframework.context.annotation.ComponentScan;
@@ -7,12 +7,11 @@ package com.office.server;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.PropertySource;
 
-@Configuration
-@ComponentScan(basePackages = "com.office.server")
-//@PropertySource(value = {"classpath:application.properties"})
-//@EnableAspectJAutoProxy
-public class Config {
+@ComponentScan(basePackages = "com.daoli.ze.ren")
+public class ZeRenConfig {
 
 
 }
