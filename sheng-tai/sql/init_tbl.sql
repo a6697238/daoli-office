@@ -1,10 +1,11 @@
-CREATE TABLE `tbl_dangfeng_exam` (
+CREATE TABLE `tbl_shengtai_exam` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `exam_id` varchar(64) NOT NULL DEFAULT '' COMMENT '考试唯一标识',
   `parent_exam_id` varchar(64) NOT NULL DEFAULT '0' COMMENT '父级菜单id',
-  `template_type` varchar(255) NOT NULL DEFAULT '' COMMENT '模板类型，考核分类，考核指标，考核要点',
+  `exam_type` varchar(255) NOT NULL DEFAULT '' COMMENT '模板类型，考核分类，考核指标，考核要点',
   `exam_name` varchar(255) NOT NULL DEFAULT '' COMMENT '考核名称',
   `exam_desc` varchar(2048) NOT NULL DEFAULT '' COMMENT '考核描述',
+  `exam_score` int(11) NOT NULL DEFAULT 0 COMMENT '分值',
   `exam_status` varchar(255) NOT NULL DEFAULT '' COMMENT '考核状态',
   `create_uid`  varchar(64) NOT NULL DEFAULT '' COMMENT '创建者的id',
   `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开始时间',
@@ -51,13 +52,15 @@ CREATE TABLE `tbl_department_exam` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部门-考核';
 
 
-CREATE TABLE `tbl_dangfeng_exam_record` (
+CREATE TABLE `tbl_shengtai_exam_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `exam_record_id` varchar(64) NOT NULL DEFAULT '' COMMENT '考核记录id',
+  `exam_record_id` varchar(64) NOT NULL DEFAULT '' COMMENT '考核指标id',
   `exam_index_id` varchar(64) NOT NULL DEFAULT '' COMMENT '考核指标id',
   `exam_index_desc` varchar(255) NOT NULL DEFAULT '' COMMENT '考核指标描述',
   `exam_detail_id` varchar(64) NOT NULL DEFAULT '' COMMENT '考核要点id',
   `exam_detail_desc` varchar(255) NOT NULL DEFAULT '' COMMENT '考核要点描述',
+  `exam_score` int(11) NOT NULL DEFAULT 0 COMMENT '分值',
+  `department_id` varchar(64) NOT NULL DEFAULT '' COMMENT '部门id',
   `record_name` varchar(64) NOT NULL DEFAULT '' COMMENT '记录名称',
   `record_abstract` varchar(64) NOT NULL DEFAULT '0' COMMENT '记录摘要',
   `record_addition_name` varchar(512) NOT NULL DEFAULT '' COMMENT '附件名称',
