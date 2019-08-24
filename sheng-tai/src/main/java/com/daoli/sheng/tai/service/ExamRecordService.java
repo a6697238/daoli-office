@@ -27,4 +27,11 @@ public class ExamRecordService {
         examRecordEntityMapper.insertSelective(examRecordEntity);
     }
 
+    public ShengtaiExamRecordVo queryExamRecord(Integer id){
+        ShengtaiExamRecordEntity examRecordEntity = examRecordEntityMapper.selectByPrimaryKey(id);
+        ShengtaiExamRecordVo vo = new ShengtaiExamRecordVo();
+        BeanUtils.copyProperties(vo,examRecordEntity);
+        return vo;
+    }
+
 }
