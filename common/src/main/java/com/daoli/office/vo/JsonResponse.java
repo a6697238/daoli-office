@@ -42,6 +42,7 @@ public class JsonResponse {
         this(status, success200, msg);
     }
 
+
     public JsonResponse(boolean status, int code, String msg) {
         this.status = status;
         this.code = code;

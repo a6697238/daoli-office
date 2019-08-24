@@ -16,7 +16,7 @@
     select 
     <include refid="Base_Column_List" />
     from tbl_department_exam
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} and valid = "1"
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tbl_department_exam
@@ -103,4 +103,26 @@
       valid = #{valid,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByField"  resultMap="BaseResultMap"  parameterType="com.daoli.sheng.tai.entity.DepartmentExamEntity" >
+
+    select
+    <include refid="Base_Column_List" />
+    from tbl_department_exam
+    where  valid = "1" and
+    <trim prefix="(" suffix=")" suffixOverrides="and" >
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=VARCHAR} and
+      </if>
+      <if test="examId != null" >
+        exam_id = #{examId,jdbcType=VARCHAR} and
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP} and
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP} and
+      </if>
+    </trim>
+  </select>
 </mapper>
