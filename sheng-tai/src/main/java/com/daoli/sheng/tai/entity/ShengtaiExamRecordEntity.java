@@ -23,10 +23,6 @@ public class ShengtaiExamRecordEntity {
 
     private String recordAbstract;
 
-    private String recordAdditionName;
-
-    private String recordAdditionLocation;
-
     private String recordMasterName;
 
     private String recordGroupName;
@@ -119,22 +115,6 @@ public class ShengtaiExamRecordEntity {
 
     public void setRecordAbstract(String recordAbstract) {
         this.recordAbstract = recordAbstract;
-    }
-
-    public String getRecordAdditionName() {
-        return recordAdditionName;
-    }
-
-    public void setRecordAdditionName(String recordAdditionName) {
-        this.recordAdditionName = recordAdditionName;
-    }
-
-    public String getRecordAdditionLocation() {
-        return recordAdditionLocation;
-    }
-
-    public void setRecordAdditionLocation(String recordAdditionLocation) {
-        this.recordAdditionLocation = recordAdditionLocation;
     }
 
     public String getRecordMasterName() {

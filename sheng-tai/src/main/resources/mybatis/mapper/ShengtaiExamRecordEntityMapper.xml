@@ -12,8 +12,6 @@
     <result column="department_id" property="departmentId" jdbcType="VARCHAR" />
     <result column="record_name" property="recordName" jdbcType="VARCHAR" />
     <result column="record_abstract" property="recordAbstract" jdbcType="VARCHAR" />
-    <result column="record_addition_name" property="recordAdditionName" jdbcType="VARCHAR" />
-    <result column="record_addition_location" property="recordAdditionLocation" jdbcType="VARCHAR" />
     <result column="record_master_name" property="recordMasterName" jdbcType="VARCHAR" />
     <result column="record_group_name" property="recordGroupName" jdbcType="VARCHAR" />
     <result column="record_status" property="recordStatus" jdbcType="VARCHAR" />
@@ -24,9 +22,8 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, exam_record_id, exam_index_id, exam_index_desc, exam_detail_id, exam_detail_desc, 
-    exam_score, department_id, record_name, record_abstract, record_addition_name, record_addition_location, 
-    record_master_name, record_group_name, record_status, create_uid, modify_time, create_time, 
-    valid
+    exam_score, department_id, record_name, record_abstract, record_master_name, record_group_name, 
+    record_status, create_uid, modify_time, create_time, valid
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -42,17 +39,15 @@
     insert into tbl_shengtai_exam_record (id, exam_record_id, exam_index_id, 
       exam_index_desc, exam_detail_id, exam_detail_desc, 
       exam_score, department_id, record_name, 
-      record_abstract, record_addition_name, record_addition_location, 
-      record_master_name, record_group_name, record_status, 
-      create_uid, modify_time, create_time, 
-      valid)
+      record_abstract, record_master_name, record_group_name, 
+      record_status, create_uid, modify_time, 
+      create_time, valid)
     values (#{id,jdbcType=INTEGER}, #{examRecordId,jdbcType=VARCHAR}, #{examIndexId,jdbcType=VARCHAR}, 
       #{examIndexDesc,jdbcType=VARCHAR}, #{examDetailId,jdbcType=VARCHAR}, #{examDetailDesc,jdbcType=VARCHAR}, 
       #{examScore,jdbcType=INTEGER}, #{departmentId,jdbcType=VARCHAR}, #{recordName,jdbcType=VARCHAR}, 
-      #{recordAbstract,jdbcType=VARCHAR}, #{recordAdditionName,jdbcType=VARCHAR}, #{recordAdditionLocation,jdbcType=VARCHAR}, 
-      #{recordMasterName,jdbcType=VARCHAR}, #{recordGroupName,jdbcType=VARCHAR}, #{recordStatus,jdbcType=VARCHAR}, 
-      #{createUid,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{valid,jdbcType=TINYINT})
+      #{recordAbstract,jdbcType=VARCHAR}, #{recordMasterName,jdbcType=VARCHAR}, #{recordGroupName,jdbcType=VARCHAR}, 
+      #{recordStatus,jdbcType=VARCHAR}, #{createUid,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity" >
     insert into tbl_shengtai_exam_record
@@ -86,12 +81,6 @@
       </if>
       <if test="recordAbstract != null" >
         record_abstract,
-      </if>
-      <if test="recordAdditionName != null" >
-        record_addition_name,
-      </if>
-      <if test="recordAdditionLocation != null" >
-        record_addition_location,
       </if>
       <if test="recordMasterName != null" >
         record_master_name,
@@ -146,12 +135,6 @@
       <if test="recordAbstract != null" >
         #{recordAbstract,jdbcType=VARCHAR},
       </if>
-      <if test="recordAdditionName != null" >
-        #{recordAdditionName,jdbcType=VARCHAR},
-      </if>
-      <if test="recordAdditionLocation != null" >
-        #{recordAdditionLocation,jdbcType=VARCHAR},
-      </if>
       <if test="recordMasterName != null" >
         #{recordMasterName,jdbcType=VARCHAR},
       </if>
@@ -205,12 +188,6 @@
       <if test="recordAbstract != null" >
         record_abstract = #{recordAbstract,jdbcType=VARCHAR},
       </if>
-      <if test="recordAdditionName != null" >
-        record_addition_name = #{recordAdditionName,jdbcType=VARCHAR},
-      </if>
-      <if test="recordAdditionLocation != null" >
-        record_addition_location = #{recordAdditionLocation,jdbcType=VARCHAR},
-      </if>
       <if test="recordMasterName != null" >
         record_master_name = #{recordMasterName,jdbcType=VARCHAR},
       </if>
@@ -246,8 +223,6 @@
       department_id = #{departmentId,jdbcType=VARCHAR},
       record_name = #{recordName,jdbcType=VARCHAR},
       record_abstract = #{recordAbstract,jdbcType=VARCHAR},
-      record_addition_name = #{recordAdditionName,jdbcType=VARCHAR},
-      record_addition_location = #{recordAdditionLocation,jdbcType=VARCHAR},
       record_master_name = #{recordMasterName,jdbcType=VARCHAR},
       record_group_name = #{recordGroupName,jdbcType=VARCHAR},
       record_status = #{recordStatus,jdbcType=VARCHAR},

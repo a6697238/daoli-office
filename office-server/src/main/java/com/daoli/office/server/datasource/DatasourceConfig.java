@@ -13,8 +13,12 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
@@ -33,7 +37,7 @@ public class DatasourceConfig {
 
 
     @Bean
-    @ConfigurationProperties("spring.datasource")
+    @ConfigurationProperties("spring.mysql.datasource")
     @ConditionalOnMissingBean
     public SpringDataSourceProperties dataSourceProperties() {
         return new SpringDataSourceProperties();
@@ -48,6 +52,14 @@ public class DatasourceConfig {
                 .password(properties.getPassword()).url(properties.getUrl())
                 .build();
     }
+
+
+    @Bean
+    public DataSourceTransactionManager adminTransactionManager(
+            @Qualifier("daoliDataSource") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+
 
     @Bean
     public SqlSessionFactory sqlSessionFactory(

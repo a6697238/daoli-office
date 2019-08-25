@@ -32,33 +32,40 @@
 
 
     <!--为哪些表生成代码 tableName:表名 schema:不用填写 -->
-    <table schema="daoli_office" tableName="tbl_department"
-      domainObjectName="DepartmentEntity"
-      enableCountByExample="false"
-      enableUpdateByExample="false" enableDeleteByExample="false"
-      enableSelectByExample="false" selectByExampleQueryId="false">
-    </table>
+    <!--<table schema="daoli_office" tableName="tbl_department"-->
+      <!--domainObjectName="DepartmentEntity"-->
+      <!--enableCountByExample="false"-->
+      <!--enableUpdateByExample="false" enableDeleteByExample="false"-->
+      <!--enableSelectByExample="false" selectByExampleQueryId="false">-->
+    <!--</table>-->
 
-    <table schema="daoli_office" tableName="tbl_department_exam"
-      domainObjectName="DepartmentExamEntity"
-      enableCountByExample="false"
-      enableUpdateByExample="false" enableDeleteByExample="false"
-      enableSelectByExample="false" selectByExampleQueryId="false">
-    </table>
-    <table schema="daoli_office" tableName="tbl_shengtai_exam"
-      domainObjectName="ShengTaiExamEntity"
-      enableCountByExample="false"
-      enableUpdateByExample="false" enableDeleteByExample="false"
-      enableSelectByExample="false" selectByExampleQueryId="false">
-    </table>
-    <table schema="daoli_office" tableName="tbl_shengtai_exam_record"
-      domainObjectName="ShengtaiExamRecordEntity"
-      enableCountByExample="false"
-      enableUpdateByExample="false" enableDeleteByExample="false"
-      enableSelectByExample="false" selectByExampleQueryId="false">
-    </table>
-    <table schema="daoli_office" tableName="tbl_user"
-      domainObjectName="UserEntity"
+    <!--<table schema="daoli_office" tableName="tbl_department_exam"-->
+      <!--domainObjectName="DepartmentExamEntity"-->
+      <!--enableCountByExample="false"-->
+      <!--enableUpdateByExample="false" enableDeleteByExample="false"-->
+      <!--enableSelectByExample="false" selectByExampleQueryId="false">-->
+    <!--</table>-->
+    <!--<table schema="daoli_office" tableName="tbl_shengtai_exam"-->
+      <!--domainObjectName="ShengTaiExamEntity"-->
+      <!--enableCountByExample="false"-->
+      <!--enableUpdateByExample="false" enableDeleteByExample="false"-->
+      <!--enableSelectByExample="false" selectByExampleQueryId="false">-->
+    <!--</table>-->
+    <!--<table schema="daoli_office" tableName="tbl_user"-->
+      <!--domainObjectName="UserEntity"-->
+      <!--enableCountByExample="false"-->
+      <!--enableUpdateByExample="false" enableDeleteByExample="false"-->
+      <!--enableSelectByExample="false" selectByExampleQueryId="false">-->
+    <!--</table>-->
+
+    <!--<table schema="daoli_office" tableName="tbl_shengtai_exam_record"-->
+      <!--domainObjectName="ShengtaiExamRecordEntity"-->
+      <!--enableCountByExample="false"-->
+      <!--enableUpdateByExample="false" enableDeleteByExample="false"-->
+      <!--enableSelectByExample="false" selectByExampleQueryId="false">-->
+    <!--</table>-->
+    <table schema="daoli_office" tableName="tbl_shengtai_exam_record_addition"
+      domainObjectName="ShengtaiExamRecordAdditionEntity"
       enableCountByExample="false"
       enableUpdateByExample="false" enableDeleteByExample="false"
       enableSelectByExample="false" selectByExampleQueryId="false">

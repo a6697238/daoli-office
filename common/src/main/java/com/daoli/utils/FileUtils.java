@@ -2,6 +2,7 @@ package com.daoli.utils;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -33,5 +34,20 @@ public class FileUtils {
         } catch (Exception e) {
             log.error("fail to write file ", e);
         }
+    }
+
+
+    public static byte[] readFile(String filePath) {
+        try (FileInputStream is = new FileInputStream(filePath)) {
+            File file = new File(filePath);
+            if (file.exists() && file.isFile()) {
+                byte[] fileData = new byte[(int) file.length()];
+                is.read(fileData);
+                return fileData;
+            }
+        } catch (Exception e) {
+            log.error("fail to write file ", e);
+        }
+        return new byte[0];
     }
 }

@@ -1,7 +1,12 @@
 package com.daoli.office.vo.sheng.tai;
 
+import java.util.Date;
+
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -12,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
  * @since 1.0.0
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ShengtaiExamRecordVo {
 
     @ApiModelProperty(value = "id", required = false)
@@ -61,5 +69,9 @@ public class ShengtaiExamRecordVo {
 
     @ApiModelProperty(value = "createUid", required = false)
     private String createUid;
+
+    private Date modifyTime;
+
+    private Date createTime;
 
 }

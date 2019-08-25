@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.daoli.office.server.controller.BaseController;
 import com.daoli.office.vo.JsonResponse;
+import com.daoli.office.vo.sheng.tai.ExamRecordAdditionVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
 import com.daoli.sheng.tai.service.ExamRecordService;
 import com.daoli.utils.FileUtils;
@@ -48,8 +50,9 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "上传一条考核记录")
     @RequestMapping(value = "/upload_exam_record", method = RequestMethod.POST)
-    public JsonResponse uploadExamRecord(@RequestBody ShengtaiExamRecordVo req) {
-        examRecordService.uploadRecord(req);
+    public JsonResponse uploadExamRecord(@RequestBody ShengtaiExamRecordVo req,
+            @RequestParam List<Integer> additionId) {
+        examRecordService.uploadRecord(req,additionId);
         return new JsonResponse();
     }
 
@@ -58,7 +61,7 @@ public class ExamRecordController extends BaseController {
     @RequestMapping(value = "/upload_exam_addition", method = RequestMethod.POST)
     public JsonResponse uploadExamAddition(@RequestParam String userId,
             @RequestParam MultipartFile[] recordAdditionFile) throws IOException {
-        List<Map<String, String>> resList = Lists.newArrayList();
+        List<ExamRecordAdditionVo> resList = Lists.newArrayList();
         for (MultipartFile file : recordAdditionFile) {
             if (!file.isEmpty()) {
                 Map<String, String> resultMap = Maps.newHashMap();
@@ -68,6 +71,14 @@ public class ExamRecordController extends BaseController {
                         file.getBytes());
                 resultMap.put("fileName", file.getOriginalFilename());
                 resultMap.put("filePath", relativeFile);
+                ExamRecordAdditionVo vo = ExamRecordAdditionVo.builder()
+                        .additionLocation(relativeFile)
+                        .additionName(file.getOriginalFilename())
+                        .createUid(userId)
+                        .additionId(UUID.randomUUID().toString())
+                        .build();
+                examRecordService.uploadeAddition(vo);
+                resList.add(vo);
             }
         }
         return new JsonResponse(resList);
@@ -81,7 +92,15 @@ public class ExamRecordController extends BaseController {
         return new JsonResponse(examRecordService.queryExamRecord(recordId));
     }
 
+    @ResponseBody
+    @ApiOperation(value = "查询一条考核记录")
+    @RequestMapping(value = "/query_exam_record", method = RequestMethod.GET)
+    public JsonResponse queryRecordAddition(@RequestParam String examRecordId) {
+        return new JsonResponse(examRecordService.queryRecordAdditionList(examRecordId));
+    }
 
 
+//    public List<ExamRecordAdditionVo> queryRecordAdditionList(String examRecordId) {
 
-}
+
+    }

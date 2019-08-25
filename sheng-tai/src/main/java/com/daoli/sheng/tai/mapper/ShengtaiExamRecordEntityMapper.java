@@ -1,6 +1,5 @@
 package com.daoli.sheng.tai.mapper;
 
-
 import com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity;
 import org.springframework.stereotype.Component;
 
