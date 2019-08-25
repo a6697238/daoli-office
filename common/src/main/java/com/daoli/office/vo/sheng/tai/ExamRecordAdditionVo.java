@@ -21,23 +21,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ExamRecordAdditionVo {
 
-    @ApiModelProperty(value = "id", required = false)
+    @ApiModelProperty(value = "", required = false)
     private Integer id;
 
-    @ApiModelProperty(value = "additionId", required = false)
+    @ApiModelProperty(value = "", required = false)
     private String additionId;
 
-    @ApiModelProperty(value = "additionName", required = false)
+    @ApiModelProperty(value = "附件名称", required = false)
     private String additionName;
 
-    @ApiModelProperty(value = "additionLocation", required = false)
+    @ApiModelProperty(value = "附件相对路径", required = false)
     private String additionLocation;
 
-    @ApiModelProperty(value = "createUid", required = false)
+    @ApiModelProperty(value = "创建者id", required = false)
     private String createUid;
 
+    @ApiModelProperty(value = "修改时间", required = false)
     private Date modifyTime;
 
+    @ApiModelProperty(value = "上传时间", required = false)
     private Date createTime;
 
 

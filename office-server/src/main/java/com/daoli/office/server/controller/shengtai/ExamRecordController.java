@@ -2,6 +2,7 @@ package com.daoli.office.server.controller.shengtai;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import com.daoli.office.vo.sheng.tai.ExamRecordAdditionVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
 import com.daoli.sheng.tai.service.ExamRecordService;
 import com.daoli.utils.FileUtils;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.ApiImplicitParam;
@@ -19,6 +21,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,23 +53,34 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "上传一条考核记录")
     @RequestMapping(value = "/upload_exam_record", method = RequestMethod.POST)
-    public JsonResponse uploadExamRecord(@RequestBody ShengtaiExamRecordVo req,
-            @RequestParam List<Integer> additionId) {
-        examRecordService.uploadRecord(req,additionId);
+    public JsonResponse uploadExamRecord(@RequestBody ShengtaiExamRecordVo vo,
+            @RequestParam Integer[] additionId) {
+        examRecordService.uploadRecord(vo, Lists.newArrayList(additionId));
+        return new JsonResponse();
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value = "修改一条考核记录")
+    @RequestMapping(value = "/modify_exam_record", method = RequestMethod.POST)
+    public JsonResponse modifyExamRecord(@RequestBody ShengtaiExamRecordVo req,
+            @RequestParam Integer[] additionId) {
+        examRecordService.modifyRecord(req, Lists.newArrayList(additionId));
         return new JsonResponse();
     }
 
     @ResponseBody
     @ApiOperation(value = "上传一条考核附件")
     @RequestMapping(value = "/upload_exam_addition", method = RequestMethod.POST)
+    @ApiImplicitParam(value = "1(数据库自增主键)", name = "recordId", required = true, dataType = "String", paramType = "query")
     public JsonResponse uploadExamAddition(@RequestParam String userId,
             @RequestParam MultipartFile[] recordAdditionFile) throws IOException {
         List<ExamRecordAdditionVo> resList = Lists.newArrayList();
         for (MultipartFile file : recordAdditionFile) {
             if (!file.isEmpty()) {
                 Map<String, String> resultMap = Maps.newHashMap();
-                String relativeFile = "/" + userId + "/" + file.getOriginalFilename();
-                String relativePath = "/" + userId;
+                String relativeFile = "/shengtai/" + userId + "/" + file.getOriginalFilename();
+                String relativePath = "/shengtai/" + userId;
                 FileUtils.writeFile(file.getOriginalFilename(), baseSavePath + relativePath,
                         file.getBytes());
                 resultMap.put("fileName", file.getOriginalFilename());
@@ -76,8 +90,10 @@ public class ExamRecordController extends BaseController {
                         .additionName(file.getOriginalFilename())
                         .createUid(userId)
                         .additionId(UUID.randomUUID().toString())
+                        .createTime(new Date())
+                        .modifyTime(new Date())
                         .build();
-                examRecordService.uploadeAddition(vo);
+                examRecordService.uploadAddition(vo);
                 resList.add(vo);
             }
         }
@@ -88,19 +104,26 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "查询一条考核记录")
     @RequestMapping(value = "/query_exam_record", method = RequestMethod.GET)
+    @ApiImplicitParam(value = "1(数据库自增主键)", name = "recordId", required = true, dataType = "String", paramType = "query")
     public JsonResponse queryExamRecord(@RequestParam Integer recordId) {
-        return new JsonResponse(examRecordService.queryExamRecord(recordId));
+        ShengtaiExamRecordVo vo = examRecordService.queryExamRecord(recordId);
+        List<ExamRecordAdditionVo> additionVoList = examRecordService
+                .queryRecordAdditionList(vo.getExamRecordId());
+        return new JsonResponse(
+                ImmutableMap.<String, Object>builder()
+                        .put("vo", vo)
+                        .put("additionVoList", additionVoList)
+                        .build());
     }
 
     @ResponseBody
-    @ApiOperation(value = "查询一条考核记录")
-    @RequestMapping(value = "/query_exam_record", method = RequestMethod.GET)
-    public JsonResponse queryRecordAddition(@RequestParam String examRecordId) {
-        return new JsonResponse(examRecordService.queryRecordAdditionList(examRecordId));
+    @ApiOperation(value = "下载考核附件")
+    @RequestMapping(value = "/down_load_addition", method = RequestMethod.GET)
+    @ApiImplicitParam(value = "1(数据库自增主键)", name = "additionId", required = true, dataType = "String", paramType = "query")
+    public byte[] downloadAddition(@RequestParam Integer additionId) {
+        ExamRecordAdditionVo vo = examRecordService.queryAdditionById(additionId);
+        return FileUtils.readFile(baseSavePath + "/" + vo.getAdditionLocation());
     }
 
 
-//    public List<ExamRecordAdditionVo> queryRecordAdditionList(String examRecordId) {
-
-
-    }
+}

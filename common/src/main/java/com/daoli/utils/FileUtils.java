@@ -24,10 +24,10 @@ public class FileUtils {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        File checkFile = new File(filePath + "/" + fileName);
-        try (FileOutputStream out = new FileOutputStream(filePath)) {
-            if (!checkFile.exists()) {
-                checkFile.createNewFile();// 创建目标文件
+        File writeFile = new File(filePath + "/" + fileName);
+        try (FileOutputStream out = new FileOutputStream(writeFile)) {
+            if (!writeFile.exists()) {
+                writeFile.createNewFile();// 创建目标文件
             }
             out.write(fileBytes);
             out.flush();

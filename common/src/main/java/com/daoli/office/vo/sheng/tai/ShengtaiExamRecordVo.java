@@ -22,52 +22,46 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class ShengtaiExamRecordVo {
 
-    @ApiModelProperty(value = "id", required = false)
+    @ApiModelProperty(value = "记录id", required = false)
     private Integer id;
 
-    @ApiModelProperty(value = "examRecordId", required = false)
+    @ApiModelProperty(value = "记录uuid", required = false)
     private String examRecordId;
 
-    @ApiModelProperty(value = "examIndexId", required = false)
+    @ApiModelProperty(value = "指标id", required = false)
     private String examIndexId;
 
-    @ApiModelProperty(value = "examIndexDesc", required = false)
+    @ApiModelProperty(value = "指标描述", required = false)
     private String examIndexDesc;
 
-    @ApiModelProperty(value = "examDetailId", required = false)
+    @ApiModelProperty(value = "要点id", required = false)
     private String examDetailId;
 
-    @ApiModelProperty(value = "examDetailDesc", required = false)
+    @ApiModelProperty(value = "要点描述", required = false)
     private String examDetailDesc;
 
-    @ApiModelProperty(value = "examScore", required = false)
+    @ApiModelProperty(value = "记录得分", required = false)
     private Integer examScore;
 
-    @ApiModelProperty(value = "departmentId", required = false)
+    @ApiModelProperty(value = "部门id", required = false)
     private String departmentId;
 
-    @ApiModelProperty(value = "recordName", required = false)
+    @ApiModelProperty(value = "记录名称", required = false)
     private String recordName;
 
-    @ApiModelProperty(value = "recordAbstract", required = false)
+    @ApiModelProperty(value = "记录摘要", required = false)
     private String recordAbstract;
 
-    @ApiModelProperty(value = "recordAdditionName", required = false, example = "不用填")
-    private String recordAdditionName;
-
-    @ApiModelProperty(value = "recordAdditionLocation", required = false)
-    private String recordAdditionLocation;
-
-    @ApiModelProperty(value = "recordMasterName", required = false)
+    @ApiModelProperty(value = "负责人姓名", required = false)
     private String recordMasterName;
 
-    @ApiModelProperty(value = "recordGroupName", required = false)
+    @ApiModelProperty(value = "相关组织人员", required = false)
     private String recordGroupName;
 
-    @ApiModelProperty(value = "recordStatus", required = false)
+    @ApiModelProperty(value = "记录状态", required = false)
     private String recordStatus;
 
-    @ApiModelProperty(value = "createUid", required = false)
+    @ApiModelProperty(value = "创建者id", required = false)
     private String createUid;
 
     private Date modifyTime;

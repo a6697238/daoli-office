@@ -88,6 +88,7 @@ CREATE TABLE `tbl_shengtai_exam_record` (
 DROP TABLE IF EXISTS `tbl_shengtai_exam_record_addition`;
 CREATE TABLE `tbl_shengtai_exam_record_addition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `exam_record_id` varchar(64) NOT NULL DEFAULT '' COMMENT '考核指标id',
   `addition_id` varchar(64) NOT NULL DEFAULT '' COMMENT '附件id',
   `addition_name` varchar(2048) NOT NULL DEFAULT '' COMMENT '附件名称',
   `addition_location` varchar(2048) NOT NULL DEFAULT '' COMMENT '附件相对位置',
