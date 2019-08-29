@@ -3,6 +3,7 @@ package com.daoli.sheng.tai.mapper;
 
 import com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity;
 import org.springframework.stereotype.Component;
+import java.util.ArrayList;
 
 @Component
 public interface ShengtaiExamRecordEntityMapper {
@@ -13,6 +14,7 @@ public interface ShengtaiExamRecordEntityMapper {
     int insertSelective(ShengtaiExamRecordEntity record);
 
     ShengtaiExamRecordEntity selectByPrimaryKey(Integer id);
+    ArrayList<ShengtaiExamRecordEntity> selectByExamIndexIdAndDepartId(ShengtaiExamRecordEntity record);
 
     int updateByPrimaryKeySelective(ShengtaiExamRecordEntity record);
 

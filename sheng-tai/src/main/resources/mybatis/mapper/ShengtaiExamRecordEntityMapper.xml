@@ -34,9 +34,22 @@
     from tbl_shengtai_exam_record
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="queryRecordByDetailIdiAndDepartId" resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_shengtai_exam_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tbl_shengtai_exam_record
-    where id = #{id,jdbcType=INTEGER}
+    where vilad = "1" and
+    <if test="departmentId != null" >
+      department_id =  #{departmentId,jdbcType=VARCHAR} and
+    </if>
+    <if test="examDetailId != null" >
+      exam_detail_id = #{examDetailId,jdbcType=VARCHAR}
+    </if>
+
   </delete>
   <insert id="insert" parameterType="com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity" >
     insert into tbl_shengtai_exam_record (id, exam_record_id, exam_index_id, 

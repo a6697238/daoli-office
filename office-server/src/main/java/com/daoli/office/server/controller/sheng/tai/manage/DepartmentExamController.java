@@ -2,9 +2,11 @@ package com.daoli.office.server.controller.sheng.tai.manage;
 
 import com.daoli.office.vo.JsonResponse;
 import com.daoli.office.vo.sheng.tai.ShengtaiDepartmentExamVo;
+import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamVo;
+import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamStatusConstant;
 import com.daoli.sheng.tai.entity.DepartmentExamEntity;
-import com.daoli.sheng.tai.entity.ShengTaiExamEntity;
+import com.daoli.sheng.tai.service.ExamRecordService;
 import com.daoli.sheng.tai.service.ShengTaiDepartmentEaxmService;
 import com.daoli.sheng.tai.service.ShengTaiEaxmService;
 import io.swagger.annotations.ApiOperation;
@@ -13,7 +15,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * AUTO-GENERATED: houlu @ 2019/8/20 下午8:52
@@ -31,6 +36,8 @@ public class DepartmentExamController {
     private ShengTaiDepartmentEaxmService shengTaiDepartmentEaxmService;
     @Autowired
     private ShengTaiEaxmService shengTaiEaxmService;
+    @Autowired
+    private ExamRecordService examRecordService;
 
     @ResponseBody
     @ApiOperation(
@@ -45,7 +52,7 @@ public class DepartmentExamController {
         exam_vo.setExamId(vo.getExamId());
         ShengtaiExamVo id_vo = shengTaiEaxmService.getIdVo(exam_vo);
         if (id_vo != null) {
-            id_vo.setExamStatus(shengTaiEaxmService.kaoHeJinXingZhong);
+            id_vo.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_WEI_KAI_SHI);
             res = shengTaiEaxmService.updateExam(id_vo);
             res = shengTaiDepartmentEaxmService.insertDeparmentExam(vo);
         } else {
@@ -88,7 +95,7 @@ public class DepartmentExamController {
                 examEntry.setValid(new Byte((byte)1));
                 shengTaiDepartmentEaxmService.updateDeparmentExam(examEntry);
             }else{
-                exam_id_vo.setExamStatus(shengTaiEaxmService.kaoHeZhongTuTingZhi);
+                exam_id_vo.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_ZHONG_TU_TING_ZHI );
                 shengTaiEaxmService.updateExam(exam_id_vo);
                 res = 1;
             }
@@ -99,56 +106,80 @@ public class DepartmentExamController {
         else
             return new JsonResponse(false,"fail");
     }
-/*
+
     @ResponseBody
     @ApiOperation(
-            value = "更改一条考核考核分类、考核指标或考核要点"
+            value = "获得部门 x 全部考核要点详情, 将会返回要点的父节点"
     )
-    @RequestMapping(value = "/update_department_exam", method = RequestMethod.POST)
-    public JsonResponse updateDepartmentExam(@RequestBody ShengtaiDepartmentExamVo vo){
-        int res = shengTaiDepartmentEaxmService.updateDeparmentExam(vo);
-        if (res != 0)
-          return new JsonResponse();
-        else
-            return new JsonResponse(false,"fail");
+    @RequestMapping(value = "/query_exams_detail_by_department", method = RequestMethod.POST)
+    public ArrayList<ShengtaiExamVo> queryExamsDetailByDepartment(@RequestBody ShengtaiDepartmentExamVo vo){
+        ArrayList<ShengtaiExamVo> res = new ArrayList<>();
+        //去重
+        HashSet<ShengtaiExamVo > exam_vo_set = new HashSet<>();
+        ArrayList<ShengtaiDepartmentExamVo> arr_raw_exam_vo=  shengTaiDepartmentEaxmService.selectDeparmentExamByField(vo);
+        for(ShengtaiDepartmentExamVo raw_exam_vo : arr_raw_exam_vo){
+            ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
+            query_exam_vo.setExamId(raw_exam_vo.getExamId());
+            ArrayList<ShengtaiExamVo> tmp = shengTaiEaxmService.query_exam_all_tree_by_exam_id_or_id(query_exam_vo);
+            if (tmp != null)
+              for (ShengtaiExamVo t:tmp){
+                 exam_vo_set.add(t);
+              }
+        }
+        Iterator it = exam_vo_set.iterator();
+        while (it.hasNext()){
+           res.add((ShengtaiExamVo) it.next());
+        }
+        return res;
     }
-*/
+
     @ResponseBody
     @ApiOperation(
-            value = "获得部门 x 全部考核要点"
+            value = "获得部门 x 全部raw考核要点, id、depart_id、exam_id"
     )
-    @RequestMapping(value = "/select_exams_by_department", method = RequestMethod.POST)
-    public ArrayList<ShengtaiDepartmentExamVo> selectExamsByDepartment(@RequestBody ShengtaiDepartmentExamVo vo){
+    @RequestMapping(value = "/query_exams_raw_by_department", method = RequestMethod.POST)
+    public ArrayList<ShengtaiDepartmentExamVo> queryExamsRawByDepartment(@RequestBody ShengtaiDepartmentExamVo vo){
+        //去重
+        ArrayList<ShengtaiDepartmentExamVo> arr_raw_exam_vo=  shengTaiDepartmentEaxmService.selectDeparmentExamByField(vo);
+        return arr_raw_exam_vo;
+    }
+
+    @ResponseBody
+    @ApiOperation(
+            value = "获得部门 x 提交的 全部Record"
+    )
+    @RequestMapping(value = "/query_records_by_department", method = RequestMethod.POST)
+    public ArrayList<ShengtaiExamRecordVo> queryRecordsByDepartment(@RequestBody ShengtaiDepartmentExamVo vo){
+        ArrayList<ShengtaiExamRecordVo> arr_record_vo = new ArrayList<>();
+        ArrayList<ShengtaiDepartmentExamVo> raw_depart_exam_vo = queryExamsRawByDepartment(vo);
+        for(ShengtaiDepartmentExamVo one_depart_exam: raw_depart_exam_vo){
+            ShengtaiExamRecordVo query_recor_vo = new ShengtaiExamRecordVo();
+            query_recor_vo.setDepartmentId(one_depart_exam.getDepartmentId());
+            arr_record_vo.addAll(examRecordService.queryRecordByDepartId(query_recor_vo));
+        }
+        return arr_record_vo;
+    }
+    @ResponseBody
+    @ApiOperation(
+            value = "获得部门 x 的要点 a 提交的 全部Record"
+    )
+    @RequestMapping(value = "/query_records_by_department_and_yao_dian", method = RequestMethod.POST)
+    public ArrayList<ShengtaiExamRecordVo> queryRecordsByDepartmentAndYaoDian(@RequestBody ShengtaiDepartmentExamVo one_depart_exam){
+        ArrayList<ShengtaiExamRecordVo> arr_record_vo = new ArrayList<>();
+        ShengtaiExamRecordVo query_recor_vo = new ShengtaiExamRecordVo();
+            query_recor_vo.setExamDetailId(one_depart_exam.getExamId());
+            query_recor_vo.setDepartmentId(one_depart_exam.getDepartmentId());
+            arr_record_vo.addAll(examRecordService.queryRecordByDetailIdiAndDepartId(query_recor_vo));
+        return arr_record_vo;
+    }
+    @ResponseBody
+    @ApiOperation(
+            value = "获得考核要点 y 派发给哪些部门。因为department   有待完善"
+    )
+    @RequestMapping(value = "/query_departments_by_exam", method = RequestMethod.POST)
+    public ArrayList<ShengtaiDepartmentExamVo> queryDepartmentsByExam(@RequestBody ShengtaiDepartmentExamVo vo){
         return shengTaiDepartmentEaxmService.selectDeparmentExamByField(vo);
     }
-
-    @ResponseBody
-    @ApiOperation(
-            value = "获得考核要点 y 派发给哪些部门"
-    )
-    @RequestMapping(value = "/select_departments_by_exam", method = RequestMethod.POST)
-    public ArrayList<ShengtaiDepartmentExamVo> selectDepartmentsByExam(@RequestBody ShengtaiDepartmentExamVo vo){
-        return shengTaiDepartmentEaxmService.selectDeparmentExamByField(vo);
-    }
-
-//    @ResponseBody
-//    @ApiOperation(
-//            value = "按属性获得 N 条考核分类、考核指标或考核要点,属性直接 and 关系"
-//    )
-//    @RequestMapping(value = "/get_exam", method = RequestMethod.POST)
-//    public ArrayList<ShengtaiExamVo> getAllExam(@RequestBody ShengtaiExamVo vo){
-//        return shengTaiDepartmentEaxmService.selectExamFenLeiByField(vo);
-//    }
-//
-//    @ResponseBody
-//    @ApiOperation(
-//            value = "按属性获得 N 条考核分类、考核指标或考核要点，属性之间 or 关系"
-//    )
-//    @RequestMapping(value = "/get_exam_fuzzy", method = RequestMethod.POST)
-//    public ArrayList<ShengtaiExamVo> getAllExamFuzzy(@RequestBody ShengtaiExamVo vo){
-//        return shengTaiDepartmentEaxmService.selectExamFenLeiByFieldFuzzy(vo);
-//    }
-
 
 
 }
