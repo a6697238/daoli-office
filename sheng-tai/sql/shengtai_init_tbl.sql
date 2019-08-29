@@ -11,7 +11,7 @@ CREATE TABLE `tbl_shengtai_exam` (
   `create_uid`  varchar(64) NOT NULL DEFAULT '' COMMENT '创建者的id',
   `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开始时间',
   `end_time`   timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '结束时间',
-  `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后实名认证的时间戳',
+  `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录修改时间',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   `valid` tinyint(4) NOT NULL DEFAULT '0' COMMENT '有效性 0删除，1有效',
   PRIMARY KEY (`id`),
