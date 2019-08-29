@@ -5,7 +5,7 @@ import com.daoli.office.vo.sheng.tai.ShengtaiExamVo;
 import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamStatusConstant;
 import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant;
 import com.daoli.sheng.tai.service.ShengTaiDepartmentEaxmService;
-import com.daoli.sheng.tai.service.ShengTaiEaxmService;
+import com.daoli.sheng.tai.service.ShengTaiExamService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class ExamController {
 
     @Autowired
-    private ShengTaiEaxmService shengTaiEaxmService;
+    private ShengTaiExamService shengTaiEaxmService;
     @Autowired
     private ShengTaiDepartmentEaxmService shengTaiDepartmentEaxmService;
 

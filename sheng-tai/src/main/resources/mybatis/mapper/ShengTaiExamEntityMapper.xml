@@ -202,7 +202,6 @@
     <include refid="Base_Column_List" />
     from tbl_shengtai_exam
     where
-
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id = #{id,jdbcType=INTEGER} and

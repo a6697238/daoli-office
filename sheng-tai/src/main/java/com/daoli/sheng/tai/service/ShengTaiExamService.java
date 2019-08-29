@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Created by wanglining on 2019/8/22.
  */
 @Service
-public class ShengTaiEaxmService {
+public class ShengTaiExamService {
     @Autowired
     private ShengTaiExamEntityMapper examMapper;
 
@@ -63,7 +63,8 @@ public class ShengTaiEaxmService {
 
     public int updateExam(ShengtaiExamVo vo){
         ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
-        BeanUtils.copyProperties(vo,examEntry); // vo 不设置某个属性，属性就不会被拷贝到新对象，满足selective。
+        // vo 不设置某个属性，属性就不会被拷贝到新对象，满足selective。
+        BeanUtils.copyProperties(vo,examEntry);
         return examMapper.updateByPrimaryKeySelective(examEntry);
     }
 
@@ -85,13 +86,13 @@ public class ShengTaiEaxmService {
         return res_vo;
     }
 
-    public ShengtaiExamVo getIdVo(ShengtaiExamVo vo){
-        ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
-        BeanUtils.copyProperties(vo,examEntry);
+
+    public ShengTaiExamEntity queryExamById(Integer id){
         ArrayList<ShengTaiExamEntity> res = examMapper.selectByField(examEntry);
         ShengtaiExamVo vo_res = new ShengtaiExamVo();
-        if (res.size()>1 || res.size() <= 0)
+        if (res.size()>1 || res.size() <= 0) {
             return null;
+        }
         BeanUtils.copyProperties( res.get(0), vo_res);
         return vo_res;
     }

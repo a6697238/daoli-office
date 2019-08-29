@@ -1,11 +1,24 @@
 package com.daoli.sheng.tai.service;
 
+import static com.daoli.constant.DBconstant.VALID;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import com.daoli.office.vo.sheng.tai.ExamRecordAdditionVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
+import com.daoli.sheng.tai.entity.ShengtaiExamRecordAdditionEntity;
 import com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity;
+import com.daoli.sheng.tai.mapper.ShengtaiExamRecordAdditionEntityMapper;
 import com.daoli.sheng.tai.mapper.ShengtaiExamRecordEntityMapper;
+import com.google.common.collect.Lists;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * AUTO-GENERATED: houlu @ 2019/8/20 下午9:04
@@ -90,6 +103,11 @@ public class ExamRecordService {
         return vo;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public ExamRecordAdditionVo queryAdditionById(Integer id) {
         ShengtaiExamRecordAdditionEntity entity = additionEntityMapper.selectByPrimaryKey(id);
         ExamRecordAdditionVo vo = new ExamRecordAdditionVo();
@@ -98,10 +116,15 @@ public class ExamRecordService {
     }
 
 
-    public ArrayList<ShengtaiExamRecordVo> queryRecordByDepartId(ShengtaiExamRecordVo arg_vo){
+    /**
+     * 根据条件
+     * @param vo
+     * @return
+     */
+    public ArrayList<ShengtaiExamRecordVo> queryRecordByCondition(ShengtaiExamRecordVo vo){
 
         ShengtaiExamRecordEntity examRecordEntity = new ShengtaiExamRecordEntity();
-        BeanUtils.copyProperties(arg_vo,examRecordEntity);
+        BeanUtils.copyProperties(vo,examRecordEntity);
         ArrayList<ShengtaiExamRecordEntity>  res_entry =  examRecordEntityMapper.selectByExamIndexIdAndDepartId(examRecordEntity);
 
         ArrayList<ShengtaiExamRecordVo> res = new ArrayList<>();
@@ -113,18 +136,6 @@ public class ExamRecordService {
         return res ;
     }
 
-    public ArrayList<ShengtaiExamRecordVo> queryRecordByDetailIdiAndDepartId(ShengtaiExamRecordVo arg_vo){
 
-        ShengtaiExamRecordEntity examRecordEntity = new ShengtaiExamRecordEntity();
-        BeanUtils.copyProperties(arg_vo,examRecordEntity);
-        ArrayList<ShengtaiExamRecordEntity>  res_entry =  examRecordEntityMapper.selectByExamIndexIdAndDepartId(examRecordEntity);
 
-        ArrayList<ShengtaiExamRecordVo> res = new ArrayList<>();
-        for(ShengtaiExamRecordEntity one_entry : res_entry){
-            ShengtaiExamRecordVo one_vo = new ShengtaiExamRecordVo();
-            BeanUtils.copyProperties(one_entry,one_vo);
-            res.add(one_vo);
-        }
-        return res ;
-    }
 }

@@ -13,6 +13,7 @@ public interface ShengtaiExamRecordEntityMapper {
     int insertSelective(ShengtaiExamRecordEntity record);
 
     ShengtaiExamRecordEntity selectByPrimaryKey(Integer id);
+
     ArrayList<ShengtaiExamRecordEntity> selectByExamIndexIdAndDepartId(ShengtaiExamRecordEntity record);
 
     int updateByPrimaryKeySelective(ShengtaiExamRecordEntity record);

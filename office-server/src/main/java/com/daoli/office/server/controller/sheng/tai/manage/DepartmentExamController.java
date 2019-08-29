@@ -8,14 +8,13 @@ import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamStatusConstant;
 import com.daoli.sheng.tai.entity.DepartmentExamEntity;
 import com.daoli.sheng.tai.service.ExamRecordService;
 import com.daoli.sheng.tai.service.ShengTaiDepartmentEaxmService;
-import com.daoli.sheng.tai.service.ShengTaiEaxmService;
+import com.daoli.sheng.tai.service.ShengTaiExamService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -35,7 +34,7 @@ public class DepartmentExamController {
     @Autowired
     private ShengTaiDepartmentEaxmService shengTaiDepartmentEaxmService;
     @Autowired
-    private ShengTaiEaxmService shengTaiEaxmService;
+    private ShengTaiExamService shengTaiExamService;
     @Autowired
     private ExamRecordService examRecordService;
 
@@ -45,24 +44,27 @@ public class DepartmentExamController {
     )
     @RequestMapping(value = "/send_exam_to_department", method = RequestMethod.POST)
     public JsonResponse sendExamToDepartment(@RequestBody ShengtaiDepartmentExamVo vo){
+//
+//        int res = 0;
+//
+//        ShengtaiExamVo examVo = new ShengtaiExamVo();
+//        exam_vo.setExamId(vo.getExamId());
+//        ShengtaiExamVo id_vo = shengTaiEaxmService.getIdVo(exam_vo);
+//        if (id_vo != null) {
+//            id_vo.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_WEI_KAI_SHI);
+//            res = shengTaiEaxmService.updateExam(id_vo);
+//            res = shengTaiDepartmentEaxmService.insertDeparmentExam(vo);
+//        } else {
+//            res = 0;
+//        }
+//
+//        if (res != 0) {
+//            return new JsonResponse();
+//        } else {
+//            return new JsonResponse(false,"fail");
+//        }
+        ShengtaiExamVo examVo = shengTaiExamService.getIdVo()
 
-        int res = 0;
-
-        ShengtaiExamVo exam_vo = new ShengtaiExamVo();
-        exam_vo.setExamId(vo.getExamId());
-        ShengtaiExamVo id_vo = shengTaiEaxmService.getIdVo(exam_vo);
-        if (id_vo != null) {
-            id_vo.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_WEI_KAI_SHI);
-            res = shengTaiEaxmService.updateExam(id_vo);
-            res = shengTaiDepartmentEaxmService.insertDeparmentExam(vo);
-        } else {
-            res = 0;
-        }
-
-        if (res != 0)
-            return new JsonResponse();
-        else
-            return new JsonResponse(false,"fail");
     }
 
     @ResponseBody
@@ -101,10 +103,13 @@ public class DepartmentExamController {
             }
         }
 
-        if (res != 0)
+        return res != 0 ? new JsonResponse() : JsonResponse(false,"fail");
+
+        if (res != 0) {
             return new JsonResponse();
-        else
+        } else {
             return new JsonResponse(false,"fail");
+        }
     }
 
     @ResponseBody
@@ -155,7 +160,7 @@ public class DepartmentExamController {
         for(ShengtaiDepartmentExamVo one_depart_exam: raw_depart_exam_vo){
             ShengtaiExamRecordVo query_recor_vo = new ShengtaiExamRecordVo();
             query_recor_vo.setDepartmentId(one_depart_exam.getDepartmentId());
-            arr_record_vo.addAll(examRecordService.queryRecordByDepartId(query_recor_vo));
+            arr_record_vo.addAll(examRecordService.queryRecordByCondition(query_recor_vo));
         }
         return arr_record_vo;
     }
