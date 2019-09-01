@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-
+import java.util.List;
 /**
  * Created by wanglining on 2019/8/22.
  */
@@ -40,7 +40,7 @@ public class ShengTaiExamService {
         ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
         BeanUtils.copyProperties(vo,examEntry);
         examEntry.setValid(new Byte((byte)1));
-        examEntry.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_WEI_KAI_SHI);
+        examEntry.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_DAI_FA_BU);
         return examMapper.insertSelective(examEntry);
     }
 
@@ -87,8 +87,10 @@ public class ShengTaiExamService {
     }
 
 
-    public ShengTaiExamEntity queryExamById(Integer id){
-        ArrayList<ShengTaiExamEntity> res = examMapper.selectByField(examEntry);
+    public ShengtaiExamVo queryExamByExamId(ShengtaiExamVo vo){
+        ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
+        examEntry.setExamId(vo.getExamId());
+        List<ShengTaiExamEntity> res = examMapper.selectByField(examEntry);
         ShengtaiExamVo vo_res = new ShengtaiExamVo();
         if (res.size()>1 || res.size() <= 0) {
             return null;
@@ -97,10 +99,10 @@ public class ShengTaiExamService {
         return vo_res;
     }
 
-    public ArrayList<ShengtaiExamVo> selectExamByField(ShengtaiExamVo vo){
+    public List<ShengtaiExamVo> selectExamByField(ShengtaiExamVo vo){
         ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
         BeanUtils.copyProperties(vo,examEntry);
-        ArrayList<ShengTaiExamEntity> res = examMapper.selectByField(examEntry);
+        List<ShengTaiExamEntity> res = examMapper.selectByField(examEntry);
         ArrayList<ShengtaiExamVo> vo_res = new ArrayList<>();
         for (int i = 0; i < res.size(); ++i){
             ShengtaiExamVo one_vo = new ShengtaiExamVo();
@@ -110,11 +112,11 @@ public class ShengTaiExamService {
         return vo_res;
     }
 
-    public ArrayList<ShengtaiExamVo> selectExamByFieldFuzzy(ShengtaiExamVo vo){
+    public List<ShengtaiExamVo> selectExamByFieldFuzzy(ShengtaiExamVo vo){
         ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
         BeanUtils.copyProperties(vo,examEntry);
-        ArrayList<ShengTaiExamEntity> res = examMapper.selectByFieldFuzzy(examEntry);
-        ArrayList<ShengtaiExamVo> vo_res = new ArrayList<>();
+        List<ShengTaiExamEntity> res = examMapper.selectByFieldFuzzy(examEntry);
+        List<ShengtaiExamVo> vo_res = new ArrayList<>();
         for (int i = 0; i < res.size(); ++i){
                 ShengtaiExamVo one_vo = new ShengtaiExamVo();
                 BeanUtils.copyProperties(res.get(i), one_vo);
@@ -125,10 +127,10 @@ public class ShengTaiExamService {
 
     // 获得一个exam 的树状结构 , 参数 arg_exam_vo 必须能够查询到一个 entry 。
     // 因此仅限制 exam_id 和 id 两个字段
-    public ArrayList<ShengtaiExamVo> query_exam_all_tree_by_exam_id_or_id(ShengtaiExamVo arg_exam_vo){
+    public List<ShengtaiExamVo> query_exam_all_tree_by_exam_id_or_id(ShengtaiExamVo arg_exam_vo){
         ArrayList<ShengtaiExamVo> arr_res_vo = new ArrayList<>();
 
-        ArrayList<ShengtaiExamVo>  res_by_exam_id =  selectExamByField(arg_exam_vo);
+        List<ShengtaiExamVo>  res_by_exam_id =  selectExamByField(arg_exam_vo);
         if (res_by_exam_id.size() > 1 || res_by_exam_id.size() < 0){
             // 此处应该有异常抛出
             return null;
@@ -151,7 +153,7 @@ public class ShengTaiExamService {
             }
         }
         // 子树
-        ArrayList<ShengtaiExamVo> sub_tree = query_exam_sub_tree_by_exam_id_or_id(res_by_exam_id.get(0));
+        List<ShengtaiExamVo> sub_tree = query_exam_sub_tree_by_exam_id_or_id(res_by_exam_id.get(0));
         if(sub_tree != null && sub_tree.size()>0){
 
         }
@@ -159,16 +161,16 @@ public class ShengTaiExamService {
     }
 
     // 获得一个 exam 的子树结构
-    public  ArrayList<ShengtaiExamVo> query_exam_sub_tree_by_exam_id_or_id(ShengtaiExamVo arg_exam_vo){
+    public  List<ShengtaiExamVo> query_exam_sub_tree_by_exam_id_or_id(ShengtaiExamVo arg_exam_vo){
 
-        ArrayList<ShengtaiExamVo> res = null;
+        List<ShengtaiExamVo> res = null;
 
         if(arg_exam_vo.getExamId() != null){
             ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
             query_exam_vo.setParentExamId(arg_exam_vo.getExamId());
             res = selectExamByField(query_exam_vo);
         } else if(arg_exam_vo.getId() != null){
-            ShengtaiExamVo arg_exam_vo_detail = getIdVo(arg_exam_vo);
+            ShengtaiExamVo arg_exam_vo_detail = queryExamByExamId(arg_exam_vo);
             ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
             query_exam_vo.setParentExamId(arg_exam_vo_detail.getExamId());
             res = selectExamByField(query_exam_vo);
@@ -184,7 +186,7 @@ public class ShengTaiExamService {
 
     // 获得 一个 exam 的详细信息, 通过 exam id
     public  ShengtaiExamVo query_exam_detail_by_exam_id(ShengtaiExamVo arg_exam_vo){
-        ArrayList<ShengtaiExamVo>  res_by_exam_id =  selectExamByField(arg_exam_vo);
+        List<ShengtaiExamVo>  res_by_exam_id =  selectExamByField(arg_exam_vo);
         if (res_by_exam_id.size() > 1 || res_by_exam_id.size() < 0){
             // 此处应该有异常抛出
             return null;
