@@ -32,7 +32,7 @@ public class DeparmentService {
 
     public int updateDeparment(DepartmentVo vo){
         DepartmentEntity departmentEntity = new DepartmentEntity();
-        BeanUtils.copyProperties(vo,examEntry); // vo 不设置某个属性，属性就不会被拷贝到新对象，满足selective。
+        BeanUtils.copyProperties(vo, departmentEntity); // vo 不设置某个属性，属性就不会被拷贝到新对象，满足selective。
         return departmentEntityMapper.updateByPrimaryKeySelective(departmentEntity);
     }
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * AUTO-GENERATED: wln @ 2019/8/20 下午8:52
@@ -142,10 +143,11 @@ public class ExamController {
             }
         }
         msg = "批量删除成功!";
-        if (res != 0)
+        if (res != 0) {
             return new JsonResponse();
-        else
-            return new JsonResponse(false,msg);
+        } else {
+            return new JsonResponse(false, msg);
+        }
     }
 
     @ResponseBody
@@ -159,7 +161,7 @@ public class ExamController {
 
         ShengtaiExamVo detail_vo = shengTaiEaxmService.selectExamById(vo);
         // 只能在 考核未开始 状态下 才能进行删除
-        if(detail_vo.getExamStatus() == ShengTaiExamStatusConstant.KAO_HE_DAI_FA_BU) {
+        if(Objects.equals(detail_vo.getExamStatus(), ShengTaiExamStatusConstant.KAO_HE_DAI_FA_BU)) {
             res = shengTaiEaxmService.updateExam(vo);
             msg = "更新成功!";
         } else {
