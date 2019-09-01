@@ -2,7 +2,7 @@
 <configuration>
     <if condition='isNull("APP_NAME")'>
         <then>
-            <property name="APP_NAME" value="task-manage"/>
+            <property name="APP_NAME" value="daoli-server"/>
         </then>
     </if>
 
