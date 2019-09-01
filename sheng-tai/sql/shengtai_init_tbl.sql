@@ -99,7 +99,3 @@ CREATE TABLE `tbl_shengtai_exam_record_addition` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_addition_id` (`addition_id`(10))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='考核记录';
-
-
-
-

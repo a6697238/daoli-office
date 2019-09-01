@@ -54,7 +54,7 @@ public class ExamRecordController extends BaseController {
     @ApiOperation(value = "上传一条考核记录")
     @RequestMapping(value = "/upload_exam_record", method = RequestMethod.POST)
     public JsonResponse uploadExamRecord(@RequestBody ShengtaiExamRecordVo vo,
-            @RequestParam Integer[] additionId) {
+            @RequestParam List<Integer> additionId) {
         examRecordService.uploadRecord(vo, Lists.newArrayList(additionId));
         return new JsonResponse();
     }
@@ -64,7 +64,7 @@ public class ExamRecordController extends BaseController {
     @ApiOperation(value = "修改一条考核记录")
     @RequestMapping(value = "/modify_exam_record", method = RequestMethod.POST)
     public JsonResponse modifyExamRecord(@RequestBody ShengtaiExamRecordVo req,
-            @RequestParam Integer[] additionId) {
+            @RequestParam List<Integer> additionId) {
         examRecordService.modifyRecord(req, Lists.newArrayList(additionId));
         return new JsonResponse();
     }
