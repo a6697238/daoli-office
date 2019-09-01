@@ -1,5 +1,7 @@
 package com.daoli.sheng.tai.service;
 
+import static com.daoli.constant.DBconstant.VALID;
+
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
 import com.daoli.sheng.tai.entity.DepartmentEntity;
 import com.daoli.sheng.tai.mapper.DepartmentEntityMapper;
@@ -23,7 +25,7 @@ public class DeparmentService {
         // 删除
         DepartmentEntity departmentEntity= new DepartmentEntity();
         BeanUtils.copyProperties(vo,departmentEntity);
-        departmentEntity.setValid(new Byte((byte)0));
+        departmentEntity.setValid(VALID);
 
         //删除
         int res = departmentEntityMapper.updateByPrimaryKeySelective(departmentEntity);
@@ -32,7 +34,7 @@ public class DeparmentService {
 
     public int updateDeparment(DepartmentVo vo){
         DepartmentEntity departmentEntity = new DepartmentEntity();
-        BeanUtils.copyProperties(vo,examEntry); // vo 不设置某个属性，属性就不会被拷贝到新对象，满足selective。
+        BeanUtils.copyProperties(vo,departmentEntity);
         return departmentEntityMapper.updateByPrimaryKeySelective(departmentEntity);
     }
 

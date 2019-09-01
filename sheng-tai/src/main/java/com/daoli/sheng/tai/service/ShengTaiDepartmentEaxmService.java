@@ -22,8 +22,6 @@ public class ShengTaiDepartmentEaxmService {
 
     public int deleteDeparmentExam(ShengtaiDepartmentExamVo vo){
 
-
-
         // 删除
         DepartmentExamEntity examEntry = new DepartmentExamEntity();
         BeanUtils.copyProperties(vo,examEntry);
