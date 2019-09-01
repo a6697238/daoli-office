@@ -1,9 +1,7 @@
 package com.daoli.sheng.tai.service;
 
 import com.daoli.office.vo.sheng.tai.ShengtaiDepartmentExamVo;
-import com.daoli.office.vo.sheng.tai.ShengtaiExamVo;
 import com.daoli.sheng.tai.entity.DepartmentExamEntity;
-import com.daoli.sheng.tai.entity.ShengTaiExamEntity;
 import com.daoli.sheng.tai.mapper.DepartmentExamEntityMapper;
 
 import org.springframework.beans.BeanUtils;

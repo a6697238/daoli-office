@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.daoli.sheng.tai.entity.ShengTaiExamEntity" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="exam_id" property="examId" jdbcType="VARCHAR" />
-    <result column="parent_exam_id" property="parentExamId" jdbcType="INTEGER" />
+    <result column="parent_exam_id" property="parentExamId" jdbcType="VARCHAR" />
     <result column="exam_type" property="examType" jdbcType="VARCHAR" />
     <result column="exam_name" property="examName" jdbcType="VARCHAR" />
     <result column="exam_desc" property="examDesc" jdbcType="VARCHAR" />
@@ -37,7 +37,7 @@
       exam_score, exam_status, create_uid, 
       start_time, end_time, modify_time, 
       create_time, valid)
-    values (#{id,jdbcType=INTEGER}, #{examId,jdbcType=VARCHAR}, #{parentExamId,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{examId,jdbcType=VARCHAR}, #{parentExamId,jdbcType=VARCHAR}, 
       #{examType,jdbcType=VARCHAR}, #{examName,jdbcType=VARCHAR}, #{examDesc,jdbcType=VARCHAR}, 
       #{examScore,jdbcType=INTEGER}, #{examStatus,jdbcType=VARCHAR}, #{createUid,jdbcType=VARCHAR}, 
       #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
@@ -97,7 +97,7 @@
         #{examId,jdbcType=VARCHAR},
       </if>
       <if test="parentExamId != null" >
-        #{parentExamId,jdbcType=INTEGER},
+        #{parentExamId,jdbcType=VARCHAR},
       </if>
       <if test="examType != null" >
         #{examType,jdbcType=VARCHAR},
@@ -141,7 +141,7 @@
         exam_id = #{examId,jdbcType=VARCHAR},
       </if>
       <if test="parentExamId != null" >
-        parent_exam_id = #{parentExamId,jdbcType=INTEGER},
+        parent_exam_id = #{parentExamId,jdbcType=VARCHAR},
       </if>
       <if test="examType != null" >
         exam_type = #{examType,jdbcType=VARCHAR},
@@ -182,7 +182,7 @@
   <update id="updateByPrimaryKey" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity" >
     update tbl_shengtai_exam
     set exam_id = #{examId,jdbcType=VARCHAR},
-      parent_exam_id = #{parentExamId,jdbcType=INTEGER},
+      parent_exam_id = #{parentExamId,jdbcType=VARCHAR},
       exam_type = #{examType,jdbcType=VARCHAR},
       exam_name = #{examName,jdbcType=VARCHAR},
       exam_desc = #{examDesc,jdbcType=VARCHAR},
@@ -210,7 +210,7 @@
         exam_id = #{examId,jdbcType=VARCHAR} and
       </if>
       <if test="parentExamId != null" >
-        parent_exam_id = #{parentExamId,jdbcType=INTEGER} and
+        parent_exam_id = #{parentExamId,jdbcType=VARCHAR} and
       </if>
       <if test="examType != null" >
         exam_type = #{examType,jdbcType=VARCHAR} and
@@ -259,7 +259,7 @@
         exam_id = #{examId,jdbcType=VARCHAR} or
       </if>
       <if test="parentExamId != null" >
-        parent_exam_id = #{parentExamId,jdbcType=INTEGER} or
+        parent_exam_id = #{parentExamId,jdbcType=VARCHAR} or
       </if>
       <if test="examType != null" >
         exam_type = #{examType,jdbcType=VARCHAR} or
@@ -322,5 +322,4 @@
       </if>
     </trim>
   </select>
-
 </mapper>

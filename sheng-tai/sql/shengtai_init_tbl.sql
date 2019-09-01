@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS `tbl_shengtai_exam`;
 CREATE TABLE `tbl_shengtai_exam` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `exam_id` varchar(64) NOT NULL DEFAULT '' COMMENT '考试唯一标识',
-  `parent_exam_id` varchar(64) NOT NULL DEFAULT '0' COMMENT '父级菜单id',
+  `parent_exam_id` int(11)  NOT NULL DEFAULT '0' COMMENT '父级菜单id',
   `exam_type` varchar(255) NOT NULL DEFAULT '' COMMENT '模板类型，考核分类，考核指标，考核要点',
   `exam_name` varchar(255) NOT NULL DEFAULT '' COMMENT '考核名称',
   `exam_desc` varchar(2048) NOT NULL DEFAULT '' COMMENT '考核描述',

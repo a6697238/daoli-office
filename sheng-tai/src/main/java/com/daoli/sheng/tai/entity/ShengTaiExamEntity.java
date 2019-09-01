@@ -7,7 +7,7 @@ public class ShengTaiExamEntity {
 
     private String examId;
 
-    private String parentExamId;
+    private Integer parentExamId;
 
     private String examType;
 
@@ -47,11 +47,11 @@ public class ShengTaiExamEntity {
         this.examId = examId;
     }
 
-    public String getParentExamId() {
+    public Integer getParentExamId() {
         return parentExamId;
     }
 
-    public void setParentExamId(String parentExamId) {
+    public void setParentExamId(Integer parentExamId) {
         this.parentExamId = parentExamId;
     }
 

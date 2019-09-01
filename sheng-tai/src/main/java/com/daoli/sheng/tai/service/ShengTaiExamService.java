@@ -139,16 +139,16 @@ public class ShengTaiExamService {
         arr_res_vo.add(res_by_exam_id.get(0));
 
         // 父亲
-        if (res_by_exam_id.get(0).getParentExamId()!= null && res_by_exam_id.get(0).getParentExamId().trim() != "" )
+        if (res_by_exam_id.get(0).getParentExamId()!= null && res_by_exam_id.get(0).getParentExamId() != 0 )
         {
             ShengtaiExamVo parent_vo = new ShengtaiExamVo();
-            parent_vo.setExamId( res_by_exam_id.get(0).getParentExamId());
+            parent_vo.setId( res_by_exam_id.get(0).getParentExamId());
             ShengtaiExamVo parent_vo_detail = query_exam_detail_by_exam_id(parent_vo);
             arr_res_vo.add(parent_vo_detail);
 
-            if(parent_vo.getParentExamId() != null && parent_vo.getParentExamId().trim() != ""){
+            if(parent_vo.getParentExamId() != null && parent_vo.getParentExamId() != 0){
                 ShengtaiExamVo parent_vo_2 = new ShengtaiExamVo();
-                parent_vo_2.setExamId( parent_vo.getParentExamId());
+                parent_vo_2.setId( parent_vo.getParentExamId());
                 arr_res_vo.add(query_exam_detail_by_exam_id(parent_vo_2));
             }
         }
@@ -167,18 +167,18 @@ public class ShengTaiExamService {
 
         if(arg_exam_vo.getExamId() != null){
             ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
-            query_exam_vo.setParentExamId(arg_exam_vo.getExamId());
+            query_exam_vo.setParentExamId(arg_exam_vo.getId());
             res = selectExamByField(query_exam_vo);
         } else if(arg_exam_vo.getId() != null){
             ShengtaiExamVo arg_exam_vo_detail = queryExamByExamId(arg_exam_vo);
             ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
-            query_exam_vo.setParentExamId(arg_exam_vo_detail.getExamId());
+            query_exam_vo.setParentExamId(arg_exam_vo_detail.getId());
             res = selectExamByField(query_exam_vo);
         }
         if (res != null)
           for(ShengtaiExamVo iter_vo : res){
             ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
-            query_exam_vo.setParentExamId(iter_vo.getExamId());
+            query_exam_vo.setParentExamId(iter_vo.getId());
             res.addAll(selectExamByField(query_exam_vo));
           }
         return res;
