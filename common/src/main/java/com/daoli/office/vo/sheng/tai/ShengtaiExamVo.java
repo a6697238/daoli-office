@@ -33,5 +33,6 @@ public class ShengtaiExamVo {
     private Date modifyTime;
 
     private Date createTime;
+    private Integer assignedNum;
 
 }

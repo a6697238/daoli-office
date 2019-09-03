@@ -31,6 +31,8 @@ public class ShengTaiExamEntity {
 
     private Byte valid;
 
+    private Integer assignedNum;
+
     public Integer getId() {
         return id;
     }
@@ -141,5 +143,13 @@ public class ShengTaiExamEntity {
 
     public void setValid(Byte valid) {
         this.valid = valid;
+    }
+
+    public Integer getAssignedNum() {
+        return assignedNum;
+    }
+
+    public void setAssignedNum(Integer assignedNum) {
+        this.assignedNum = assignedNum;
     }
 }

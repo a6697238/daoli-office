@@ -17,3 +17,9 @@ CREATE TABLE `tbl_shengtai_exam` (
 PRIMARY KEY (`id`),
 UNIQUE KEY `idx_exam_id` (`exam_id`(10))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='考核录入';
+
+# 添加一列
+#ALTER TABLE `tbl_shengtai_exam` add column `assigned_num` int(11) NOT NULL DEFAULT 0 ;
+
+# 删除一列
+#alter table `tbl_department_exam` drop column `assigned_num`;
