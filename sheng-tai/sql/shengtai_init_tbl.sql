@@ -7,6 +7,7 @@ CREATE TABLE `tbl_shengtai_exam` (
   `exam_name` varchar(255) NOT NULL DEFAULT '' COMMENT '考核名称',
   `exam_desc` varchar(2048) NOT NULL DEFAULT '' COMMENT '考核描述',
   `exam_score` int(11) NOT NULL DEFAULT 0 COMMENT '分值',
+  `assigned_num` int(11) NOT NULL DEFAULT 0 COMMENT '考核上传的记录数量';
   `exam_status` varchar(255) NOT NULL DEFAULT '' COMMENT '考核状态',
   `create_uid`  varchar(64) NOT NULL DEFAULT '' COMMENT '创建者的id',
   `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开始时间',
@@ -17,7 +18,6 @@ CREATE TABLE `tbl_shengtai_exam` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_exam_id` (`exam_id`(10))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='考核录入';
-
 
 
 
