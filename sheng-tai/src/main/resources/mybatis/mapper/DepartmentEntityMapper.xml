@@ -18,6 +18,12 @@
     from tbl_department
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByBusinessKey" resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.DepartmentEntity" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_department
+    where departmentId = #{departmentId,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tbl_department
     where id = #{id,jdbcType=INTEGER}
@@ -103,4 +109,16 @@
       valid = #{valid,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByFields" resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.DepartmentEntity" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_department
+    where valid = 1 and
+    <trim prefix="(" suffix=")" suffixOverrides="and" >
+      <if test="departmentName != null" >
+        department_name like "%"#{departmentName,jdbcType=VARCHAR}"%" and
+      </if>
+    </trim>
+  </select>
 </mapper>

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by wanglining on 2019/8/22.
@@ -34,7 +35,7 @@ public class DeparmentService {
 
     public int updateDeparment(DepartmentVo vo){
         DepartmentEntity departmentEntity = new DepartmentEntity();
-        BeanUtils.copyProperties(vo,departmentEntity);
+        BeanUtils.copyProperties(vo, departmentEntity); // vo 不设置某个属性，属性就不会被拷贝到新对象，满足selective。
         return departmentEntityMapper.updateByPrimaryKeySelective(departmentEntity);
     }
 
@@ -43,5 +44,37 @@ public class DeparmentService {
         BeanUtils.copyProperties(vo, departmentEntity);
         departmentEntity.setValid(new Byte((byte)1));
         return departmentEntityMapper.insertSelective(departmentEntity);
+    }
+
+    public DepartmentVo queryDepartmentById(Integer id){
+
+        DepartmentEntity departmentEntity  =  departmentEntityMapper.selectByPrimaryKey(id);
+
+        DepartmentVo resVo = new DepartmentVo();
+        BeanUtils.copyProperties(departmentEntity, resVo);
+        return resVo;
+    }
+
+    public DepartmentVo queryDepartmentByBusinessId(DepartmentVo vo){
+
+        DepartmentEntity argDepartmentEntity = new DepartmentEntity();
+        argDepartmentEntity.setDepartmentId(vo.getDepartmentId());
+        DepartmentEntity departmentEntity  =  departmentEntityMapper.selectByBusinessKey(argDepartmentEntity);
+        DepartmentVo resVo = new DepartmentVo();
+        BeanUtils.copyProperties(departmentEntity, resVo);
+        return resVo;
+    }
+
+    public List<DepartmentVo> queryAllDepartment(){
+        DepartmentEntity argEntry = new DepartmentEntity();
+        argEntry.setDepartmentName("");
+        List<DepartmentEntity> resFromSql = departmentEntityMapper.selectByFields(argEntry);
+        List<DepartmentVo> res = new ArrayList<>();
+        for(DepartmentEntity iterEntry : resFromSql){
+            DepartmentVo desVo =  new DepartmentVo();
+            BeanUtils.copyProperties(iterEntry, desVo);
+            res.add(desVo);
+        }
+        return res;
     }
 }

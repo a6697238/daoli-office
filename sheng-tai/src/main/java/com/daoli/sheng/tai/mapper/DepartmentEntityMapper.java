@@ -3,6 +3,8 @@ package com.daoli.sheng.tai.mapper;
 import com.daoli.sheng.tai.entity.DepartmentEntity;
 import org.springframework.stereotype.Component;
 
+import  java.util.List;
+
 @Component
 public interface DepartmentEntityMapper {
     int deleteByPrimaryKey(Integer id);
@@ -13,7 +15,11 @@ public interface DepartmentEntityMapper {
 
     DepartmentEntity selectByPrimaryKey(Integer id);
 
+
     int updateByPrimaryKeySelective(DepartmentEntity record);
 
     int updateByPrimaryKey(DepartmentEntity record);
+
+    List<DepartmentEntity> selectByFields(DepartmentEntity record);
+    DepartmentEntity selectByBusinessKey(DepartmentEntity record);
 }

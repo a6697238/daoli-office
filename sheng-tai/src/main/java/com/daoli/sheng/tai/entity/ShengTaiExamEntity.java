@@ -7,7 +7,7 @@ public class ShengTaiExamEntity {
 
     private String examId;
 
-    private String parentExamId;
+    private Integer parentExamId;
 
     private String examType;
 
@@ -31,6 +31,8 @@ public class ShengTaiExamEntity {
 
     private Byte valid;
 
+    private Integer assignedNum;
+
     public Integer getId() {
         return id;
     }
@@ -47,11 +49,11 @@ public class ShengTaiExamEntity {
         this.examId = examId;
     }
 
-    public String getParentExamId() {
+    public Integer getParentExamId() {
         return parentExamId;
     }
 
-    public void setParentExamId(String parentExamId) {
+    public void setParentExamId(Integer parentExamId) {
         this.parentExamId = parentExamId;
     }
 
@@ -141,5 +143,13 @@ public class ShengTaiExamEntity {
 
     public void setValid(Byte valid) {
         this.valid = valid;
+    }
+
+    public Integer getAssignedNum() {
+        return assignedNum;
+    }
+
+    public void setAssignedNum(Integer assignedNum) {
+        this.assignedNum = assignedNum;
     }
 }

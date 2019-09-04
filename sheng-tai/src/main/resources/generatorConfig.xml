@@ -4,8 +4,8 @@
   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
 
-  <classPathEntry
-    location="/apps/software/MavenJar/mysql/mysql-connector-java/5.1.34/mysql-connector-java-5.1.34.jar"/>
+  <classPathEntry location="/apps/software/MavenJar/mysql/mysql-connector-java/5.1.34/mysql-connector-java-5.1.34.jar"/>
+  <!--<classPathEntry location="/Users/wanglining/.m2/repository/mysql/mysql-connector-java/8.0.17/mysql-connector-java-8.0.17.jar"/>-->
 
 
   <!-- 配置数据源和生成的代码所存放的位置 -->
@@ -45,12 +45,12 @@
       <!--enableUpdateByExample="false" enableDeleteByExample="false"-->
       <!--enableSelectByExample="false" selectByExampleQueryId="false">-->
     <!--</table>-->
-    <!--<table schema="daoli_office" tableName="tbl_shengtai_exam"-->
-      <!--domainObjectName="ShengTaiExamEntity"-->
-      <!--enableCountByExample="false"-->
-      <!--enableUpdateByExample="false" enableDeleteByExample="false"-->
-      <!--enableSelectByExample="false" selectByExampleQueryId="false">-->
-    <!--</table>-->
+    <table schema="daoli_office" tableName="tbl_shengtai_exam"
+      domainObjectName="ShengTaiExamEntity"
+      enableCountByExample="false"
+      enableUpdateByExample="false" enableDeleteByExample="false"
+      enableSelectByExample="false" selectByExampleQueryId="false">
+    </table>
     <!--<table schema="daoli_office" tableName="tbl_user"-->
       <!--domainObjectName="UserEntity"-->
       <!--enableCountByExample="false"-->
@@ -64,12 +64,12 @@
       <!--enableUpdateByExample="false" enableDeleteByExample="false"-->
       <!--enableSelectByExample="false" selectByExampleQueryId="false">-->
     <!--</table>-->
-    <table schema="daoli_office" tableName="tbl_shengtai_exam_record_addition"
-      domainObjectName="ShengtaiExamRecordAdditionEntity"
-      enableCountByExample="false"
-      enableUpdateByExample="false" enableDeleteByExample="false"
-      enableSelectByExample="false" selectByExampleQueryId="false">
-    </table>
+    <!--<table schema="daoli_office" tableName="tbl_shengtai_exam_record_addition"-->
+      <!--domainObjectName="ShengtaiExamRecordAdditionEntity"-->
+      <!--enableCountByExample="false"-->
+      <!--enableUpdateByExample="false" enableDeleteByExample="false"-->
+      <!--enableSelectByExample="false" selectByExampleQueryId="false">-->
+    <!--</table>-->
 
 
   </context>

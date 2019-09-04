@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.daoli.sheng.tai.entity.ShengTaiExamEntity" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="exam_id" property="examId" jdbcType="VARCHAR" />
-    <result column="parent_exam_id" property="parentExamId" jdbcType="INTEGER" />
+    <result column="parent_exam_id" property="parentExamId" jdbcType="VARCHAR" />
     <result column="exam_type" property="examType" jdbcType="VARCHAR" />
     <result column="exam_name" property="examName" jdbcType="VARCHAR" />
     <result column="exam_desc" property="examDesc" jdbcType="VARCHAR" />
@@ -16,17 +16,16 @@
     <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="valid" property="valid" jdbcType="TINYINT" />
-    <result column="assigned_num" property="assignedNum" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, exam_id, parent_exam_id, exam_type, exam_name, exam_desc, exam_score, exam_status, 
-    create_uid, start_time, end_time, modify_time, create_time, valid, assigned_num
+    create_uid, start_time, end_time, modify_time, create_time, valid
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from tbl_shengtai_exam
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} and valid = "1"
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tbl_shengtai_exam
@@ -37,14 +36,12 @@
       exam_type, exam_name, exam_desc, 
       exam_score, exam_status, create_uid, 
       start_time, end_time, modify_time, 
-      create_time, valid, assigned_num
-      )
-    values (#{id,jdbcType=INTEGER}, #{examId,jdbcType=VARCHAR}, #{parentExamId,jdbcType=INTEGER}, 
+      create_time, valid)
+    values (#{id,jdbcType=INTEGER}, #{examId,jdbcType=VARCHAR}, #{parentExamId,jdbcType=VARCHAR}, 
       #{examType,jdbcType=VARCHAR}, #{examName,jdbcType=VARCHAR}, #{examDesc,jdbcType=VARCHAR}, 
       #{examScore,jdbcType=INTEGER}, #{examStatus,jdbcType=VARCHAR}, #{createUid,jdbcType=VARCHAR}, 
       #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT}, #{assignedNum,jdbcType=INTEGER}
-      )
+      #{createTime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity" >
     insert into tbl_shengtai_exam
@@ -91,9 +88,6 @@
       <if test="valid != null" >
         valid,
       </if>
-      <if test="assignedNum != null" >
-        assigned_num,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -103,7 +97,7 @@
         #{examId,jdbcType=VARCHAR},
       </if>
       <if test="parentExamId != null" >
-        #{parentExamId,jdbcType=INTEGER},
+        #{parentExamId,jdbcType=VARCHAR},
       </if>
       <if test="examType != null" >
         #{examType,jdbcType=VARCHAR},
@@ -138,9 +132,6 @@
       <if test="valid != null" >
         #{valid,jdbcType=TINYINT},
       </if>
-      <if test="assignedNum != null" >
-        #{assignedNum,jdbcType=INTEGER},
-      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity" >
@@ -150,7 +141,7 @@
         exam_id = #{examId,jdbcType=VARCHAR},
       </if>
       <if test="parentExamId != null" >
-        parent_exam_id = #{parentExamId,jdbcType=INTEGER},
+        parent_exam_id = #{parentExamId,jdbcType=VARCHAR},
       </if>
       <if test="examType != null" >
         exam_type = #{examType,jdbcType=VARCHAR},
@@ -185,16 +176,13 @@
       <if test="valid != null" >
         valid = #{valid,jdbcType=TINYINT},
       </if>
-      <if test="assignedNum != null" >
-        assigned_num = #{assignedNum,jdbcType=INTEGER},
-      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity" >
     update tbl_shengtai_exam
     set exam_id = #{examId,jdbcType=VARCHAR},
-      parent_exam_id = #{parentExamId,jdbcType=INTEGER},
+      parent_exam_id = #{parentExamId,jdbcType=VARCHAR},
       exam_type = #{examType,jdbcType=VARCHAR},
       exam_name = #{examName,jdbcType=VARCHAR},
       exam_desc = #{examDesc,jdbcType=VARCHAR},
@@ -205,11 +193,9 @@
       end_time = #{endTime,jdbcType=TIMESTAMP},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      valid = #{valid,jdbcType=TINYINT},
-      assigned_num = #{assignedNum,jdbcType=INTEGER}
+      valid = #{valid,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
   <select id="selectByField"  resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity"  >
 
     select
@@ -224,7 +210,7 @@
         exam_id = #{examId,jdbcType=VARCHAR} and
       </if>
       <if test="parentExamId != null" >
-        parent_exam_id = #{parentExamId,jdbcType=INTEGER} and
+        parent_exam_id = #{parentExamId,jdbcType=VARCHAR} and
       </if>
       <if test="examType != null" >
         exam_type = #{examType,jdbcType=VARCHAR} and
@@ -254,18 +240,17 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP} and
       </if>
-      valid = "1"
+        valid = "1"
     </trim>
   </select>
-
-  <select id="selectByFieldFuzzyOr"  resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity"  >
+    <select id="selectByFieldFuzzyOr"  resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity"  >
 
     select
     <include refid="Base_Column_List" />
     from tbl_shengtai_exam
     where
 
-    valid = "1" and
+      valid = "1" and
     <trim prefix="(" suffix=")" suffixOverrides="or" >
       <if test="id != null" >
         id = #{id,jdbcType=INTEGER} or
@@ -274,7 +259,7 @@
         exam_id = #{examId,jdbcType=VARCHAR} or
       </if>
       <if test="parentExamId != null" >
-        parent_exam_id = #{parentExamId,jdbcType=INTEGER} or
+        parent_exam_id = #{parentExamId,jdbcType=VARCHAR} or
       </if>
       <if test="examType != null" >
         exam_type = #{examType,jdbcType=VARCHAR} or
@@ -314,23 +299,23 @@
     from tbl_shengtai_exam
     where
 
-    valid = "1" and
+      valid = "1" and
     <trim prefix="(" suffix=")" suffixOverrides="and" >
 
       <if test="examType != null" >
-        exam_type like "%"#{examType,jdbcType=VARCHAR}"%" and
+        exam_type like #{examType,jdbcType=VARCHAR} and
       </if>
       <if test="examName != null" >
-        exam_name like "%"#{examName,jdbcType=VARCHAR}"%" and
+        exam_name like #{examName,jdbcType=VARCHAR} and
       </if>
       <if test="examDesc != null" >
-        exam_desc like "%"#{examDesc,jdbcType=VARCHAR}"%" and
+        exam_desc like #{examDesc,jdbcType=VARCHAR} and
       </if>
       <if test="examStatus != null" >
-        exam_status like "%"#{examStatus,jdbcType=VARCHAR}"%" and
+        exam_status like #{examStatus,jdbcType=VARCHAR} and
       </if>
       <if test="createUid != null" >
-        create_uid like "%"#{createUid,jdbcType=VARCHAR}"%" and
+        create_uid like #{createUid,jdbcType=VARCHAR} and
       </if>
       <if test="startTime != null and endTime != null" >
         start_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}

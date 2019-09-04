@@ -12,7 +12,7 @@ public class ShengtaiExamVo {
 
     private String examId;
 
-    private String parentExamId;
+    private Integer parentExamId;
 
     private String examType;
 
@@ -33,5 +33,6 @@ public class ShengtaiExamVo {
     private Date modifyTime;
 
     private Date createTime;
+    private Integer assignedNum;
 
 }
