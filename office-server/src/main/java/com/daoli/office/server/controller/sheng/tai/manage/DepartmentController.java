@@ -46,7 +46,7 @@ public class DepartmentController {
     public JsonResponse deleteDepartmen(@RequestBody DepartmentVo vo) {
         int res = 0;
 
-        res = deparmentService.deleteDeparment(vo);
+//        res = deparmentService.deleteDeparment(vo);
         if (res != 0) {
             return new JsonResponse();
         } else {

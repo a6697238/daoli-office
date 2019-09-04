@@ -95,10 +95,10 @@ public class ExamController {
             value = "开始 考核"
     )
     @RequestMapping(value = "/start_exam", method = RequestMethod.POST)
-    public JsonResponse startExam(@RequestParam Integer examPIds) {
-        ShengtaiExamVo vo = shengTaiExamService.queryExamByPId(examPIds);
+    public JsonResponse startExam(@RequestParam Integer examPId) {
+        ShengtaiExamVo vo = shengTaiExamService.queryExamByPId(examPId);
         if (ShengTaiExamStatusConstant.KAO_HE_WEI_KAI_SHI.equals(vo.getExamStatus())) {
-            if (shengTaiExamService.startExam(vo) > 0) {
+            if (shengTaiExamService.startExam(examPId) > 0) {
                 return new JsonResponse();
             }
         }
@@ -114,7 +114,7 @@ public class ExamController {
         ShengtaiExamVo vo = shengTaiExamService.queryExamByPId(examPId);
         // 只能在 考核未开始 状态下 才能进行删除
         if (ShengTaiExamStatusConstant.KAO_HE_WEI_KAI_SHI.equals(vo.getExamStatus())) {
-            if (shengTaiExamService.endExam(vo) > 0) {
+            if (shengTaiExamService.endExam(examPId) > 0) {
                 return new JsonResponse();
             }
         }

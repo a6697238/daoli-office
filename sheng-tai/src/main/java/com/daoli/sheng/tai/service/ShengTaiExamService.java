@@ -58,7 +58,6 @@ public class ShengTaiExamService {
     /**
      * 批量添加 考试信息
      */
-    @Transactional(rollbackFor = Exception.class)
     public Map<Integer, Object> addBatchExam(List<ShengtaiExamVo> vos) {
         Map<Integer, Object> resMap = Maps.newHashMap();
         for (ShengtaiExamVo vo : vos) {
@@ -79,7 +78,6 @@ public class ShengTaiExamService {
      * 1.删除现有的关系
      * 2.新增新的关系
      */
-    @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> assignBatchExam(String examId,
             List<String> departmentIds) {
         Map<String, Object> resMap = Maps.newHashMap();
@@ -106,7 +104,6 @@ public class ShengTaiExamService {
         return resMap;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public Map<Integer, Object> publishBatchExam(Integer[] examPIds) {
         Map<Integer, Object> resMap = Maps.newHashMap();
         for (Integer id : examPIds) {
@@ -120,7 +117,6 @@ public class ShengTaiExamService {
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
     public Map<Integer, Object> rollbackPublishBatchExam(Integer[] examPIds) {
         Map<Integer, Object> resMap = Maps.newHashMap();
         for (Integer id : examPIds) {
@@ -135,7 +131,6 @@ public class ShengTaiExamService {
         return resMap;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public Map<Integer, Object> deleteBatchExam(Integer[] examPIds) {
         Map<Integer, Object> resMap = Maps.newHashMap();
         for (Integer id : examPIds) {
@@ -182,14 +177,16 @@ public class ShengTaiExamService {
     }
 
 
-    public int startExam(ShengtaiExamVo shengtaiExamVo) {
-        shengtaiExamVo.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_JIN_XING_ZHONG);
-        return updateExam(shengtaiExamVo);
+    public int startExam(Integer examPid) {
+        ShengTaiExamEntity examEntity = examMapper.selectByPrimaryKey(examPid);
+        examEntity.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_JIN_XING_ZHONG);
+        return examMapper.updateByPrimaryKeySelective(examEntity);
     }
 
-    public int endExam(ShengtaiExamVo vo) {
-        vo.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_ZHENG_CHANG_JIE_SHU);
-        return updateExam(vo);
+    public int endExam(Integer examPid) {
+        ShengTaiExamEntity examEntity = examMapper.selectByPrimaryKey(examPid);
+        examEntity.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_ZHENG_CHANG_JIE_SHU);
+        return examMapper.updateByPrimaryKeySelective(examEntity);
     }
 
 
