@@ -2,6 +2,8 @@ package com.daoli.sheng.tai.entity;
 
 import java.util.Date;
 
+import lombok.Builder;
+
 public class ShengTaiExamEntity {
     private Integer id;
 

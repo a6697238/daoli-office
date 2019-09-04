@@ -9,6 +9,8 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="valid" property="valid" jdbcType="TINYINT" />
   </resultMap>
+
+
   <sql id="Base_Column_List" >
     id, department_id, exam_id, modify_time, create_time, valid
   </sql>
@@ -18,6 +20,18 @@
     from tbl_department_exam
     where id = #{id,jdbcType=INTEGER} and valid = "1"
   </select>
+
+  <select id="queryAssignedDepartmentsByExamId">
+    SELECT
+      tbl_d.id, tbl_d.department_id, tbl_d.department_name, tbl_d.modify_time , tbl_d.create_time
+    FROM tbl_department_exam tbl_d_e
+    LEFT JOIN
+    tbl_department tbl_d
+    ON tbl_d.department_id = tbl_d_e.department_id
+    WHERE examId = #{examId,jdbcType=VARCHAR} AND tbl_d_e.valid=1
+    AND tbl_d.valid=1
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tbl_department_exam
     where id = #{id,jdbcType=INTEGER}

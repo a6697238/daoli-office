@@ -17,11 +17,11 @@ import java.util.List;
  * Created by wanglining on 2019/8/22.
  */
 @Service
-public class DeparmentService {
+public class DepartmentService {
     @Autowired
     private DepartmentEntityMapper departmentEntityMapper;
 
-    public int deleteDeparment(DepartmentVo vo){
+    public int deleteDepartment(DepartmentVo vo){
 
         // 删除
         DepartmentEntity departmentEntity= new DepartmentEntity();

@@ -3,23 +3,14 @@ package com.daoli.office.server.controller.sheng.tai.manage;
 import com.daoli.office.vo.JsonResponse;
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiDepartmentExamVo;
-import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamVo;
-import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamStatusConstant;
-import com.daoli.sheng.tai.entity.DepartmentExamEntity;
 import com.daoli.sheng.tai.service.ExamRecordService;
-import com.daoli.sheng.tai.service.ShengTaiDepartmentEaxmService;
+import com.daoli.sheng.tai.service.ShengTaiDepartmentExamService;
 import com.daoli.sheng.tai.service.ShengTaiExamService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * AUTO-GENERATED: wln @ 2019/8/20 下午8:52
@@ -34,7 +25,7 @@ import java.util.List;
 public class DepartmentExamController {
 
     @Autowired
-    private ShengTaiDepartmentEaxmService shengTaiDepartmentEaxmService;
+    private ShengTaiDepartmentExamService shengTaiDepartmentExamService;
     @Autowired
     private ShengTaiExamService shengTaiExamService; //shengTaiExamService
     @Autowired
@@ -44,7 +35,7 @@ public class DepartmentExamController {
     @ApiOperation(value = "批量删除分配")
     @RequestMapping(value = "/delete_batch_department_exam", method = RequestMethod.POST)
     public JsonResponse deleteBatchDepartmentExam(@RequestBody ShengtaiDepartmentExamVo[] vos) {
-     return new JsonResponse(shengTaiDepartmentEaxmService.deleteBatchDepartmentExam(vos));
+     return new JsonResponse(shengTaiDepartmentExamService.deleteBatchDepartmentExam(vos));
     }
 
     @ResponseBody
@@ -53,7 +44,7 @@ public class DepartmentExamController {
     )
     @RequestMapping(value = "/query_departments_by_exam_primary_id", method = RequestMethod.POST)
     public JsonResponse queryDepartmentsByExamPrimaryId(@RequestBody ShengtaiExamVo vo){
-      return  new JsonResponse(shengTaiDepartmentEaxmService.queryDepartmentsByExamPrimaryId(vo));
+      return  new JsonResponse(shengTaiDepartmentExamService.queryDepartmentsByExamPrimaryId(vo));
     }
 
     @ResponseBody
@@ -62,7 +53,7 @@ public class DepartmentExamController {
     )
     @RequestMapping(value = "/query_exams_detail_by_department_primary_id", method = RequestMethod.POST)
     public JsonResponse queryExamsDetailByDepartmentPrimaryId(@RequestBody DepartmentVo vo){
-       return  new JsonResponse(shengTaiDepartmentEaxmService.queryExamsDetailByDepartmentPrimaryId(vo));
+       return  new JsonResponse(shengTaiDepartmentExamService.queryExamsDetailByDepartmentPrimaryId(vo));
     }
 
 //    @ResponseBody

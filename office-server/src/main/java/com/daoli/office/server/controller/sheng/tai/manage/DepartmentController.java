@@ -2,22 +2,11 @@ package com.daoli.office.server.controller.sheng.tai.manage;
 
 import com.daoli.office.vo.JsonResponse;
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
-import com.daoli.office.vo.sheng.tai.ShengtaiDepartmentExamVo;
-import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
-import com.daoli.office.vo.sheng.tai.ShengtaiExamVo;
-import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamStatusConstant;
-import com.daoli.sheng.tai.entity.DepartmentExamEntity;
-import com.daoli.sheng.tai.service.DeparmentService;
+import com.daoli.sheng.tai.service.DepartmentService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * AUTO-GENERATED: wln @ 2019/8/20 下午8:52
@@ -35,7 +24,7 @@ import java.util.List;
 public class DepartmentController {
 
     @Autowired
-    private DeparmentService deparmentService;
+    private DepartmentService deparmentService;
 
     @ResponseBody
     @ApiOperation(value = "增加部门")

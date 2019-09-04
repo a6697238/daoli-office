@@ -1,16 +1,20 @@
 package com.daoli.sheng.tai.service;
 
+import static com.daoli.constant.DBconstant.IN_VALID;
 import static com.daoli.constant.DBconstant.VALID;
 
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiDepartmentExamVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamVo;
 import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamStatusConstant;
+import com.daoli.sheng.tai.entity.DepartmentExamEntity;
 import com.daoli.sheng.tai.entity.ShengTaiExamEntity;
+import com.daoli.sheng.tai.mapper.DepartmentExamEntityMapper;
 import com.daoli.sheng.tai.mapper.ShengTaiExamEntityMapper;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,14 +33,10 @@ public class ShengTaiExamService {
     @Autowired
     private ShengTaiExamEntityMapper examMapper;
 
-    @Autowired
-    private ShengTaiDepartmentEaxmService shengTaiDepartmentEaxmService;
 
     @Autowired
-    private ExamRecordService examRecordService;
+    private DepartmentExamEntityMapper departmentExamEntityMapper;
 
-    @Autowired
-    private  DeparmentService deparmentService;
     // 考试状态单独类 done
     // 只有在 考核未开始的状况可以删除 ，需要在deleteExam 验证一下。 done
     // exam 在未开始的时候，可以修改的东西 done
@@ -58,88 +58,77 @@ public class ShengTaiExamService {
     /**
      * 批量添加 考试信息
      */
-    public Map<String, Object> addBatchExam(List<ShengtaiExamVo> vos) {
-        Map<String, Object> resMap = Maps.newHashMap();
+    @Transactional(rollbackFor = Exception.class)
+    public Map<Integer, Object> addBatchExam(List<ShengtaiExamVo> vos) {
+        Map<Integer, Object> resMap = Maps.newHashMap();
         for (ShengtaiExamVo vo : vos) {
-            if (addExam(vo) == 1) {
-                resMap.put(vo.getExamName(), true);
-            } else {
-                resMap.put(vo.getExamName(), false);
-            }
-        }
-        return resMap;
-    }
-
-    public int addExam(ShengtaiExamVo vo) {
-        int res = 0;
-        try {
             ShengTaiExamEntity examEntity = new ShengTaiExamEntity();
             BeanUtils.copyProperties(vo, examEntity);
             examEntity.setValid(VALID);
+            examEntity.setExamId(UUID.randomUUID().toString());
             examEntity.setStartTime(new Date());
             examEntity.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_DAI_FA_BU);
-            res = examMapper.insertSelective(examEntity);
-        } catch (Exception e) {
-            log.error("fail to add Exam ", e);
+            examMapper.insertSelective(examEntity);
+            resMap.put(examEntity.getId(), true);
         }
-
-        return res;
+        return resMap;
     }
 
-    public Map<String, Object> assignBatchExam(List<ShengtaiDepartmentExamVo> vos) {
+
+    /**
+     * 1.删除现有的关系
+     * 2.新增新的关系
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> assignBatchExam(String examId,
+            List<String> departmentIds) {
         Map<String, Object> resMap = Maps.newHashMap();
-        for(ShengtaiDepartmentExamVo vo:vos) {
-            int res = shengTaiDepartmentEaxmService.insertDeparmentExam(vo);
+        Map<String, Object> deleteMap = Maps.newHashMap();
+        Map<String, Object> addMap = Maps.newHashMap();
 
-            //更新 exam assigned num
-            ShengtaiExamVo argExamVo = new ShengtaiExamVo();
-            argExamVo.setExamId(vo.getExamId());
-            ShengtaiExamVo filledExamVo = queryExamByExamId(argExamVo);
-            ShengtaiExamVo updateExamVo = new ShengtaiExamVo();
-            updateExamVo.setId(filledExamVo.getId());
-            updateExamVo.setAssignedNum(filledExamVo.getAssignedNum() +1);
-            updateExam(updateExamVo);
+        List<DepartmentExamEntity> examEntityList = departmentExamEntityMapper
+                .queryDepartmentExamByExamId(examId);
+        for (DepartmentExamEntity entity : examEntityList) {
+            entity.setValid(IN_VALID);
+            if (departmentExamEntityMapper.updateByPrimaryKeySelective(entity) > 0) {
+                deleteMap.put("delete", entity.getDepartmentId());
+            }
+        }
 
-            if (res == 0){
-                resMap.put(vo.getExamId()+"," +vo.getDepartmentId(), false);
-            } else {
-                resMap.put(vo.getExamId()+"," +vo.getDepartmentId(), true);
+        for (String departmentId : departmentIds) {
+            DepartmentExamEntity entity = DepartmentExamEntity.builder().createTime(new Date())
+                    .examId(examId).departmentId(departmentId).valid(VALID).build();
+            departmentExamEntityMapper.insertSelective(entity);
+            deleteMap.put("add", departmentId);
+        }
+        resMap.put("addMap", addMap);
+        resMap.put("deleteMap", deleteMap);
+        return resMap;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Map<Integer, Object> publishBatchExam(Integer[] examPIds) {
+        Map<Integer, Object> resMap = Maps.newHashMap();
+        for (Integer id : examPIds) {
+            ShengTaiExamEntity examEntity = examMapper.selectByPrimaryKey(id);
+            examEntity.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_WEI_KAI_SHI);
+            if (examMapper.updateByPrimaryKeySelective(examEntity) > 0) {
+                resMap.put(examEntity.getId(), true);
             }
         }
         return resMap;
     }
 
-    public Map<String, Object> publishBatchExam(ShengtaiExamVo[] vos){
-        Map<String, Object> resMap = Maps.newHashMap();
-        for (ShengtaiExamVo vo : vos) {
-            vo.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_WEI_KAI_SHI);
-            int res = updateExam(vo);
-            if (res == 0) {
-                resMap.put(vo.getExamId(),false);
-            } else {
-                resMap.put(vo.getExamId(),true);
-            }
-        }
-        return resMap;
-    }
 
-    public Map<String, Object> backoutPublishBatchExam(ShengtaiExamVo[] vos){
-        Map<String, Object> resMap = Maps.newHashMap();
-        for (ShengtaiExamVo vo : vos) {
-            ShengtaiExamVo filledVo = selectExamById(vo);
-            if (StringUtils.isEmpty(filledVo.getExamStatus() )){
-                resMap.put(filledVo.getExamId() , false);
-            } else {
-                if (filledVo.getExamStatus().equals(ShengTaiExamStatusConstant.KAO_HE_WEI_KAI_SHI)) {
-                    filledVo.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_DAI_FA_BU);
-                    int res = updateExam(filledVo);
-                    if (res == 0) {
-                        resMap.put(filledVo.getExamId() , false);
-                    } else {
-                        resMap.put(filledVo.getExamId() , true);
-                    }
-                } else {
-                    resMap.put(filledVo.getExamId() , false);
+    @Transactional(rollbackFor = Exception.class)
+    public Map<Integer, Object> rollbackPublishBatchExam(Integer[] examPIds) {
+        Map<Integer, Object> resMap = Maps.newHashMap();
+        for (Integer id : examPIds) {
+            ShengTaiExamEntity examEntity = examMapper.selectByPrimaryKey(id);
+            if (ShengTaiExamStatusConstant.KAO_HE_WEI_KAI_SHI.equals(examEntity.getExamStatus())) {
+                examEntity.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_DAI_FA_BU);
+                if (examMapper.updateByPrimaryKeySelective(examEntity) > 0) {
+                    resMap.put(examEntity.getId(), true);
                 }
             }
         }
@@ -147,79 +136,39 @@ public class ShengTaiExamService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> deleteBatchExam(ShengtaiExamVo[] vos){
-        Map<String,Object> resMap = Maps.newHashMap();
-        for (ShengtaiExamVo vo : vos) {
-            // 删除 departmentExam
-            ShengtaiDepartmentExamVo argDepartmentExamVo = new ShengtaiDepartmentExamVo();
-            argDepartmentExamVo.setExamId(vo.getExamId());
-            List<ShengtaiDepartmentExamVo> deparmentExamsWithSameExamId
-                    = shengTaiDepartmentEaxmService.selectDeparmentExamByField(argDepartmentExamVo);
-            for (ShengtaiDepartmentExamVo oneDepartmentExamVo : deparmentExamsWithSameExamId) {
-                shengTaiDepartmentEaxmService.deleteDeparmentExam(oneDepartmentExamVo);
-            }
-            // 删除 record
-
-            int res = deleteExam(vo);
-            if (res == 0) {
-                resMap.put(vo.getExamId() , false);
-            } else {
-                resMap.put(vo.getExamId() , true);
+    public Map<Integer, Object> deleteBatchExam(Integer[] examPIds) {
+        Map<Integer, Object> resMap = Maps.newHashMap();
+        for (Integer id : examPIds) {
+            ShengTaiExamEntity examEntity = examMapper.selectByPrimaryKey(id);
+            examEntity.setValid(IN_VALID);
+            if (examMapper.updateByPrimaryKeySelective(examEntity) > 0) {
+                resMap.put(examEntity.getId(), true);
             }
         }
         return resMap;
     }
 
-    public List<DepartmentVo> queryAssignedDepartsmensByExamPrimaryId(ShengtaiExamVo vo){
-        ShengtaiExamVo filledExamVo = selectExamById(vo);
-        ShengtaiDepartmentExamVo argShengtaiDepartmentExamVo = new ShengtaiDepartmentExamVo();
-        argShengtaiDepartmentExamVo.setExamId(filledExamVo.getExamId());
-        List<ShengtaiDepartmentExamVo> listShengtaiDepartmentExamVo = shengTaiDepartmentEaxmService.selectDeparmentExamByField(argShengtaiDepartmentExamVo);
-
-        List<DepartmentVo> res = new  ArrayList<DepartmentVo>();
-        for (ShengtaiDepartmentExamVo oneShengtaiDepartmentExamVo: listShengtaiDepartmentExamVo){
-            res.add(deparmentService.queryDepartmentById(oneShengtaiDepartmentExamVo.getId()));
-        }
-        return res;
+    public List<DepartmentVo> queryAssignedDepartmentsByExamId(String examId) {
+        return departmentExamEntityMapper.queryAssignedDepartmentsByExamId(examId);
     }
 
-    public List<DepartmentVo> queryNotAssignedDepartsmensByExamPrimaryId(ShengtaiExamVo vo){
-        ShengtaiExamVo filledExamVo = selectExamById(vo);
-        ShengtaiDepartmentExamVo argShengtaiDepartmentExamVo = new ShengtaiDepartmentExamVo();
-        argShengtaiDepartmentExamVo.setExamId(filledExamVo.getExamId());
-        List<ShengtaiDepartmentExamVo> listShengtaiDepartmentExamVo = shengTaiDepartmentEaxmService.selectDeparmentExamByField(argShengtaiDepartmentExamVo);
-
-        Map<Integer,DepartmentVo>  mapAssignedDepartment = new HashMap<>();
-        for (ShengtaiDepartmentExamVo oneShengtaiDepartmentExamVo: listShengtaiDepartmentExamVo){
-            mapAssignedDepartment.put(oneShengtaiDepartmentExamVo.getId(), deparmentService.queryDepartmentById(oneShengtaiDepartmentExamVo.getId()));
-        }
-        List<DepartmentVo> allDepartment = deparmentService.queryAllDepartment();
-        Map<Integer,DepartmentVo> mapAllDepartment = new HashMap<>();
-        for(DepartmentVo oneDepartment : allDepartment){
-            mapAllDepartment.put(oneDepartment.getId(),oneDepartment);
-        }
-        Map<Integer,DepartmentVo>  mapNotAssigned = Maps.difference(mapAllDepartment, mapAssignedDepartment).entriesInCommon();
-
-        List<DepartmentVo> res = new ArrayList<>();
-        for(DepartmentVo notVo : mapNotAssigned.values()){
-            res.add(notVo);
-        }
-        return res;
+    public List<DepartmentVo> queryNotAssignedDepartsmensByExamPrimaryId(String examId) {
+        return departmentExamEntityMapper.queryNotAssignedDepartmentsByExamId(examId);
     }
-    //////////-------------------------------
 
     public int updateExam(ShengtaiExamVo vo) {
-        ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
+        ShengTaiExamEntity examEntity = new ShengTaiExamEntity();
         // vo 不设置某个属性，属性就不会被拷贝到新对象，满足selective。
-        BeanUtils.copyProperties(vo, examEntry);
-        return examMapper.updateByPrimaryKeySelective(examEntry);
+        BeanUtils.copyProperties(vo, examEntity);
+        examEntity.setValid(VALID);
+        return examMapper.updateByPrimaryKeySelective(examEntity);
     }
 
     public int deleteExam(ShengtaiExamVo vo) {
         ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
         BeanUtils.copyProperties(vo, examEntry);
 
-        examEntry.setValid(new Byte((byte) 0));
+        examEntry.setValid(VALID);
         return examMapper.updateByPrimaryKeySelective(examEntry);
     }
 
@@ -227,42 +176,37 @@ public class ShengTaiExamService {
     public int deleteExamByExamId(ShengtaiExamVo vo) {
         ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
         BeanUtils.copyProperties(vo, examEntry);
-        examEntry.setValid(new Byte((byte) 0));
+        examEntry.setValid(VALID);
         //return examMapper.deleteByPrimaryKey(vo.getId());
         return examMapper.updateByPrimaryKeySelective(examEntry);
     }
 
 
-    public int startExam(ShengtaiExamVo arg_vo) {
-        arg_vo.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_JIN_XING_ZHONG);
-        return updateExam(arg_vo);
+    public int startExam(ShengtaiExamVo shengtaiExamVo) {
+        shengtaiExamVo.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_JIN_XING_ZHONG);
+        return updateExam(shengtaiExamVo);
     }
 
-    public int endExam(ShengtaiExamVo arg_vo) {
-        arg_vo.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_ZHENG_CHANG_JIE_SHU);
-        return updateExam(arg_vo);
-    }
-
-    public ShengtaiExamVo selectExamById(ShengtaiExamVo vo) {
-        ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
-        BeanUtils.copyProperties(vo, examEntry);
-        ShengtaiExamVo res_vo = new ShengtaiExamVo();
-        BeanUtils.copyProperties(examMapper.selectByPrimaryKey(vo.getId()), res_vo);
-        return res_vo;
+    public int endExam(ShengtaiExamVo vo) {
+        vo.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_ZHENG_CHANG_JIE_SHU);
+        return updateExam(vo);
     }
 
 
-    public ShengtaiExamVo queryExamByExamId(ShengtaiExamVo vo) {
-        ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
-        examEntry.setExamId(vo.getExamId());
-        List<ShengTaiExamEntity> res = examMapper.selectByField(examEntry);
-        ShengtaiExamVo vo_res = new ShengtaiExamVo();
-        if (res.size() > 1 || res.size() <= 0) {
-            return null;
-        }
-        BeanUtils.copyProperties(res.get(0), vo_res);
-        return vo_res;
+    public ShengtaiExamVo queryExamByPId(Integer examPid) {
+        ShengTaiExamEntity res = examMapper.selectByPrimaryKey(examPid);
+        ShengtaiExamVo vo = ShengtaiExamVo.builder().build();
+        BeanUtils.copyProperties(res, vo);
+        return vo;
     }
+
+    public ShengtaiExamVo queryExamByExamId(String examId) {
+        ShengTaiExamEntity res = examMapper.queryByExamId(examId);
+        ShengtaiExamVo vo = ShengtaiExamVo.builder().build();
+        BeanUtils.copyProperties(res, vo);
+        return vo;
+    }
+
 
     public List<ShengtaiExamVo> selectExamByField(ShengtaiExamVo vo) {
         ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
@@ -304,16 +248,16 @@ public class ShengTaiExamService {
         arr_res_vo.add(res_by_exam_id.get(0));
 
         // 父亲
-        if (res_by_exam_id.get(0).getParentExamId()!= null && res_by_exam_id.get(0).getParentExamId() != 0 )
-        {
+        if (res_by_exam_id.get(0).getParentExamId() != null
+                && res_by_exam_id.get(0).getParentExamId() != 0) {
             ShengtaiExamVo parent_vo = new ShengtaiExamVo();
-            parent_vo.setId( res_by_exam_id.get(0).getParentExamId());
+            parent_vo.setId(res_by_exam_id.get(0).getParentExamId());
             ShengtaiExamVo parent_vo_detail = queryExamDetailByExamBusinessId(parent_vo);
             arr_res_vo.add(parent_vo_detail);
 
-            if(parent_vo.getParentExamId() != null && parent_vo.getParentExamId() != 0){
+            if (parent_vo.getParentExamId() != null && parent_vo.getParentExamId() != 0) {
                 ShengtaiExamVo parent_vo_2 = new ShengtaiExamVo();
-                parent_vo_2.setId( parent_vo.getParentExamId());
+                parent_vo_2.setId(parent_vo.getParentExamId());
                 arr_res_vo.add(queryExamDetailByExamBusinessId(parent_vo_2));
             }
         }
@@ -328,26 +272,26 @@ public class ShengTaiExamService {
     // 获得一个 exam 的子树结构
     public List<ShengtaiExamVo> queryExamSubTreeByExamIdOrId(ShengtaiExamVo arg_exam_vo) {
 
-        List<ShengtaiExamVo> res = null;
-
-        if (arg_exam_vo.getExamId() != null) {
-            ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
-            query_exam_vo.setParentExamId(arg_exam_vo.getId());
-            res = selectExamByField(query_exam_vo);
-        } else if (arg_exam_vo.getId() != null) {
-            ShengtaiExamVo arg_exam_vo_detail = queryExamByExamId(arg_exam_vo);
-            ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
-            query_exam_vo.setParentExamId(arg_exam_vo_detail.getId());
-            res = selectExamByField(query_exam_vo);
-        }
-        if (res != null) {
-            for (ShengtaiExamVo iter_vo : res) {
-                ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
-                query_exam_vo.setParentExamId(iter_vo.getId());
-                res.addAll(selectExamByField(query_exam_vo));
-            }
-        }
-        return res;
+//        List<ShengtaiExamVo> res = null;
+//
+//        if (arg_exam_vo.getExamId() != null) {
+//            ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
+//            query_exam_vo.setParentExamId(arg_exam_vo.getId());
+//            res = selectExamByField(query_exam_vo);
+//        } else if (arg_exam_vo.getId() != null) {
+//            ShengtaiExamVo arg_exam_vo_detail = queryExamByExamId(arg_exam_vo);
+//            ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
+//            query_exam_vo.setParentExamId(arg_exam_vo_detail.getId());
+//            res = selectExamByField(query_exam_vo);
+//        }
+//        if (res != null) {
+//            for (ShengtaiExamVo iter_vo : res) {
+//                ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
+//                query_exam_vo.setParentExamId(iter_vo.getId());
+//                res.addAll(selectExamByField(query_exam_vo));
+//            }
+//        }
+        return null;
     }
 
     // 获得 一个 exam 的详细信息, 通过 exam id

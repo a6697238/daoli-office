@@ -1,6 +1,9 @@
 package com.daoli.office.vo.sheng.tai;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -9,6 +12,9 @@ import java.util.Date;
  */
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ShengtaiDepartmentExamVo {
 
     private Integer id;
@@ -20,6 +26,4 @@ public class ShengtaiDepartmentExamVo {
     private Date modifyTime;
 
     private Date createTime;
-
-    //private Byte valid;
 }
