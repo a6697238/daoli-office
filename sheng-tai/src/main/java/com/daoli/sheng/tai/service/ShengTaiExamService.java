@@ -11,7 +11,9 @@ import com.daoli.sheng.tai.entity.DepartmentExamEntity;
 import com.daoli.sheng.tai.entity.ShengTaiExamEntity;
 import com.daoli.sheng.tai.mapper.DepartmentExamEntityMapper;
 import com.daoli.sheng.tai.mapper.ShengTaiExamEntityMapper;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
@@ -259,36 +261,25 @@ public class ShengTaiExamService {
             }
         }
         // 子树
-        List<ShengtaiExamVo> sub_tree = queryExamSubTreeByExamIdOrId(res_by_exam_id.get(0));
-        if (sub_tree != null && sub_tree.size() > 0) {
-
-        }
+//        List<ShengtaiExamVo> sub_tree = queryExamSubTreeByExamIdOrId(res_by_exam_id.get(0));
+//        if (sub_tree != null && sub_tree.size() > 0) {
+//
+//        }
         return arr_res_vo;
     }
 
     // 获得一个 exam 的子树结构
-    public List<ShengtaiExamVo> queryExamSubTreeByExamIdOrId(ShengtaiExamVo arg_exam_vo) {
+    public List<ShengtaiExamVo> queryExamSubTreeByExamIdOrId(Integer examPid) {
 
-//        List<ShengtaiExamVo> res = null;
-//
-//        if (arg_exam_vo.getExamId() != null) {
-//            ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
-//            query_exam_vo.setParentExamId(arg_exam_vo.getId());
-//            res = selectExamByField(query_exam_vo);
-//        } else if (arg_exam_vo.getId() != null) {
-//            ShengtaiExamVo arg_exam_vo_detail = queryExamByExamId(arg_exam_vo);
-//            ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
-//            query_exam_vo.setParentExamId(arg_exam_vo_detail.getId());
-//            res = selectExamByField(query_exam_vo);
-//        }
-//        if (res != null) {
-//            for (ShengtaiExamVo iter_vo : res) {
-//                ShengtaiExamVo query_exam_vo = new ShengtaiExamVo();
-//                query_exam_vo.setParentExamId(iter_vo.getId());
-//                res.addAll(selectExamByField(query_exam_vo));
-//            }
-//        }
+
+        List<ShengTaiExamEntity> zhibiaoList = Lists.newArrayList();
+
+        for(ShengTaiExamEntity examEntity : zhibiaoList){
+            zhibiaoList.addAll(Lists.newArrayList());
+        }
+
         return null;
+
     }
 
     // 获得 一个 exam 的详细信息, 通过 exam id
