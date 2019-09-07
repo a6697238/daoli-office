@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * AUTO-GENERATED: wln @ 2019/8/20 下午8:52
  *
@@ -27,26 +30,29 @@ public class DepartmentController {
     private DepartmentService deparmentService;
 
     @ResponseBody
-    @ApiOperation(value = "增加部门")
+    @ApiOperation(value = "批量增加部门, departmentId、valid、create_time、modify_time 等后台自动填充")
     @RequestMapping(value = "/add_department", method = RequestMethod.POST)
-    public JsonResponse addDepartment(@RequestBody DepartmentVo vo) {
-        int res = 0;
-
-        res = deparmentService.insertDeparment(vo);
-        if (res != 0) {
-            return new JsonResponse();
-        } else {
-            return new JsonResponse(false,"fail");
+    public JsonResponse addDepartment(@RequestBody DepartmentVo[] vos) {
+        Map<String,Boolean> resMap = new HashMap<>();
+        for (DepartmentVo vo:vos) {
+            int res = 0;
+            res = deparmentService.insertDeparment(vo);
+            if (res != 0) {
+                resMap.put(vo.getDepartmentName(),true);
+            } else {
+                resMap.put(vo.getDepartmentName(),false);
+            }
         }
+        return  new JsonResponse(resMap);
     }
 
     @ResponseBody
     @ApiOperation(value = "删除 部门")
     @RequestMapping(value = "/delete_department", method = RequestMethod.POST)
-    public JsonResponse deleteDepartmen(@RequestBody DepartmentVo vo) {
+    public JsonResponse deleteDepartmen(@RequestBody Integer departmentPId) {
         int res = 0;
 
-//        res = deparmentService.deleteDeparment(vo);
+        res = deparmentService.deleteDepartment(departmentPId);
         if (res != 0) {
             return new JsonResponse();
         } else {

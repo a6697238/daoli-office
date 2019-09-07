@@ -210,7 +210,15 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="selectByField"  resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity"  >
+  <select id="queryByExamId"  resultMap="BaseResultMap" parameterType="java.lang.String"  >
+
+    select
+    <include refid="Base_Column_List" />
+    from tbl_shengtai_exam
+    where  valid = "1"  and exam_id = #{examId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="queryExamsByCondition"  resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity"  >
 
     select
     <include refid="Base_Column_List" />
@@ -307,7 +315,7 @@
     </trim>
   </select>
 
-  <select id="selectByFieldFuzzy"  resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity"  >
+  <select id="queryExamsByFuzzyCondition"  resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity"  >
 
     select
     <include refid="Base_Column_List" />
@@ -336,5 +344,15 @@
         start_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
       </if>
     </trim>
+  </select>
+
+  <select id="queryAllExams"  resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity"  >
+
+    select
+    <include refid="Base_Column_List" />
+    from tbl_shengtai_exam
+    where
+
+    valid = "1"
   </select>
 </mapper>

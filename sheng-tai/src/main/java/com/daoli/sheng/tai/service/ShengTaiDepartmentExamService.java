@@ -92,20 +92,20 @@ public class ShengTaiDepartmentExamService {
         return null ; // selectDeparmentExamByField(argAssingVo);
     }
 
-    public List<ShengtaiExamVo>  queryExamsDetailByDepartmentPrimaryId(DepartmentVo vo){
-        DepartmentVo filledDepartmentVo = filledDepartmentVo = deparmentService.queryDepartmentById(vo.getId());
+    public List<ShengtaiExamVo>  queryExamsDetailByDepartmentPrimaryId(Integer departmentPid){
+        DepartmentVo filledDepartmentVo = deparmentService.queryDepartmentById(departmentPid);
 
         ShengtaiDepartmentExamVo argAssingVo = new ShengtaiDepartmentExamVo();
-        argAssingVo.setExamId(filledDepartmentVo.getDepartmentId());
+        argAssingVo.setDepartmentId(filledDepartmentVo.getDepartmentId());
         List<ShengtaiDepartmentExamVo> listAssign = selectDeparmentExamByField(argAssingVo);
 
         List<ShengtaiExamVo> res = new ArrayList<>();
         for (ShengtaiDepartmentExamVo oneAssign :listAssign){
-            ShengtaiExamVo argExamVo = new ShengtaiExamVo();
-            argExamVo.setExamId(oneAssign.getExamId());
-            res.add(shengTaiExamService.queryExamDetailByExamBusinessId(argExamVo));
+            //ShengtaiExamVo argExamVo = new ShengtaiExamVo();
+            //argExamVo.setExamId(oneAssign.getExamId());
+            res.add(shengTaiExamService.queryExamByExamId(oneAssign.getExamId()));
         }
-       return null;
+       return res;
     }
     /////////--------------------///////////////------------------////////----------------//////
 

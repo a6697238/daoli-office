@@ -31,29 +31,23 @@ public class DepartmentExamController {
     @Autowired
     private ExamRecordService examRecordService;
 
-    @ResponseBody
-    @ApiOperation(value = "批量删除分配")
-    @RequestMapping(value = "/delete_batch_department_exam", method = RequestMethod.POST)
-    public JsonResponse deleteBatchDepartmentExam(@RequestBody ShengtaiDepartmentExamVo[] vos) {
-     return new JsonResponse(shengTaiDepartmentExamService.deleteBatchDepartmentExam(vos));
-    }
 
-    @ResponseBody
-    @ApiOperation(
-            value = "通过 exam id 获得 分配的部门list"
-    )
-    @RequestMapping(value = "/query_departments_by_exam_primary_id", method = RequestMethod.POST)
-    public JsonResponse queryDepartmentsByExamPrimaryId(@RequestBody ShengtaiExamVo vo){
-      return  new JsonResponse(shengTaiDepartmentExamService.queryDepartmentsByExamPrimaryId(vo));
-    }
+    //@ResponseBody
+    //@ApiOperation(
+    //        value = "通过 exam id 获得 分配的部门list"
+    //)
+    //@RequestMapping(value = "/query_departments_by_exam_primary_id", method = RequestMethod.POST)
+    //public JsonResponse queryDepartmentsByExamPrimaryId(@RequestBody ShengtaiExamVo vo){
+    //  return  new JsonResponse(shengTaiDepartmentExamService.queryDepartmentsByExamPrimaryId(vo));
+    //}
 
     @ResponseBody
     @ApiOperation(
             value = "通过 department id 获得分配的考核要点"
     )
     @RequestMapping(value = "/query_exams_detail_by_department_primary_id", method = RequestMethod.POST)
-    public JsonResponse queryExamsDetailByDepartmentPrimaryId(@RequestBody DepartmentVo vo){
-       return  new JsonResponse(shengTaiDepartmentExamService.queryExamsDetailByDepartmentPrimaryId(vo));
+    public JsonResponse queryExamsDetailByDepartmentPrimaryId(@RequestBody  Integer departmentPid){
+       return  new JsonResponse(shengTaiDepartmentExamService.queryExamsDetailByDepartmentPrimaryId(departmentPid));
     }
 
 //    @ResponseBody

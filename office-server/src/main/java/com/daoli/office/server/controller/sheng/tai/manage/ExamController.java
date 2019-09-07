@@ -97,7 +97,7 @@ public class ExamController {
     @RequestMapping(value = "/start_exam", method = RequestMethod.POST)
     public JsonResponse startExam(@RequestParam Integer examPId) {
         ShengtaiExamVo vo = shengTaiExamService.queryExamByPId(examPId);
-        if (ShengTaiExamStatusConstant.KAO_HE_WEI_KAI_SHI.equals(vo.getExamStatus())) {
+        if (ShengTaiExamStatusConstant.KAO_HE_YI_FA_BU.equals(vo.getExamStatus())) {
             if (shengTaiExamService.startExam(examPId) > 0) {
                 return new JsonResponse();
             }
@@ -113,7 +113,7 @@ public class ExamController {
     public JsonResponse endExam(@RequestParam Integer examPId) {
         ShengtaiExamVo vo = shengTaiExamService.queryExamByPId(examPId);
         // 只能在 考核未开始 状态下 才能进行删除
-        if (ShengTaiExamStatusConstant.KAO_HE_WEI_KAI_SHI.equals(vo.getExamStatus())) {
+        if (ShengTaiExamStatusConstant.KAO_HE_YI_FA_BU.equals(vo.getExamStatus())) {
             if (shengTaiExamService.endExam(examPId) > 0) {
                 return new JsonResponse();
             }
@@ -146,7 +146,7 @@ public class ExamController {
     )
     @RequestMapping(value = "/query_exams_by_and_fields", method = RequestMethod.GET)
     public JsonResponse queryExamsByAndFields(@RequestBody ShengtaiExamVo vo) {
-        return new JsonResponse(shengTaiExamService.selectExamByField(vo));
+        return new JsonResponse(shengTaiExamService.queryExamsByCondition(vo));
     }
 
     @ResponseBody
@@ -174,8 +174,7 @@ public class ExamController {
     @RequestMapping(value = "/query_all_exams", method = RequestMethod.POST)
     public JsonResponse queryAllExam() {
 
-        ShengtaiExamVo vo = new ShengtaiExamVo();
-        List<ShengtaiExamVo> allVo = shengTaiExamService.selectExamByFieldFuzzy(vo);
+        List<ShengtaiExamVo> allVo = shengTaiExamService.queryAllExams();
         return new JsonResponse(allVo);
     }
 

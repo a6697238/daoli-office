@@ -15,15 +15,17 @@ public interface ShengTaiExamEntityMapper {
     int insertSelective(ShengTaiExamEntity record);
 
     ShengTaiExamEntity selectByPrimaryKey(Integer id);
+    ShengTaiExamEntity queryByExamId(String examId);
 
     int updateByPrimaryKeySelective(ShengTaiExamEntity record);
 
     int updateByPrimaryKey(ShengTaiExamEntity record);
 
-    List<ShengTaiExamEntity> selectByField(ShengTaiExamEntity record);
+    List<ShengTaiExamEntity> queryExamsByCondition(ShengTaiExamEntity record);
 
-    List<ShengTaiExamEntity> selectByFieldFuzzy(ShengTaiExamEntity record);
+    List<ShengTaiExamEntity> queryExamsByFuzzyCondition(ShengTaiExamEntity record);
+    List<ShengTaiExamEntity> queryAllExams();
 
-    ShengTaiExamEntity queryByExamId(String examId);
+    //ShengTaiExamEntity queryByExamId(String examId);
 
 }

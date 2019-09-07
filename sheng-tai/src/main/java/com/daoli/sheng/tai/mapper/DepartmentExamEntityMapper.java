@@ -1,6 +1,7 @@
 package com.daoli.sheng.tai.mapper;
 
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
+import com.daoli.sheng.tai.entity.DepartmentEntity;
 import com.daoli.sheng.tai.entity.DepartmentExamEntity;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -22,14 +23,14 @@ public interface DepartmentExamEntityMapper {
 
     int updateByPrimaryKey(DepartmentExamEntity record);
 
-    List<DepartmentExamEntity> queryDepartmentExamByExamId(@Param("examIds")String examIds);
+    List<DepartmentExamEntity> queryDepartmentExamByExamId(@Param("examId")String examId);
 
     List<DepartmentExamEntity> queryDepartmentExamByDepartmentId(@Param("departmentIds")String departmentIds);
 
     ArrayList<DepartmentExamEntity> selectByField(DepartmentExamEntity record);
 
-    List<DepartmentVo> queryAssignedDepartmentsByExamId(@Param("examId")String examId);
+    List<DepartmentEntity> queryAssignedDepartmentsByExamId(@Param("examId")String examId);
 
-    List<DepartmentVo> queryNotAssignedDepartmentsByExamId(@Param("examId")String examId);
+    List<DepartmentEntity> queryNotAssignedDepartmentsByExamId(@Param("examId")String examId);
 
 }
