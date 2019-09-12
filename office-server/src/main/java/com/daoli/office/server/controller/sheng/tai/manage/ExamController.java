@@ -37,7 +37,7 @@ public class ExamController {
     //3.对于这种场景，应该是部分成功，部分失败
     //4.批量接口 用 list来承接
     @ResponseBody
-    @ApiOperation(value = "批量插入")
+    @ApiOperation(value = "批量插入，createUid、examName、examDesc、examType、examStatus、parentExamId，必须。其中 parentExamId = 0表示分类；examStatus默认为 '待发布'")
     @RequestMapping(value = "/add_batch_exam", method = RequestMethod.POST)
     public JsonResponse addBatchExam(@RequestBody List<ShengtaiExamVo> vos) {
         return new JsonResponse(shengTaiExamService.addBatchExam(vos));
@@ -45,7 +45,7 @@ public class ExamController {
 
 
     @ResponseBody
-    @ApiOperation(value = "批量分配")
+    @ApiOperation(value = "批量分配, examId 表示 exam 业务键，departmentId 部门业务键 list 。")
     @RequestMapping(value = "/assign_batch_exam", method = RequestMethod.POST)
     public JsonResponse assignBatchExam(@RequestParam String examId,
             @RequestParam List<String> departmentId) {
@@ -53,21 +53,21 @@ public class ExamController {
     }
 
     @ResponseBody
-    @ApiOperation(value = "批量发布")
+    @ApiOperation(value = "批量发布, examPIds exam 数据库主键 list")
     @RequestMapping(value = "/publish_batch_exam", method = RequestMethod.POST)
     public JsonResponse publishBatchExam(@RequestParam Integer[] examPIds) {
         return new JsonResponse(shengTaiExamService.publishBatchExam(examPIds));
     }
 
     @ResponseBody
-    @ApiOperation(value = "撤销发布")
+    @ApiOperation(value = "撤销发布， examPIds exam 数据库主键 list")
     @RequestMapping(value = "/rollback_publish_batch_exam", method = RequestMethod.POST)
     public JsonResponse rollbackPublishBatchExam(@RequestParam Integer[] examPIds) {
         return new JsonResponse(shengTaiExamService.rollbackPublishBatchExam(examPIds));
     }
 
 
-    @ApiOperation(value = "批量删除")
+    @ApiOperation(value = "批量删除，examPIds exam 数据库主键 list")
     @RequestMapping(value = "/delete_batch_exam", method = RequestMethod.POST)
     public JsonResponse deleteBatchExam(@RequestParam Integer[] examPIds) {
         return new JsonResponse(shengTaiExamService.deleteBatchExam(examPIds));
@@ -76,7 +76,7 @@ public class ExamController {
 
     @ResponseBody
     @ApiOperation(
-            value = "更改一条考核考核分类、考核指标或考核要点"
+            value = "更改一条考核考核分类、考核指标或考核要点, id 数据库主键,examName、examDesc、start_time 、end_time 等可选"
     )
     @RequestMapping(value = "/modify_exam", method = RequestMethod.POST)
     public JsonResponse modifyExam(@RequestBody ShengtaiExamVo vo) {
@@ -92,7 +92,7 @@ public class ExamController {
 
     @ResponseBody
     @ApiOperation(
-            value = "开始 考核"
+            value = "开始 考核, examPId 数据库主键"
     )
     @RequestMapping(value = "/start_exam", method = RequestMethod.POST)
     public JsonResponse startExam(@RequestParam Integer examPId) {
@@ -107,7 +107,7 @@ public class ExamController {
 
     @ResponseBody
     @ApiOperation(
-            value = "结束 考核"
+            value = "结束 考核, examPId 数据库主键"
     )
     @RequestMapping(value = "/end_exam", method = RequestMethod.POST)
     public JsonResponse endExam(@RequestParam Integer examPId) {
@@ -124,7 +124,7 @@ public class ExamController {
 
     @ResponseBody
     @ApiOperation(
-            value = "获取要点已经分配的单位列表"
+            value = "获取要点已经分配的单位列表，examId 表示 exam 的业务键"
     )
     @RequestMapping(value = "/query_assigned_departments_by_exam_id", method = RequestMethod.GET)
     public JsonResponse queryAssignedDepartmentsByExamId(@RequestParam String examId) {
@@ -133,7 +133,7 @@ public class ExamController {
 
     @ResponseBody
     @ApiOperation(
-            value = "获取要点 没有分配的单位列表"
+            value = "获取要点 没有分配的单位列表，examId 表示 exam 的业务键"
     )
     @RequestMapping(value = "/query_not_assigned_departments_by_exam_id", method = RequestMethod.GET)
     public JsonResponse queryNotAssignedDepartmentsByExamId(String examId) {
@@ -142,7 +142,7 @@ public class ExamController {
 
     @ResponseBody
     @ApiOperation(
-            value = "模糊搜索:按属性获得 N 条考核分类、考核指标或考核要点,属性直接 and 关系"
+            value = "模糊搜索:按属性获得 N 条考核分类、考核指标或考核要点,属性直接 and 关系，examName、examDesc、start_time 、end_time 等可选"
     )
     @RequestMapping(value = "/query_exams_by_and_fields", method = RequestMethod.GET)
     public JsonResponse queryExamsByAndFields(@RequestBody ShengtaiExamVo vo) {
@@ -151,7 +151,7 @@ public class ExamController {
 
     @ResponseBody
     @ApiOperation(
-            value = "按主键获得一条考核分类、考核指标或考核要点"
+            value = "按主键获得一条考核分类、考核指标或考核要点，examPid 数据库主键"
     )
     @RequestMapping(value = "/query_exam_by_id", method = RequestMethod.GET)
     public JsonResponse queryExamByPId(@RequestParam Integer examPid) {
@@ -160,7 +160,7 @@ public class ExamController {
 
     @ResponseBody
     @ApiOperation(
-            value = "按exam id 获得一条考核分类、考核指标或考核要点 详细信息"
+            value = "按exam id 获得一条考核分类、考核指标或考核要点 详细信息，examId 表示 exam 的业务键"
     )
     @RequestMapping(value = "/query_exam_by_exam_id", method = RequestMethod.GET)
     public JsonResponse queryExamByExamId(@RequestParam String examId) {
@@ -169,7 +169,7 @@ public class ExamController {
 
     @ResponseBody
     @ApiOperation(
-            value = "query 所有的exam"
+            value = "query 所有的exam，没有参数"
     )
     @RequestMapping(value = "/query_all_exams", method = RequestMethod.POST)
     public JsonResponse queryAllExam() {
