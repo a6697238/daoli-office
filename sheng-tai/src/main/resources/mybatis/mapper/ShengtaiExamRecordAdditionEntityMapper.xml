@@ -4,8 +4,7 @@
 <mapper namespace="com.daoli.sheng.tai.mapper.ShengtaiExamRecordAdditionEntityMapper">
   <resultMap id="BaseResultMap" type="com.daoli.sheng.tai.entity.ShengtaiExamRecordAdditionEntity">
     <id column="id" property="id" jdbcType="INTEGER"/>
-    <result column="exam_record_id" property="examRecordId" jdbcType="VARCHAR"/>
-    <result column="addition_id" property="additionId" jdbcType="VARCHAR"/>
+    <result column="exam_record_pid" property="examRecordPid" jdbcType="INTEGER"/>
     <result column="addition_name" property="additionName" jdbcType="VARCHAR"/>
     <result column="addition_location" property="additionLocation" jdbcType="VARCHAR"/>
     <result column="create_uid" property="createUid" jdbcType="VARCHAR"/>
@@ -14,8 +13,8 @@
     <result column="valid" property="valid" jdbcType="TINYINT"/>
   </resultMap>
   <sql id="Base_Column_List">
-    id, exam_record_id, addition_id, addition_name, addition_location, create_uid, modify_time, 
-    create_time, valid
+    id, exam_record_pid, addition_name, addition_location, create_uid, modify_time, create_time, 
+    valid
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
     select
@@ -25,12 +24,14 @@
   </select>
 
 
-  <select id="queryAdditionByRecordId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  <select id="queryAdditionByExamRecordPid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
     select
     <include refid="Base_Column_List"/>
     from tbl_shengtai_exam_record_addition
-    where exam_record_id = #{examRecordId,jdbcType=VARCHAR}
+    where exam_record_pid = #{examRecordPid,jdbcType=INTEGER}
+    AND valid = 1
   </select>
+
 
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -38,14 +39,12 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.daoli.sheng.tai.entity.ShengtaiExamRecordAdditionEntity">
-    insert into tbl_shengtai_exam_record_addition (id, exam_record_id, addition_id, 
-      addition_name, addition_location, create_uid, 
-      modify_time, create_time, valid
-      )
-    values (#{id,jdbcType=INTEGER}, #{examRecordId,jdbcType=VARCHAR}, #{additionId,jdbcType=VARCHAR}, 
-      #{additionName,jdbcType=VARCHAR}, #{additionLocation,jdbcType=VARCHAR}, #{createUid,jdbcType=VARCHAR}, 
-      #{modifyTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT}
-      )
+    insert into tbl_shengtai_exam_record_addition (id, exam_record_pid, addition_name, 
+      addition_location, create_uid, modify_time, 
+      create_time, valid)
+    values (#{id,jdbcType=INTEGER}, #{examRecordPid,jdbcType=INTEGER}, #{additionName,jdbcType=VARCHAR}, 
+      #{additionLocation,jdbcType=VARCHAR}, #{createUid,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective"
     parameterType="com.daoli.sheng.tai.entity.ShengtaiExamRecordAdditionEntity"
@@ -55,11 +54,8 @@
       <if test="id != null">
         id,
       </if>
-      <if test="examRecordId != null">
-        exam_record_id,
-      </if>
-      <if test="additionId != null">
-        addition_id,
+      <if test="examRecordPid != null">
+        exam_record_pid,
       </if>
       <if test="additionName != null">
         addition_name,
@@ -84,11 +80,8 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="examRecordId != null">
-        #{examRecordId,jdbcType=VARCHAR},
-      </if>
-      <if test="additionId != null">
-        #{additionId,jdbcType=VARCHAR},
+      <if test="examRecordPid != null">
+        #{examRecordPid,jdbcType=INTEGER},
       </if>
       <if test="additionName != null">
         #{additionName,jdbcType=VARCHAR},
@@ -114,11 +107,8 @@
     parameterType="com.daoli.sheng.tai.entity.ShengtaiExamRecordAdditionEntity">
     update tbl_shengtai_exam_record_addition
     <set>
-      <if test="examRecordId != null">
-        exam_record_id = #{examRecordId,jdbcType=VARCHAR},
-      </if>
-      <if test="additionId != null">
-        addition_id = #{additionId,jdbcType=VARCHAR},
+      <if test="examRecordPid != null">
+        exam_record_pid = #{examRecordPid,jdbcType=INTEGER},
       </if>
       <if test="additionName != null">
         addition_name = #{additionName,jdbcType=VARCHAR},
@@ -144,8 +134,7 @@
   <update id="updateByPrimaryKey"
     parameterType="com.daoli.sheng.tai.entity.ShengtaiExamRecordAdditionEntity">
     update tbl_shengtai_exam_record_addition
-    set exam_record_id = #{examRecordId,jdbcType=VARCHAR},
-      addition_id = #{additionId,jdbcType=VARCHAR},
+    set exam_record_pid = #{examRecordPid,jdbcType=INTEGER},
       addition_name = #{additionName,jdbcType=VARCHAR},
       addition_location = #{additionLocation,jdbcType=VARCHAR},
       create_uid = #{createUid,jdbcType=VARCHAR},

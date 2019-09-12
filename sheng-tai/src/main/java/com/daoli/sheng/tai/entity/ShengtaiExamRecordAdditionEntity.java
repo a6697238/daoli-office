@@ -5,9 +5,7 @@ import java.util.Date;
 public class ShengtaiExamRecordAdditionEntity {
     private Integer id;
 
-    private String examRecordId;
-
-    private String additionId;
+    private Integer examRecordPid;
 
     private String additionName;
 
@@ -29,20 +27,12 @@ public class ShengtaiExamRecordAdditionEntity {
         this.id = id;
     }
 
-    public String getExamRecordId() {
-        return examRecordId;
+    public Integer getExamRecordPid() {
+        return examRecordPid;
     }
 
-    public void setExamRecordId(String examRecordId) {
-        this.examRecordId = examRecordId;
-    }
-
-    public String getAdditionId() {
-        return additionId;
-    }
-
-    public void setAdditionId(String additionId) {
-        this.additionId = additionId;
+    public void setExamRecordPid(Integer examRecordPid) {
+        this.examRecordPid = examRecordPid;
     }
 
     public String getAdditionName() {

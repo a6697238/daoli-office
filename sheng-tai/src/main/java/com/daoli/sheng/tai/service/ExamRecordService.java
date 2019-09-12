@@ -2,10 +2,11 @@ package com.daoli.sheng.tai.service;
 
 import static com.daoli.constant.DBconstant.VALID;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.daoli.office.vo.sheng.tai.ExamRecordAdditionVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
@@ -36,20 +37,24 @@ public class ExamRecordService {
     @Autowired
     private ShengtaiExamRecordAdditionEntityMapper additionEntityMapper;
 
+    private final static String[] EXAM_RECORD_IGNORE_PROPERTIES = new String[]{"modifyTime",
+            "createTime", "recordStatus"};
+
 
     @Transactional(rollbackFor = Exception.class)
     public void modifyRecord(ShengtaiExamRecordVo vo, List<Integer> additionId) {
         ShengtaiExamRecordEntity examRecordEntity = examRecordEntityMapper
                 .selectByPrimaryKey(vo.getId());
-        BeanUtils.copyProperties(vo, examRecordEntity);
+        BeanUtils.copyProperties(vo, examRecordEntity, EXAM_RECORD_IGNORE_PROPERTIES);
         examRecordEntityMapper.updateByPrimaryKeySelective(examRecordEntity);
-        List<ShengtaiExamRecordAdditionEntity> additionEntityList = additionEntityMapper
-                .queryAdditionByRecordId(vo.getExamRecordId());
-        for (ShengtaiExamRecordAdditionEntity entity : additionEntityList) {
-            additionEntityMapper.deleteByPrimaryKey(entity.getId());
-        }
-        updateAddition(vo, additionId);
+
+        additionEntityMapper.queryAdditionByExamRecordPid(vo.getId()).forEach(entity -> {
+            entity.setExamRecordPid(-1);
+            additionEntityMapper.updateByPrimaryKeySelective(entity);
+        });
+        assignAddition(examRecordEntity.getId(), additionId);
     }
+
 
     @Transactional(rollbackFor = Exception.class)
     public void uploadRecord(ShengtaiExamRecordVo vo, List<Integer> additionId) {
@@ -60,20 +65,22 @@ public class ExamRecordService {
         examRecordEntity.setCreateTime(new Date());
         examRecordEntity.setValid(VALID);
         examRecordEntityMapper.insertSelective(examRecordEntity);
-        updateAddition(vo, additionId);
+        assignAddition(examRecordEntity.getId(), additionId);
     }
 
 
-    private void updateAddition(ShengtaiExamRecordVo vo, List<Integer> additionId) {
+    private void assignAddition(Integer examRecordId,
+            List<Integer> additionId) {
         if (CollectionUtils.isNotEmpty(additionId)) {
             for (Integer id : additionId) {
                 ShengtaiExamRecordAdditionEntity entity = additionEntityMapper
                         .selectByPrimaryKey(id);
-                entity.setExamRecordId(vo.getExamRecordId());
+                entity.setExamRecordPid(examRecordId);
                 additionEntityMapper.updateByPrimaryKeySelective(entity);
             }
         }
     }
+
 
     public ShengtaiExamRecordVo queryExamRecord(Integer id) {
         ShengtaiExamRecordEntity examRecordEntity = examRecordEntityMapper.selectByPrimaryKey(id);
@@ -82,9 +89,9 @@ public class ExamRecordService {
         return vo;
     }
 
-    public List<ExamRecordAdditionVo> queryRecordAdditionList(String examRecordId) {
+    public List<ExamRecordAdditionVo> queryRecordAdditionList(Integer examRecordPid) {
         List<ShengtaiExamRecordAdditionEntity> queryList = additionEntityMapper
-                .queryAdditionByRecordId(examRecordId);
+                .queryAdditionByExamRecordPid(examRecordPid);
         List<ExamRecordAdditionVo> resList = Lists.newArrayList();
         for (ShengtaiExamRecordAdditionEntity entity : queryList) {
             ExamRecordAdditionVo vo = new ExamRecordAdditionVo();
@@ -115,27 +122,25 @@ public class ExamRecordService {
         return vo;
     }
 
-
-    /**
-     * 根据条件
-     * @param vo
-     * @return
-     */
-    public ArrayList<ShengtaiExamRecordVo> queryRecordByCondition(ShengtaiExamRecordVo vo){
-
-        ShengtaiExamRecordEntity examRecordEntity = new ShengtaiExamRecordEntity();
-        BeanUtils.copyProperties(vo,examRecordEntity);
-        ArrayList<ShengtaiExamRecordEntity>  res_entry =  examRecordEntityMapper.selectByExamIndexIdAndDepartId(examRecordEntity);
-
-        ArrayList<ShengtaiExamRecordVo> res = new ArrayList<>();
-        for(ShengtaiExamRecordEntity one_entry : res_entry){
-            ShengtaiExamRecordVo one_vo = new ShengtaiExamRecordVo();
-            BeanUtils.copyProperties(one_entry,one_vo);
-            res.add(one_vo);
-        }
-        return res ;
-    }
-
+//
+//    /**
+//     * 根据条件
+//     */
+//    public ArrayList<ShengtaiExamRecordVo> queryRecordByCondition(String vo) {
+//
+//        ShengtaiExamRecordEntity examRecordEntity = new ShengtaiExamRecordEntity();
+//        BeanUtils.copyProperties(vo, examRecordEntity);
+//        ArrayList<ShengtaiExamRecordEntity> res_entry = examRecordEntityMapper
+//                .queryByExamIdAndDepartmentId(examRecordEntity);
+//
+//        ArrayList<ShengtaiExamRecordVo> res = new ArrayList<>();
+//        for (ShengtaiExamRecordEntity one_entry : res_entry) {
+//            ShengtaiExamRecordVo one_vo = new ShengtaiExamRecordVo();
+//            BeanUtils.copyProperties(one_entry, one_vo);
+//            res.add(one_vo);
+//        }
+//        return res;
+//    }
 
 
 }

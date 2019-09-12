@@ -19,6 +19,5 @@ public interface ShengtaiExamRecordAdditionEntityMapper {
 
     int updateByPrimaryKey(ShengtaiExamRecordAdditionEntity record);
 
-    List<ShengtaiExamRecordAdditionEntity> queryAdditionByRecordId(String recordId);
-
+    List<ShengtaiExamRecordAdditionEntity> queryAdditionByExamRecordPid(Integer examRecordPid);
 }

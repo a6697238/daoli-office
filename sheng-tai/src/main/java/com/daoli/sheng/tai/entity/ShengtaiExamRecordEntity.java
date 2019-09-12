@@ -15,7 +15,7 @@ public class ShengtaiExamRecordEntity {
 
     private String examDetailDesc;
 
-    private Integer examScore;
+    private Float examScore;
 
     private String departmentId;
 
@@ -85,11 +85,11 @@ public class ShengtaiExamRecordEntity {
         this.examDetailDesc = examDetailDesc;
     }
 
-    public Integer getExamScore() {
+    public Float getExamScore() {
         return examScore;
     }
 
-    public void setExamScore(Integer examScore) {
+    public void setExamScore(Float examScore) {
         this.examScore = examScore;
     }
 

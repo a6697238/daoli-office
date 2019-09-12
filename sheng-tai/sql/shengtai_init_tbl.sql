@@ -69,7 +69,7 @@ CREATE TABLE `tbl_shengtai_exam_record` (
   `exam_index_desc` varchar(255) NOT NULL DEFAULT '' COMMENT '考核指标描述',
   `exam_detail_id` varchar(64) NOT NULL DEFAULT '' COMMENT '考核要点id',
   `exam_detail_desc` varchar(255) NOT NULL DEFAULT '' COMMENT '考核要点描述',
-  `exam_score` int(11) NOT NULL DEFAULT 0 COMMENT '分值',
+  `exam_score` float NOT NULL DEFAULT 0 COMMENT '分值',
   `department_id` varchar(64) NOT NULL DEFAULT '' COMMENT '部门id',
   `record_name` varchar(64) NOT NULL DEFAULT '' COMMENT '记录名称',
   `record_abstract` varchar(64) NOT NULL DEFAULT '0' COMMENT '记录摘要',
@@ -88,14 +88,12 @@ CREATE TABLE `tbl_shengtai_exam_record` (
 DROP TABLE IF EXISTS `tbl_shengtai_exam_record_addition`;
 CREATE TABLE `tbl_shengtai_exam_record_addition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `exam_record_id` varchar(64) NOT NULL DEFAULT '' COMMENT '考核指标id',
-  `addition_id` varchar(64) NOT NULL DEFAULT '' COMMENT '附件id',
+  `exam_record_pid` int(11) NOT NULL DEFAULT -1 COMMENT '考核指标id',
   `addition_name` varchar(2048) NOT NULL DEFAULT '' COMMENT '附件名称',
   `addition_location` varchar(2048) NOT NULL DEFAULT '' COMMENT '附件相对位置',
   `create_uid`  varchar(64) NOT NULL DEFAULT '' COMMENT '创建者的id',
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后实名认证的时间戳',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   `valid` tinyint(4) NOT NULL DEFAULT '0' COMMENT '有效性 0删除，1有效',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_addition_id` (`addition_id`(10))
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='考核记录';

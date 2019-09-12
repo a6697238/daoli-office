@@ -54,7 +54,7 @@ public class ExamRecordController extends BaseController {
     @ApiOperation(value = "上传一条考核记录")
     @RequestMapping(value = "/upload_exam_record", method = RequestMethod.POST)
     public JsonResponse uploadExamRecord(@RequestBody ShengtaiExamRecordVo vo,
-            @RequestParam List<Integer> additionId) {
+            @RequestParam(required = false) List<Integer> additionId) {
         examRecordService.uploadRecord(vo, Lists.newArrayList(additionId));
         return new JsonResponse();
     }
@@ -72,24 +72,21 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "上传一条考核附件")
     @RequestMapping(value = "/upload_exam_addition", method = RequestMethod.POST)
-    @ApiImplicitParam(value = "1(数据库自增主键)", name = "recordId", required = true, dataType = "String", paramType = "query")
+    @ApiImplicitParam(value = "1(数据库自增主键)", name = "recordId", dataType = "String", paramType = "query")
     public JsonResponse uploadExamAddition(@RequestParam String userId,
             @RequestParam MultipartFile[] recordAdditionFile) throws IOException {
         List<ExamRecordAdditionVo> resList = Lists.newArrayList();
         for (MultipartFile file : recordAdditionFile) {
             if (!file.isEmpty()) {
-                Map<String, String> resultMap = Maps.newHashMap();
                 String relativeFile = "/shengtai/" + userId + "/" + file.getOriginalFilename();
                 String relativePath = "/shengtai/" + userId;
                 FileUtils.writeFile(file.getOriginalFilename(), baseSavePath + relativePath,
                         file.getBytes());
-                resultMap.put("fileName", file.getOriginalFilename());
-                resultMap.put("filePath", relativeFile);
                 ExamRecordAdditionVo vo = ExamRecordAdditionVo.builder()
                         .additionLocation(relativeFile)
                         .additionName(file.getOriginalFilename())
-                        .createUid(userId)
                         .additionId(UUID.randomUUID().toString())
+                        .createUid(userId)
                         .createTime(new Date())
                         .modifyTime(new Date())
                         .build();
@@ -108,7 +105,7 @@ public class ExamRecordController extends BaseController {
     public JsonResponse queryExamRecord(@RequestParam Integer recordId) {
         ShengtaiExamRecordVo vo = examRecordService.queryExamRecord(recordId);
         List<ExamRecordAdditionVo> additionVoList = examRecordService
-                .queryRecordAdditionList(vo.getExamRecordId());
+                .queryRecordAdditionList(vo.getId());
         return new JsonResponse(
                 ImmutableMap.<String, Object>builder()
                         .put("vo", vo)

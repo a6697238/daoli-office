@@ -33,6 +33,9 @@ public class ExamRecordAdditionVo {
     @ApiModelProperty(value = "附件相对路径", required = false)
     private String additionLocation;
 
+    @ApiModelProperty(value = "考核记录业务id", required = false)
+    private Integer examRecordPid;
+
     @ApiModelProperty(value = "创建者id", required = false)
     private String createUid;
 

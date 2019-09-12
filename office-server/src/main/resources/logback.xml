@@ -8,7 +8,7 @@
 
     <if condition='isNull("LOG_HOME")'>
         <then>
-            <property name="LOG_HOME" value="../logs/${APP_NAME}"/>
+            <property name="LOG_HOME" value="./logs/${APP_NAME}"/>
         </then>
     </if>
 
@@ -32,21 +32,6 @@
             </pattern>
         </encoder>
     </appender>
-
-    <appender name="mqLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/${APP_NAME}-mq.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/${APP_NAME}-mq.%d{yyyy-MM-dd}.log
-            </fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %cn %C{36}.%M:%L - %msg%n
-            </pattern>
-        </encoder>
-    </appender>
-
 
     <!-- 仅记录fatal日志 -->
     <appender name="fatalLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">

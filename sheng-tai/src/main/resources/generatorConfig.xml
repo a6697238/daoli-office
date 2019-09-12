@@ -18,7 +18,7 @@
 
 
     <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-      connectionURL="jdbc:mysql://localhost:3306/daoli_office" userId="root"
+      connectionURL="jdbc:mysql://39.100.255.251:3306/daoli_office" userId="root"
       password="123456"/>
     <!-- 所生成的实体类的位置默认资源包src -->
     <javaModelGenerator targetPackage="com.daoli.sheng.tai.entity"
@@ -45,12 +45,12 @@
       <!--enableUpdateByExample="false" enableDeleteByExample="false"-->
       <!--enableSelectByExample="false" selectByExampleQueryId="false">-->
     <!--</table>-->
-    <table schema="daoli_office" tableName="tbl_shengtai_exam"
-      domainObjectName="ShengTaiExamEntity"
-      enableCountByExample="false"
-      enableUpdateByExample="false" enableDeleteByExample="false"
-      enableSelectByExample="false" selectByExampleQueryId="false">
-    </table>
+    <!--<table schema="daoli_office" tableName="tbl_shengtai_exam"-->
+      <!--domainObjectName="ShengTaiExamEntity"-->
+      <!--enableCountByExample="false"-->
+      <!--enableUpdateByExample="false" enableDeleteByExample="false"-->
+      <!--enableSelectByExample="false" selectByExampleQueryId="false">-->
+    <!--</table>-->
     <!--<table schema="daoli_office" tableName="tbl_user"-->
       <!--domainObjectName="UserEntity"-->
       <!--enableCountByExample="false"-->
