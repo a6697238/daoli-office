@@ -1,4 +1,4 @@
-package com.daoli.office.server.controller.sheng.tai.manage;
+package com.daoli.office.server.controller.shengtai;
 
 import com.daoli.office.vo.JsonResponse;
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
@@ -20,7 +20,6 @@ import java.util.Map;
  */
 
 
-
 @RestController(value = "部门的增删改查")
 @RequestMapping(value = "/api/web/manage/deparment")
 @Slf4j
@@ -33,30 +32,30 @@ public class DepartmentController {
     @ApiOperation(value = "批量增加部门, departmentId、valid、create_time、modify_time 等后台自动填充")
     @RequestMapping(value = "/add_department", method = RequestMethod.POST)
     public JsonResponse addDepartment(@RequestBody DepartmentVo[] vos) {
-        Map<String,Boolean> resMap = new HashMap<>();
-        for (DepartmentVo vo:vos) {
+        Map<String, Boolean> resMap = new HashMap<>();
+        for (DepartmentVo vo : vos) {
             int res = 0;
             res = deparmentService.insertDeparment(vo);
             if (res != 0) {
-                resMap.put(vo.getDepartmentName(),true);
+                resMap.put(vo.getDepartmentName(), true);
             } else {
-                resMap.put(vo.getDepartmentName(),false);
+                resMap.put(vo.getDepartmentName(), false);
             }
         }
-        return  new JsonResponse(resMap);
+        return new JsonResponse(resMap);
     }
 
     @ResponseBody
     @ApiOperation(value = "删除 部门")
     @RequestMapping(value = "/delete_department", method = RequestMethod.POST)
-    public JsonResponse deleteDepartmen(@RequestBody Integer departmentPId) {
+    public JsonResponse deleteDepartment(@RequestBody Integer departmentPId) {
         int res = 0;
 
         res = deparmentService.deleteDepartment(departmentPId);
         if (res != 0) {
             return new JsonResponse();
         } else {
-            return new JsonResponse(false,"fail");
+            return new JsonResponse(false, "fail");
         }
     }
 

@@ -122,9 +122,9 @@ public class ShengTaiDepartmentExamService {
     public ShengtaiDepartmentExamVo selectDeparmentExamById(ShengtaiDepartmentExamVo vo){
         DepartmentExamEntity examEntry = new DepartmentExamEntity();
         BeanUtils.copyProperties(vo,examEntry);
-        ShengtaiDepartmentExamVo res_vo =new ShengtaiDepartmentExamVo();
-        BeanUtils.copyProperties(departmentExamEntityMapper.selectByPrimaryKey(vo.getId()), res_vo);
-        return res_vo;
+        ShengtaiDepartmentExamVo resVo =new ShengtaiDepartmentExamVo();
+        BeanUtils.copyProperties(departmentExamEntityMapper.selectByPrimaryKey(vo.getId()), resVo);
+        return resVo;
     }
 
 
@@ -132,13 +132,13 @@ public class ShengTaiDepartmentExamService {
         DepartmentExamEntity examEntry = new DepartmentExamEntity();
         BeanUtils.copyProperties(vo,examEntry);
         ArrayList<DepartmentExamEntity> res = departmentExamEntityMapper.selectByField(examEntry);
-        ShengtaiDepartmentExamVo vo_res = new ShengtaiDepartmentExamVo();
+        ShengtaiDepartmentExamVo voRes = new ShengtaiDepartmentExamVo();
 
         if(res.size() > 1 || res.size() <= 0) {
             return null;
         }
-        BeanUtils.copyProperties(res.get(0),vo_res);
-        return vo_res;
+        BeanUtils.copyProperties(res.get(0),voRes);
+        return voRes;
     }
 
     public List<ShengtaiDepartmentExamVo> selectDeparmentExamByField(ShengtaiDepartmentExamVo vo){
@@ -147,9 +147,9 @@ public class ShengTaiDepartmentExamService {
         ArrayList<DepartmentExamEntity> res = departmentExamEntityMapper.selectByField(examEntry);
         List<ShengtaiDepartmentExamVo> voRes = new ArrayList<>();
         for (int i = 0; i < res.size(); ++i){
-            ShengtaiDepartmentExamVo one_vo = new ShengtaiDepartmentExamVo();
-            BeanUtils.copyProperties(res.get(i), one_vo);
-            voRes.add(one_vo);
+            ShengtaiDepartmentExamVo oneVo = new ShengtaiDepartmentExamVo();
+            BeanUtils.copyProperties(res.get(i), oneVo);
+            voRes.add(oneVo);
         }
         return voRes;
     }

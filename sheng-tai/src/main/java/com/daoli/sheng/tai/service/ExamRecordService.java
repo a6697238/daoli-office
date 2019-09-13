@@ -85,7 +85,7 @@ public class ExamRecordService {
     public ShengtaiExamRecordVo queryExamRecord(Integer id) {
         ShengtaiExamRecordEntity examRecordEntity = examRecordEntityMapper.selectByPrimaryKey(id);
         ShengtaiExamRecordVo vo = new ShengtaiExamRecordVo();
-        BeanUtils.copyProperties(vo, examRecordEntity);
+        BeanUtils.copyProperties(examRecordEntity,vo);
         return vo;
     }
 

@@ -1,7 +1,10 @@
 package com.daoli.office.server.controller.shengtai;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +24,14 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -72,7 +80,6 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "上传一条考核附件")
     @RequestMapping(value = "/upload_exam_addition", method = RequestMethod.POST)
-    @ApiImplicitParam(value = "1(数据库自增主键)", name = "recordId", dataType = "String", paramType = "query")
     public JsonResponse uploadExamAddition(@RequestParam String userId,
             @RequestParam MultipartFile[] recordAdditionFile) throws IOException {
         List<ExamRecordAdditionVo> resList = Lists.newArrayList();
@@ -85,7 +92,6 @@ public class ExamRecordController extends BaseController {
                 ExamRecordAdditionVo vo = ExamRecordAdditionVo.builder()
                         .additionLocation(relativeFile)
                         .additionName(file.getOriginalFilename())
-                        .additionId(UUID.randomUUID().toString())
                         .createUid(userId)
                         .createTime(new Date())
                         .modifyTime(new Date())
@@ -113,13 +119,18 @@ public class ExamRecordController extends BaseController {
                         .build());
     }
 
-    @ResponseBody
     @ApiOperation(value = "下载考核附件")
     @RequestMapping(value = "/down_load_addition", method = RequestMethod.GET)
-    @ApiImplicitParam(value = "1(数据库自增主键)", name = "additionId", required = true, dataType = "String", paramType = "query")
-    public byte[] downloadAddition(@RequestParam Integer additionId) {
-        ExamRecordAdditionVo vo = examRecordService.queryAdditionById(additionId);
-        return FileUtils.readFile(baseSavePath + "/" + vo.getAdditionLocation());
+    @ApiImplicitParam(value = "1(数据库自增主键)", name = "additionPId", required = true, dataType = "String", paramType = "query")
+    public ResponseEntity<byte[]> downloadAddition(@RequestParam Integer additionPId)
+            throws Exception {
+        ExamRecordAdditionVo vo = examRecordService.queryAdditionById(additionPId);
+        File file = new File(baseSavePath + "/" + vo.getAdditionLocation());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment;filename*=utf-8'zh_cn'" + URLEncoder
+                .encode(file.getName(), "UTF-8"));
+        HttpStatus statusCode = HttpStatus.OK;
+        return new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, statusCode);
     }
 
 

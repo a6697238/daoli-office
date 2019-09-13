@@ -24,9 +24,6 @@ public class ExamRecordAdditionVo {
     @ApiModelProperty(value = "", required = false)
     private Integer id;
 
-    @ApiModelProperty(value = "", required = false)
-    private String additionId;
-
     @ApiModelProperty(value = "附件名称", required = false)
     private String additionName;
 

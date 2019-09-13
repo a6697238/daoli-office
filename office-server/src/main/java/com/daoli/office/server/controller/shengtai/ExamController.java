@@ -1,4 +1,4 @@
-package com.daoli.office.server.controller.sheng.tai.manage;
+package com.daoli.office.server.controller.shengtai;
 
 import com.daoli.office.vo.JsonResponse;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamVo;

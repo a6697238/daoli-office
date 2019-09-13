@@ -254,38 +254,25 @@ public class ShengTaiExamService {
         BeanUtils.copyProperties(vo, examEntry);
         List<ShengTaiExamEntity> res = examMapper.queryExamsByCondition(examEntry);
 
-        ArrayList<ShengtaiExamVo> vo_res = new ArrayList<>();
+        ArrayList<ShengtaiExamVo> voRes = new ArrayList<>();
         for (int i = 0; i < res.size(); ++i) {
-            ShengtaiExamVo one_vo = new ShengtaiExamVo();
-            BeanUtils.copyProperties(res.get(i), one_vo);
-            vo_res.add(one_vo);
+            ShengtaiExamVo oneVo = new ShengtaiExamVo();
+            BeanUtils.copyProperties(res.get(i), oneVo);
+            voRes.add(oneVo);
         }
-        return vo_res;
+        return voRes;
     }
 
-    public List<ShengtaiExamVo> queryExamsByFuzzyCondition(ShengtaiExamVo vo) {
-        ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
-        BeanUtils.copyProperties(vo, examEntry);
-        List<ShengTaiExamEntity> res = examMapper.queryExamsByFuzzyCondition(examEntry);
-
-        List<ShengtaiExamVo> vo_res = new ArrayList<>();
-        for (int i = 0; i < res.size(); ++i) {
-            ShengtaiExamVo one_vo = new ShengtaiExamVo();
-            BeanUtils.copyProperties(res.get(i), one_vo);
-            vo_res.add(one_vo);
-        }
-        return vo_res;
-    }
 
     public List<ShengtaiExamVo> queryAllExams() {
         List<ShengTaiExamEntity> res = examMapper.queryAllExams();
 
-        List<ShengtaiExamVo> vo_res = new ArrayList<>();
+        List<ShengtaiExamVo> voRes = new ArrayList<>();
         for (int i = 0; i < res.size(); ++i) {
-            ShengtaiExamVo one_vo = new ShengtaiExamVo();
-            BeanUtils.copyProperties(res.get(i), one_vo);
-            vo_res.add(one_vo);
+            ShengtaiExamVo oneVo = new ShengtaiExamVo();
+            BeanUtils.copyProperties(res.get(i), oneVo);
+            voRes.add(oneVo);
         }
-        return vo_res;
+        return voRes;
     }
 }
