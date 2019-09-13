@@ -1,6 +1,7 @@
 package com.daoli.sheng.tai.service;
 
 import static com.daoli.constant.DBconstant.VALID;
+import static com.daoli.constant.DBconstant.IN_VALID ;
 
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
 import com.daoli.sheng.tai.entity.DepartmentEntity;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by wanglining on 2019/8/22.
@@ -21,12 +24,12 @@ public class DepartmentService {
     @Autowired
     private DepartmentEntityMapper departmentEntityMapper;
 
-    public int deleteDepartment(DepartmentVo vo){
+    public int deleteDepartment(Integer departmentPId){
 
         // 删除
         DepartmentEntity departmentEntity= new DepartmentEntity();
-        BeanUtils.copyProperties(vo,departmentEntity);
-        departmentEntity.setValid(VALID);
+        departmentEntity.setId(departmentPId);
+        departmentEntity.setValid(IN_VALID);
 
         //删除
         int res = departmentEntityMapper.updateByPrimaryKeySelective(departmentEntity);
@@ -42,7 +45,10 @@ public class DepartmentService {
     public int insertDeparment(DepartmentVo vo){
         DepartmentEntity departmentEntity = new DepartmentEntity();
         BeanUtils.copyProperties(vo, departmentEntity);
-        departmentEntity.setValid(new Byte((byte)1));
+        departmentEntity.setDepartmentId(UUID.randomUUID().toString());
+        departmentEntity.setValid(VALID);
+        departmentEntity.setCreateTime(new Date());
+        departmentEntity.setModifyTime(new Date());
         return departmentEntityMapper.insertSelective(departmentEntity);
     }
 

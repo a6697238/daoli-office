@@ -36,7 +36,8 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("daoli api")
                 .description("open recommendation api server")
-                .termsOfServiceUrl(String.format("http://localhost:8080/"))
+                //.termsOfServiceUrl(String.format("http://localhost:8080/"))
+                .termsOfServiceUrl(String.format("http://39.100.255.251/"))
                 .version("1.0")
                 .build();
     }

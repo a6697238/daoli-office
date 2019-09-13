@@ -7,7 +7,7 @@ public class ShengTaiExamStatusConstant {
     // 待发布
     public final static String KAO_HE_DAI_FA_BU = "待发布";
     // 已发布
-    public final static String KAO_HE_WEI_KAI_SHI = "已发布";
+    public final static String KAO_HE_YI_FA_BU = "已发布";
     // 考核中
     public final static String KAO_HE_JIN_XING_ZHONG = "考核中";
     public final static String  KAO_HE_ZHENG_CHANG_JIE_SHU = "考核结束";
