@@ -47,7 +47,7 @@ public class ExamController {
     @ResponseBody
     @ApiOperation(value = "批量分配, examId 表示 exam 业务键，departmentId 部门业务键 list 。")
     @RequestMapping(value = "/assign_batch_exam", method = RequestMethod.POST)
-    public JsonResponse assignBatchExam(@RequestParam String examId,
+    public JsonResponse assignBatchExam(@RequestBody String examId,
             @RequestParam List<String> departmentId) {
         return new JsonResponse(shengTaiExamService.assignBatchExam(examId,departmentId));
     }
@@ -55,21 +55,21 @@ public class ExamController {
     @ResponseBody
     @ApiOperation(value = "批量发布, examPIds exam 数据库主键 list")
     @RequestMapping(value = "/publish_batch_exam", method = RequestMethod.POST)
-    public JsonResponse publishBatchExam(@RequestParam Integer[] examPIds) {
+    public JsonResponse publishBatchExam(@RequestBody Integer[] examPIds) {
         return new JsonResponse(shengTaiExamService.publishBatchExam(examPIds));
     }
 
     @ResponseBody
     @ApiOperation(value = "撤销发布， examPIds exam 数据库主键 list")
     @RequestMapping(value = "/rollback_publish_batch_exam", method = RequestMethod.POST)
-    public JsonResponse rollbackPublishBatchExam(@RequestParam Integer[] examPIds) {
+    public JsonResponse rollbackPublishBatchExam(@RequestBody Integer[] examPIds) {
         return new JsonResponse(shengTaiExamService.rollbackPublishBatchExam(examPIds));
     }
 
 
     @ApiOperation(value = "批量删除，examPIds exam 数据库主键 list")
     @RequestMapping(value = "/delete_batch_exam", method = RequestMethod.POST)
-    public JsonResponse deleteBatchExam(@RequestParam Integer[] examPIds) {
+    public JsonResponse deleteBatchExam(@RequestBody Integer[] examPIds) {
         return new JsonResponse(shengTaiExamService.deleteBatchExam(examPIds));
     }
 
@@ -95,7 +95,7 @@ public class ExamController {
             value = "开始 考核, examPId 数据库主键"
     )
     @RequestMapping(value = "/start_exam", method = RequestMethod.POST)
-    public JsonResponse startExam(@RequestParam Integer examPId) {
+    public JsonResponse startExam(@RequestBody Integer examPId) {
         ShengtaiExamVo vo = shengTaiExamService.queryExamByPId(examPId);
         if (ShengTaiExamStatusConstant.KAO_HE_YI_FA_BU.equals(vo.getExamStatus())) {
             if (shengTaiExamService.startExam(examPId) > 0) {
@@ -110,7 +110,7 @@ public class ExamController {
             value = "结束 考核, examPId 数据库主键"
     )
     @RequestMapping(value = "/end_exam", method = RequestMethod.POST)
-    public JsonResponse endExam(@RequestParam Integer examPId) {
+    public JsonResponse endExam(@RequestBody Integer examPId) {
         ShengtaiExamVo vo = shengTaiExamService.queryExamByPId(examPId);
         // 只能在 考核未开始 状态下 才能进行删除
         if (ShengTaiExamStatusConstant.KAO_HE_YI_FA_BU.equals(vo.getExamStatus())) {
@@ -144,8 +144,8 @@ public class ExamController {
     @ApiOperation(
             value = "模糊搜索:按属性获得 N 条考核分类、考核指标或考核要点,属性直接 and 关系，examName、examDesc、start_time 、end_time 等可选"
     )
-    @RequestMapping(value = "/query_exams_by_and_fields", method = RequestMethod.GET)
-    public JsonResponse queryExamsByAndFields(@RequestBody ShengtaiExamVo vo) {
+    @RequestMapping(value = "/query_exams_by_fields", method = RequestMethod.GET)
+    public JsonResponse queryExamsByFields(@ModelAttribute ShengtaiExamVo vo) {
         return new JsonResponse(shengTaiExamService.queryExamsByCondition(vo));
     }
 
