@@ -122,25 +122,23 @@ public class ExamRecordService {
         return vo;
     }
 
-//
-//    /**
-//     * 根据条件
-//     */
-//    public ArrayList<ShengtaiExamRecordVo> queryRecordByCondition(String vo) {
-//
-//        ShengtaiExamRecordEntity examRecordEntity = new ShengtaiExamRecordEntity();
-//        BeanUtils.copyProperties(vo, examRecordEntity);
-//        ArrayList<ShengtaiExamRecordEntity> res_entry = examRecordEntityMapper
-//                .queryByExamIdAndDepartmentId(examRecordEntity);
-//
-//        ArrayList<ShengtaiExamRecordVo> res = new ArrayList<>();
-//        for (ShengtaiExamRecordEntity one_entry : res_entry) {
-//            ShengtaiExamRecordVo one_vo = new ShengtaiExamRecordVo();
-//            BeanUtils.copyProperties(one_entry, one_vo);
-//            res.add(one_vo);
-//        }
-//        return res;
-//    }
+
+    /**
+     * 根据部门id查询考核记录
+     * @param departmentId
+     * @return
+     */
+    public List<ShengtaiExamRecordVo> queryExamRecordByDepartmentId(String departmentId){
+        List<ShengtaiExamRecordVo> voList = Lists.newArrayList();
+        for(ShengtaiExamRecordEntity entity : examRecordEntityMapper.queryExamRecordByDepartmentId(departmentId)){
+            ShengtaiExamRecordVo vo = new ShengtaiExamRecordVo();
+            BeanUtils.copyProperties(entity,vo);
+            voList.add(vo);
+        }
+        return voList;
+    }
+
+
 
 
 }

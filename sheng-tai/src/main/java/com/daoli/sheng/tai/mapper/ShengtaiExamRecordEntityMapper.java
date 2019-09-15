@@ -26,4 +26,6 @@ public interface ShengtaiExamRecordEntityMapper {
             @Param("departmentId") String departmentId);
 
 
+    List<ShengtaiExamRecordEntity> queryExamRecordByDepartmentId(
+            @Param("departmentId") String departmentId);
 }

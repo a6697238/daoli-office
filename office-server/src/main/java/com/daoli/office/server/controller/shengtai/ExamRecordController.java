@@ -119,6 +119,15 @@ public class ExamRecordController extends BaseController {
                         .build());
     }
 
+
+    @ResponseBody
+    @ApiOperation(value = "根据部门查询考核记录")
+    @RequestMapping(value = "/query_exam_record_by_department_id", method = RequestMethod.GET)
+    public JsonResponse queryExamRecordByDepartmentId(@RequestParam String departmentId) {
+        return new JsonResponse(examRecordService.queryExamRecordByDepartmentId(departmentId));
+    }
+
+
     @ApiOperation(value = "下载考核附件")
     @RequestMapping(value = "/down_load_addition", method = RequestMethod.GET)
     @ApiImplicitParam(value = "1(数据库自增主键)", name = "additionPId", required = true, dataType = "String", paramType = "query")

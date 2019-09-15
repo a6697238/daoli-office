@@ -103,9 +103,9 @@ public class ShengTaiExamService {
         for (DepartmentExamEntity entity : examEntityList) {
             entity.setValid(IN_VALID);
             if (departmentExamEntityMapper.updateByPrimaryKeySelective(entity) > 0) {
-                deleteMap.put( entity.getDepartmentId(), true);
-            }else {
-                deleteMap.put( entity.getDepartmentId(), false);
+                deleteMap.put(entity.getDepartmentId(), true);
+            } else {
+                deleteMap.put(entity.getDepartmentId(), false);
             }
         }
 
@@ -119,7 +119,7 @@ public class ShengTaiExamService {
                 addMap.put(departmentId, false);
             }
         }
-        ShengTaiExamEntity filledExamEntity  = examMapper.queryByExamId(examId);
+        ShengTaiExamEntity filledExamEntity = examMapper.queryByExamId(examId);
         ShengTaiExamEntity argExamEntity = new ShengTaiExamEntity();
         argExamEntity.setId(filledExamEntity.getId());
         argExamEntity.setAssignedNum(departmentIds.size());
@@ -173,22 +173,24 @@ public class ShengTaiExamService {
     }
 
     public List<DepartmentVo> queryAssignedDepartmentsByExamId(String examId) {
-        List<DepartmentEntity> listDepartmentEntity =  departmentExamEntityMapper.queryAssignedDepartmentsByExamId(examId);
+        List<DepartmentEntity> listDepartmentEntity = departmentExamEntityMapper
+                .queryAssignedDepartmentsByExamId(examId);
         List<DepartmentVo> listDepartmentVo = new ArrayList<>();
-        for(DepartmentEntity entity:listDepartmentEntity){
+        for (DepartmentEntity entity : listDepartmentEntity) {
             DepartmentVo oneDepartmentVo = new DepartmentVo();
-            BeanUtils.copyProperties(entity,oneDepartmentVo);
+            BeanUtils.copyProperties(entity, oneDepartmentVo);
             listDepartmentVo.add(oneDepartmentVo);
         }
         return listDepartmentVo;
     }
 
     public List<DepartmentVo> queryNotAssignedDepartsmensByExamPrimaryId(String examId) {
-        List<DepartmentEntity> listDepartmentEntity =  departmentExamEntityMapper.queryNotAssignedDepartmentsByExamId(examId);
+        List<DepartmentEntity> listDepartmentEntity = departmentExamEntityMapper
+                .queryNotAssignedDepartmentsByExamId(examId);
         List<DepartmentVo> listDepartmentVo = new ArrayList<>();
-        for(DepartmentEntity entity:listDepartmentEntity){
+        for (DepartmentEntity entity : listDepartmentEntity) {
             DepartmentVo oneDepartmentVo = new DepartmentVo();
-            BeanUtils.copyProperties(entity,oneDepartmentVo);
+            BeanUtils.copyProperties(entity, oneDepartmentVo);
             listDepartmentVo.add(oneDepartmentVo);
         }
         return listDepartmentVo;
@@ -252,7 +254,7 @@ public class ShengTaiExamService {
     public List<ShengtaiExamVo> queryExamsByCondition(ShengtaiExamVo vo) {
         ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
         BeanUtils.copyProperties(vo, examEntry);
-        List<ShengTaiExamEntity> res = examMapper.queryExamsByCondition(examEntry);
+        List<ShengTaiExamEntity> res = examMapper.queryExamsByFuzzyCondition(examEntry);
 
         ArrayList<ShengtaiExamVo> voRes = new ArrayList<>();
         for (int i = 0; i < res.size(); ++i) {

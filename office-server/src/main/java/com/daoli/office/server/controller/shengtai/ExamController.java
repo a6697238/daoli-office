@@ -6,11 +6,13 @@ import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamStatusConstant;
 import com.daoli.sheng.tai.service.ShengTaiDepartmentExamService;
 import com.daoli.sheng.tai.service.ShengTaiExamService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.Model;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * AUTO-GENERATED: wln @ 2019/8/20 下午8:52
@@ -47,9 +49,10 @@ public class ExamController {
     @ResponseBody
     @ApiOperation(value = "批量分配, examId 表示 exam 业务键，departmentId 部门业务键 list 。")
     @RequestMapping(value = "/assign_batch_exam", method = RequestMethod.POST)
-    public JsonResponse assignBatchExam(@RequestBody String examId,
-            @RequestParam List<String> departmentId) {
-        return new JsonResponse(shengTaiExamService.assignBatchExam(examId,departmentId));
+    public JsonResponse assignBatchExam(@RequestBody Map<String, Object> reqMap) {
+        return new JsonResponse(shengTaiExamService
+                .assignBatchExam((String) reqMap.get("examId"),
+                        (List<String>) reqMap.get("departmentId")));
     }
 
     @ResponseBody
@@ -137,7 +140,8 @@ public class ExamController {
     )
     @RequestMapping(value = "/query_not_assigned_departments_by_exam_id", method = RequestMethod.GET)
     public JsonResponse queryNotAssignedDepartmentsByExamId(String examId) {
-        return new JsonResponse(shengTaiExamService.queryNotAssignedDepartsmensByExamPrimaryId(examId));
+        return new JsonResponse(
+                shengTaiExamService.queryNotAssignedDepartsmensByExamPrimaryId(examId));
     }
 
     @ResponseBody
