@@ -13,4 +13,7 @@ public class DBconstant {
 
     public final static Byte IN_VALID = 0;
 
+
+    public final static float DEFAULT_SCORE = -1;
+
 }

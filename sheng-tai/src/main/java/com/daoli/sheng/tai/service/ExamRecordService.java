@@ -1,5 +1,6 @@
 package com.daoli.sheng.tai.service;
 
+import static com.daoli.constant.DBconstant.DEFAULT_SCORE;
 import static com.daoli.constant.DBconstant.VALID;
 
 import java.util.Date;
@@ -20,6 +21,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * AUTO-GENERATED: houlu @ 2019/8/20 下午9:04
@@ -38,7 +40,7 @@ public class ExamRecordService {
     private ShengtaiExamRecordAdditionEntityMapper additionEntityMapper;
 
     private final static String[] EXAM_RECORD_IGNORE_PROPERTIES = new String[]{"modifyTime",
-            "createTime", "recordStatus"};
+            "createTime", "recordStatus", "examScore"};
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -53,6 +55,25 @@ public class ExamRecordService {
             additionEntityMapper.updateByPrimaryKeySelective(entity);
         });
         assignAddition(examRecordEntity.getId(), additionId);
+    }
+
+    public void scoreExamRecord(Float score, Integer examRecordPid, String departmentId) {
+        ShengtaiExamRecordEntity examRecordEntity = examRecordEntityMapper
+                .selectByPrimaryKey(examRecordPid);
+        examRecordEntity.setExamScore(score);
+        List<ShengtaiExamRecordEntity> recordEntityList = examRecordEntityMapper
+                .queryExamRecordByDepartmentIdAndDetailId(departmentId,
+                        examRecordEntity.getExamDetailId());
+        boolean noScore = true;
+        for (ShengtaiExamRecordEntity entity : recordEntityList) {
+            if (entity.getExamScore() != DEFAULT_SCORE && !entity.getId().equals(examRecordPid)) {
+                noScore = false;
+                break;
+            }
+        }
+        if (noScore) {
+            examRecordEntityMapper.updateByPrimaryKeySelective(examRecordEntity);
+        }
     }
 
 
@@ -85,7 +106,7 @@ public class ExamRecordService {
     public ShengtaiExamRecordVo queryExamRecord(Integer id) {
         ShengtaiExamRecordEntity examRecordEntity = examRecordEntityMapper.selectByPrimaryKey(id);
         ShengtaiExamRecordVo vo = new ShengtaiExamRecordVo();
-        BeanUtils.copyProperties(examRecordEntity,vo);
+        BeanUtils.copyProperties(examRecordEntity, vo);
         return vo;
     }
 
@@ -125,20 +146,31 @@ public class ExamRecordService {
 
     /**
      * 根据部门id查询考核记录
-     * @param departmentId
-     * @return
      */
-    public List<ShengtaiExamRecordVo> queryExamRecordByDepartmentId(String departmentId){
+    public List<ShengtaiExamRecordVo> queryExamRecordByDepartmentId(String departmentId) {
         List<ShengtaiExamRecordVo> voList = Lists.newArrayList();
-        for(ShengtaiExamRecordEntity entity : examRecordEntityMapper.queryExamRecordByDepartmentId(departmentId)){
+        for (ShengtaiExamRecordEntity entity : examRecordEntityMapper
+                .queryExamRecordByDepartmentId(departmentId)) {
             ShengtaiExamRecordVo vo = new ShengtaiExamRecordVo();
-            BeanUtils.copyProperties(entity,vo);
+            BeanUtils.copyProperties(entity, vo);
             voList.add(vo);
         }
         return voList;
     }
 
-
-
+    /**
+     * 根据部门id,要点id查询考核记录
+     */
+    public List<ShengtaiExamRecordVo> queryExamRecordByDepartmentIdAndDetailId(String departmentId,
+            String detailId) {
+        List<ShengtaiExamRecordVo> voList = Lists.newArrayList();
+        for (ShengtaiExamRecordEntity entity : examRecordEntityMapper
+                .queryExamRecordByDepartmentIdAndDetailId(departmentId, detailId)) {
+            ShengtaiExamRecordVo vo = new ShengtaiExamRecordVo();
+            BeanUtils.copyProperties(entity, vo);
+            voList.add(vo);
+        }
+        return voList;
+    }
 
 }

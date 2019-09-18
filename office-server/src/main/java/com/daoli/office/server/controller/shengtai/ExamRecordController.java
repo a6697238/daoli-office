@@ -77,6 +77,17 @@ public class ExamRecordController extends BaseController {
         return new JsonResponse();
     }
 
+
+    @ResponseBody
+    @ApiOperation(value = "给一条考核记录打分")
+    @RequestMapping(value = "/score_exam_record", method = RequestMethod.POST)
+    public JsonResponse scoreExamRecord(@RequestParam Float score,
+            @RequestParam Integer examRecordPid, @RequestParam String departmentId) {
+        examRecordService.scoreExamRecord(score, examRecordPid, departmentId);
+        return new JsonResponse();
+    }
+
+
     @ResponseBody
     @ApiOperation(value = "上传一条考核附件")
     @RequestMapping(value = "/upload_exam_addition", method = RequestMethod.POST)
@@ -125,6 +136,15 @@ public class ExamRecordController extends BaseController {
     @RequestMapping(value = "/query_exam_record_by_department_id", method = RequestMethod.GET)
     public JsonResponse queryExamRecordByDepartmentId(@RequestParam String departmentId) {
         return new JsonResponse(examRecordService.queryExamRecordByDepartmentId(departmentId));
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "根据部门id,要点id,查询考核记录")
+    @RequestMapping(value = "/query_exam_record_by_department_id_and_detail_id", method = RequestMethod.GET)
+    public JsonResponse queryExamRecordByDepartmentIdAndDetailId(@RequestParam String departmentId,
+            @RequestParam String detailId) {
+        return new JsonResponse(
+                examRecordService.queryExamRecordByDepartmentIdAndDetailId(departmentId, detailId));
     }
 
 
