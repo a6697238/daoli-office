@@ -70,6 +70,7 @@ CREATE TABLE `tbl_shengtai_exam_record` (
   `exam_detail_id` varchar(64) NOT NULL DEFAULT '' COMMENT '考核要点id',
   `exam_detail_desc` varchar(255) NOT NULL DEFAULT '' COMMENT '考核要点描述',
   `exam_score` float NOT NULL DEFAULT 0 COMMENT '分值',
+  `exam_record_num` int(11) NOT NULL DEFAULT 0 COMMENT '当前考试提交数量',
   `department_id` varchar(64) NOT NULL DEFAULT '' COMMENT '部门id',
   `record_name` varchar(64) NOT NULL DEFAULT '' COMMENT '记录名称',
   `record_abstract` varchar(64) NOT NULL DEFAULT '0' COMMENT '记录摘要',
