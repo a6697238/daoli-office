@@ -15,6 +15,8 @@ public class DepartmentEntity {
 
     private Byte valid;
 
+    private String departmentType;
+
     public Integer getId() {
         return id;
     }
@@ -61,5 +63,13 @@ public class DepartmentEntity {
 
     public void setValid(Byte valid) {
         this.valid = valid;
+    }
+
+    public String getDepartmentType() {
+        return departmentType;
+    }
+
+    public void setDepartmentType(String departmentType) {
+        this.departmentType = departmentType;
     }
 }

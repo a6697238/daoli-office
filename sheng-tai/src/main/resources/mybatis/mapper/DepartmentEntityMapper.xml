@@ -8,9 +8,10 @@
     <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="valid" property="valid" jdbcType="TINYINT" />
+    <result column="department_type" property="departmentType" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, department_id, department_name, modify_time, create_time, valid
+    id, department_id, department_name, modify_time, create_time, valid, department_type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -18,23 +19,39 @@
     from tbl_department
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <select id="selectByBusinessKey" resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.DepartmentEntity" >
     select
     <include refid="Base_Column_List" />
     from tbl_department
     where departmentId = #{departmentId,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectByFields" resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.DepartmentEntity" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_department
+    where valid = 1
+    <trim prefix="(" suffix=")" suffixOverrides="and" >
+      <if test="departmentName != null" >
+        and department_name like "%"#{departmentName,jdbcType=VARCHAR}"%"
+      </if>
+    </trim>
+  </select>
+
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tbl_department
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.daoli.sheng.tai.entity.DepartmentEntity" >
     insert into tbl_department (id, department_id, department_name, 
-      modify_time, create_time, valid
-      )
+      modify_time, create_time, valid, 
+      department_type)
     values (#{id,jdbcType=INTEGER}, #{departmentId,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR}, 
-      #{modifyTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT}
-      )
+      #{modifyTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT}, 
+      #{departmentType,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.daoli.sheng.tai.entity.DepartmentEntity" >
     insert into tbl_department
@@ -57,6 +74,9 @@
       <if test="valid != null" >
         valid,
       </if>
+      <if test="departmentType != null" >
+        department_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -76,6 +96,9 @@
       </if>
       <if test="valid != null" >
         #{valid,jdbcType=TINYINT},
+      </if>
+      <if test="departmentType != null" >
+        #{departmentType,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -97,6 +120,9 @@
       <if test="valid != null" >
         valid = #{valid,jdbcType=TINYINT},
       </if>
+      <if test="departmentType != null" >
+        department_type = #{departmentType,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -106,19 +132,8 @@
       department_name = #{departmentName,jdbcType=VARCHAR},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      valid = #{valid,jdbcType=TINYINT}
+      valid = #{valid,jdbcType=TINYINT},
+      department_type = #{departmentType,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
-  <select id="selectByFields" resultMap="BaseResultMap" parameterType="com.daoli.sheng.tai.entity.DepartmentEntity" >
-    select
-    <include refid="Base_Column_List" />
-    from tbl_department
-    where valid = 1 and
-    <trim prefix="(" suffix=")" suffixOverrides="and" >
-      <if test="departmentName != null" >
-        department_name like "%"#{departmentName,jdbcType=VARCHAR}"%" and
-      </if>
-    </trim>
-  </select>
 </mapper>

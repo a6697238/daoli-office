@@ -9,10 +9,12 @@ import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import com.daoli.office.vo.sheng.tai.DepartmentScoreReportVo;
 import com.daoli.office.vo.sheng.tai.ExamRecordAdditionVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
 import com.daoli.sheng.tai.entity.ShengtaiExamRecordAdditionEntity;
 import com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity;
+import com.daoli.sheng.tai.mapper.DepartmentEntityMapper;
 import com.daoli.sheng.tai.mapper.ShengtaiExamRecordAdditionEntityMapper;
 import com.daoli.sheng.tai.mapper.ShengtaiExamRecordEntityMapper;
 import com.google.common.collect.Lists;
@@ -35,6 +37,9 @@ public class ExamRecordService {
 
     @Autowired
     private ShengtaiExamRecordEntityMapper examRecordEntityMapper;
+
+    @Autowired
+    private DepartmentEntityMapper departmentEntityMapper;
 
     @Autowired
     private ShengtaiExamRecordAdditionEntityMapper additionEntityMapper;
@@ -172,5 +177,15 @@ public class ExamRecordService {
         }
         return voList;
     }
+
+
+    /**
+     * 根据部门id,要点id查询考核记录
+     */
+    public List<DepartmentScoreReportVo> queryDepartmentScoreReport(long startTime,
+            long endTime) {
+        return null;
+    }
+
 
 }
