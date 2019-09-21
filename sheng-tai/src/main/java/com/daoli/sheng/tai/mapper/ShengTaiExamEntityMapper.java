@@ -26,6 +26,11 @@ public interface ShengTaiExamEntityMapper {
     List<ShengTaiExamEntity> queryExamsByFuzzyCondition(ShengTaiExamEntity record);
     List<ShengTaiExamEntity> queryAllExams();
 
+    int updateZhiBiaoStatusByFenLeiPid(ShengTaiExamEntity record);
+    int updateYaoDianStatusByFenLeiPid(ShengTaiExamEntity record);
+
+    int updateZhiBiaoScoreByYaoDianParentId(Integer yaoDianParentId);
+    int updateFenLeiScoreByYaoDianParentId(Integer yaoDianParentId);
     //ShengTaiExamEntity queryByExamId(String examId);
 
 }

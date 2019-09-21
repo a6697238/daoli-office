@@ -6,6 +6,7 @@ import static com.daoli.constant.DBconstant.VALID;
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamVo;
 import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamStatusConstant;
+import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant;
 import com.daoli.sheng.tai.entity.DepartmentEntity;
 import com.daoli.sheng.tai.entity.DepartmentExamEntity;
 import com.daoli.sheng.tai.entity.ShengTaiExamEntity;
@@ -70,18 +71,17 @@ public class ShengTaiExamService {
             examEntity.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_DAI_FA_BU);
             examEntity.setStartTime(new Date());
             examEntity.setEndTime(new Date());
-//            String pattern = "yyyy-MM-dd HH:mm:ss";
-//            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-//            try {
-//                Date startDate = sdf.parse("2999-01-01 08:00:00");
-//                examEntity.setStartTime(startDate);
-//                Date endtDate = sdf.parse("2999-12-30 08:00:00");
-//                examEntity.setEndTime(endtDate);
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-            examMapper.insertSelective(examEntity);
-            resMap.put(examEntity.getExamName(), true);
+
+            int res = examMapper.insertSelective(examEntity);
+            if (res != 0) {
+                if (ShengTaiExamTypeConstant.KAO_HE_YAO_DIAN.equals(vo.getExamType())) {
+                    examMapper.updateZhiBiaoScoreByYaoDianParentId(vo.getParentExamId());
+                    examMapper.updateFenLeiScoreByYaoDianParentId(vo.getParentExamId());
+                }
+                resMap.put(examEntity.getExamName(), true);
+            } else {
+                resMap.put(examEntity.getExamName(), false);
+            }
         }
         return resMap;
     }
@@ -138,7 +138,10 @@ public class ShengTaiExamService {
         for (Integer id : examPIds) {
             ShengTaiExamEntity examEntity = examMapper.selectByPrimaryKey(id);
             examEntity.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_YI_FA_BU);
+            examEntity.setModifyTime(new Date());
             if (examMapper.updateByPrimaryKeySelective(examEntity) > 0) {
+                examMapper.updateZhiBiaoStatusByFenLeiPid(examEntity);
+                examMapper.updateYaoDianStatusByFenLeiPid(examEntity);
                 resMap.put(examEntity.getId(), true);
             }
         }
@@ -152,7 +155,10 @@ public class ShengTaiExamService {
             ShengTaiExamEntity examEntity = examMapper.selectByPrimaryKey(id);
             if (ShengTaiExamStatusConstant.KAO_HE_YI_FA_BU.equals(examEntity.getExamStatus())) {
                 examEntity.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_DAI_FA_BU);
+                examEntity.setModifyTime(new Date());
                 if (examMapper.updateByPrimaryKeySelective(examEntity) > 0) {
+                    examMapper.updateZhiBiaoStatusByFenLeiPid(examEntity);
+                    examMapper.updateYaoDianStatusByFenLeiPid(examEntity);
                     resMap.put(examEntity.getId(), true);
                 }
             }
@@ -202,7 +208,15 @@ public class ShengTaiExamService {
         BeanUtils.copyProperties(vo, examEntity);
         examEntity.setValid(VALID);
         examEntity.setModifyTime(new Date());
-        return examMapper.updateByPrimaryKeySelective(examEntity);
+
+        int res = examMapper.updateByPrimaryKeySelective(examEntity);
+
+        ShengTaiExamEntity detailEntry= examMapper.selectByPrimaryKey(vo.getId());
+        if(ShengTaiExamTypeConstant.KAO_HE_YAO_DIAN.equals(detailEntry.getExamType())){
+            examMapper.updateZhiBiaoScoreByYaoDianParentId(detailEntry.getParentExamId());
+            examMapper.updateFenLeiScoreByYaoDianParentId(detailEntry.getParentExamId());
+        }
+        return res;
     }
 
     public int deleteExam(ShengtaiExamVo vo) {

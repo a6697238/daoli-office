@@ -355,4 +355,85 @@
 
     valid = "1"
   </select>
+
+
+  <update id="updateZhiBiaoStatusByFenLeiPid" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity" >
+    update  tbl_shengtai_exam a
+    inner join(
+      select tbl_shengtai_exam.id from tbl_shengtai_exam  where tbl_shengtai_exam.valid="1"  and tbl_shengtai_exam.parent_exam_id = #{id,jdbcType=INTEGER}
+    )  b
+    on a.id=b.id
+    set a.exam_status = #{examStatus,jdbcType=VARCHAR},
+        a.modify_time = #{modifyTime,jdbcType=TIMESTAMP};
+
+  </update>
+
+  <update id="updateYaoDianStatusByFenLeiPid" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity" >
+    update  tbl_shengtai_exam t1
+    inner join (
+    select  id from tbl_shengtai_exam where tbl_shengtai_exam.parent_exam_id =  #{id,jdbcType=INTEGER} and tbl_shengtai_exam.valid="1"
+    ) t2
+    on t1.parent_exam_id = t2.id
+    set t1.exam_status = #{examStatus,jdbcType=VARCHAR},
+    t1.modify_time = #{modifyTime,jdbcType=TIMESTAMP};
+  </update>
+
+
+  <update id="updateZhiBiaoScoreByYaoDianParentId" parameterType="java.lang.Integer" >
+
+    update
+    tbl_shengtai_exam a,
+    (
+      select sum(exam_score) as zhibiao_score
+      from tbl_shengtai_exam
+      where  parent_exam_id= #{yaoDianParentId,jdbcType=INTEGER}
+    )b
+    set a.exam_score=b.zhibiao_score where a.id= #{yaoDianParentId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateFenLeiScoreByYaoDianParentId" parameterType="java.lang.Integer" >
+    update tbl_shengtai_exam a,
+    (
+    select sum(exam_score) as fenlei_score
+    from tbl_shengtai_exam
+    where  parent_exam_id in (
+    select parent_exam_id from tbl_shengtai_exam  where id = #{yaoDianParentId,jdbcType=INTEGER}
+    )
+    )b,
+    (
+    select parent_exam_id
+    from tbl_shengtai_exam  where id = #{yaoDianParentId,jdbcType=INTEGER}
+    )c
+    set a.exam_score=b.fenlei_score where a.id=c.parent_exam_id;
+  </update>
+
+
+  <update id="delectZhiBiaoByFenLeiPid" parameterType="java.lang.Integer">
+    update  tbl_shengtai_exam a
+    inner join(
+    select tbl_shengtai_exam.id from tbl_shengtai_exam  where tbl_shengtai_exam.valid="1"  and tbl_shengtai_exam.parent_exam_id =  #{id,jdbcType=INTEGER}
+    )  b
+    on a.id=b.id
+    set a.valid = "0";
+
+  </update>
+
+  <update id="delectYaoDianByZhiBiaoPid" parameterType="java.lang.Integer">
+    update  tbl_shengtai_exam a
+    inner join(
+    select tbl_shengtai_exam.id from tbl_shengtai_exam  where tbl_shengtai_exam.valid="1"  and tbl_shengtai_exam.parent_exam_id =  #{id,jdbcType=INTEGER}
+    )  b
+    on a.id=b.id
+    set a.valid = "0";
+
+  </update>
+
+  <update id="delectYaoDianByFenLeiPid" parameterType="java.lang.Integer" >
+    update  tbl_shengtai_exam t1
+    inner join (
+    select  id from tbl_shengtai_exam where tbl_shengtai_exam.parent_exam_id =  #{id,jdbcType=INTEGER} and tbl_shengtai_exam.valid="1"
+    ) t2
+    on t1.parent_exam_id = t2.id
+    set t1.valid = "0";
+  </update>
 </mapper>
