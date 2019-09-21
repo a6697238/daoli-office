@@ -137,7 +137,8 @@ public class ExamRecordController extends BaseController {
     public JsonResponse queryExamRecordByDepartmentId(@RequestParam String departmentId,
             @RequestParam long startTime,
             @RequestParam long endTime) {
-        return new JsonResponse(examRecordService.queryExamRecordByDepartmentId(departmentId));
+        return new JsonResponse(
+                examRecordService.queryExamRecordByDepartmentId(departmentId, startTime, endTime));
     }
 
 
