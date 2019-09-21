@@ -134,7 +134,9 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "根据部门查询考核记录")
     @RequestMapping(value = "/query_exam_record_by_department_id", method = RequestMethod.GET)
-    public JsonResponse queryExamRecordByDepartmentId(@RequestParam String departmentId) {
+    public JsonResponse queryExamRecordByDepartmentId(@RequestParam String departmentId,
+            @RequestParam long startTime,
+            @RequestParam long endTime) {
         return new JsonResponse(examRecordService.queryExamRecordByDepartmentId(departmentId));
     }
 

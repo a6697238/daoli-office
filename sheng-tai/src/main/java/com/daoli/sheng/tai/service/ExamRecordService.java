@@ -155,7 +155,8 @@ public class ExamRecordService {
     /**
      * 根据部门id查询考核记录
      */
-    public List<ShengtaiExamRecordVo> queryExamRecordByDepartmentId(String departmentId) {
+    public List<ShengtaiExamRecordVo> queryExamRecordByDepartmentId(String departmentId,
+            long startTime, long endTime) {
         List<ShengtaiExamRecordVo> voList = Lists.newArrayList();
         for (ShengtaiExamRecordEntity entity : examRecordEntityMapper
                 .queryExamRecordByDepartmentId(departmentId)) {
