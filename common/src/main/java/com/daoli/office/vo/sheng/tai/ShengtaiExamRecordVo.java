@@ -69,5 +69,10 @@ public class ShengtaiExamRecordVo {
 
     private Date createTime;
 
+    private Date startTime;
+
+    private Date endTime;
+
+
 
 }

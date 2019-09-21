@@ -5,6 +5,7 @@ import static com.daoli.constant.DBconstant.VALID;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -12,12 +13,14 @@ import java.util.stream.Collectors;
 import com.daoli.office.vo.sheng.tai.DepartmentScoreReportVo;
 import com.daoli.office.vo.sheng.tai.ExamRecordAdditionVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
+import com.daoli.sheng.tai.entity.DepartmentEntity;
 import com.daoli.sheng.tai.entity.ShengtaiExamRecordAdditionEntity;
 import com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity;
 import com.daoli.sheng.tai.mapper.DepartmentEntityMapper;
 import com.daoli.sheng.tai.mapper.ShengtaiExamRecordAdditionEntityMapper;
 import com.daoli.sheng.tai.mapper.ShengtaiExamRecordEntityMapper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +48,7 @@ public class ExamRecordService {
     private ShengtaiExamRecordAdditionEntityMapper additionEntityMapper;
 
     private final static String[] EXAM_RECORD_IGNORE_PROPERTIES = new String[]{"modifyTime",
-            "createTime", "recordStatus", "examScore"};
+            "createTime", "recordStatus", "examScore", "startTime", "endTime"};
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -182,9 +185,37 @@ public class ExamRecordService {
     /**
      * 根据部门id,要点id查询考核记录
      */
-    public List<DepartmentScoreReportVo> queryDepartmentScoreReport(long startTime,
+    public List<DepartmentScoreReportVo> queryDepartmentScoreReport(String departmentName,
+            String departmentType, long startTime,
             long endTime) {
-        return null;
+        DepartmentEntity entity = DepartmentEntity.builder().departmentName(departmentName)
+                .departmentType(departmentType).build();
+        List<DepartmentEntity> entityList = departmentEntityMapper.selectByFields(entity);
+        List<DepartmentScoreReportVo> reportVoList = Lists.newArrayList();
+        for (DepartmentEntity departmentEntity : entityList) {
+            List<ShengtaiExamRecordEntity> recordEntityList = examRecordEntityMapper
+                    .queryExamRecordByDepartmentIdWithTime(departmentEntity.getDepartmentId(),
+                            new Date(startTime), new Date(endTime));
+            int scoredRecord = 0;
+            int totalRecord = 0;
+            float totalScore = 0;
+            Set<String> countDetail = Sets.newHashSet();
+            for (ShengtaiExamRecordEntity recordEntity : recordEntityList) {
+                if (!countDetail.contains(recordEntity.getExamDetailId())) {
+                    totalRecord++;
+                    if (recordEntity.getExamScore() > -1) {
+                        scoredRecord++;
+                        totalScore = totalScore + recordEntity.getExamScore();
+                    }
+                }
+            }
+            reportVoList
+                    .add(DepartmentScoreReportVo.builder().departmentId(entity.getDepartmentId())
+                            .departmentName(entity.getDepartmentName()).scoredRecord(scoredRecord)
+                            .totalRecord(totalRecord).totalScore(totalScore).build());
+        }
+
+        return reportVoList;
     }
 
 

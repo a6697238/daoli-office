@@ -37,6 +37,10 @@ public class ShengtaiExamRecordEntity {
 
     private Byte valid;
 
+    private Date startTime;
+
+    private Date endTime;
+
     public Integer getId() {
         return id;
     }
@@ -171,5 +175,21 @@ public class ShengtaiExamRecordEntity {
 
     public void setValid(Byte valid) {
         this.valid = valid;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

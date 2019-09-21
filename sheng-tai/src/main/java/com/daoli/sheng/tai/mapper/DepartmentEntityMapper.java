@@ -23,4 +23,6 @@ public interface DepartmentEntityMapper {
 
     DepartmentEntity selectByBusinessKey(DepartmentEntity record);
 
+
+
 }

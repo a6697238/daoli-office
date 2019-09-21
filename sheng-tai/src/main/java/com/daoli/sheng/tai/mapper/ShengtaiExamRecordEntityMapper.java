@@ -1,6 +1,6 @@
 package com.daoli.sheng.tai.mapper;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity;
@@ -29,7 +29,10 @@ public interface ShengtaiExamRecordEntityMapper {
     List<ShengtaiExamRecordEntity> queryExamRecordByDepartmentId(
             @Param("departmentId") String departmentId);
 
+    List<ShengtaiExamRecordEntity> queryExamRecordByDepartmentIdWithTime(
+            @Param("departmentId") String departmentId, @Param("startTime") Date startTime,
+            @Param("endTime") Date endTime);
+
     List<ShengtaiExamRecordEntity> queryExamRecordByDepartmentIdAndDetailId(
             @Param("departmentId") String departmentId, @Param("detailId") String detailId);
-
 }

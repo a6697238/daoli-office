@@ -31,7 +31,7 @@ public class DepartmentScoreReportVo {
 
     private Integer totalRecord;
 
-    private Date totalScore;
+    private Float totalScore;
 
 
 }

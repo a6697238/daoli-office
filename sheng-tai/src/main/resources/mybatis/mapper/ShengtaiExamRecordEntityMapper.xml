@@ -20,11 +20,13 @@
     <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
     <result column="valid" property="valid" jdbcType="TINYINT"/>
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
   </resultMap>
   <sql id="Base_Column_List">
     id, exam_record_id, exam_index_id, exam_index_desc, exam_detail_id, exam_detail_desc, 
     exam_score, department_id, record_name, record_abstract, record_master_name, record_group_name, 
-    record_status, create_uid, modify_time, create_time, valid
+    record_status, create_uid, modify_time, create_time, valid, start_time, end_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
     select
@@ -34,8 +36,8 @@
   </select>
 
 
-
-  <select id="queryExamRecordByDepartmentId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  <select id="queryExamRecordByDepartmentId" resultMap="BaseResultMap"
+    parameterType="java.lang.String">
     select
     <include refid="Base_Column_List"/>
     from tbl_shengtai_exam_record
@@ -44,7 +46,8 @@
   </select>
 
 
-  <select id="queryExamRecordByDepartmentIdAndDetailId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  <select id="queryExamRecordByDepartmentIdAndDetailId" resultMap="BaseResultMap"
+    parameterType="java.lang.String">
     select
     <include refid="Base_Column_List"/>
     from tbl_shengtai_exam_record
@@ -54,13 +57,21 @@
   </select>
 
 
-
   <select id="queryByExamIdAndDepartmentId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
     from tbl_shengtai_exam_record
-    where examId = #{examIdjdbcType=VARCHAR}
-    AND departmentId = #{departmentId,jdbcType=VARCHAR}
+    where examId = #{examId,jdbcType=VARCHAR}
+    AND valid = 1
+  </select>
+
+  <select id="queryExamRecordByDepartmentIdWithTime" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from tbl_shengtai_exam_record
+    where examId = #{examId,jdbcType=VARCHAR}
+    AND start_time &lt;= #{startTime,jdbcType=TIMESTAMP}
+    AND endTime &gt;= #{startTime,jdbcType=TIMESTAMP}
     AND valid = 1
   </select>
 
@@ -75,16 +86,17 @@
       exam_score, department_id, record_name, 
       record_abstract, record_master_name, record_group_name, 
       record_status, create_uid, modify_time, 
-      create_time, valid)
+      create_time, valid, start_time, 
+      end_time)
     values (#{id,jdbcType=INTEGER}, #{examRecordId,jdbcType=VARCHAR}, #{examIndexId,jdbcType=VARCHAR}, 
       #{examIndexDesc,jdbcType=VARCHAR}, #{examDetailId,jdbcType=VARCHAR}, #{examDetailDesc,jdbcType=VARCHAR}, 
       #{examScore,jdbcType=REAL}, #{departmentId,jdbcType=VARCHAR}, #{recordName,jdbcType=VARCHAR}, 
       #{recordAbstract,jdbcType=VARCHAR}, #{recordMasterName,jdbcType=VARCHAR}, #{recordGroupName,jdbcType=VARCHAR}, 
       #{recordStatus,jdbcType=VARCHAR}, #{createUid,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT})
+      #{createTime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity"
-    useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+  <insert id="insertSelective" parameterType="com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity">
     insert into tbl_shengtai_exam_record
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -138,6 +150,12 @@
       <if test="valid != null">
         valid,
       </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -190,6 +208,12 @@
       </if>
       <if test="valid != null">
         #{valid,jdbcType=TINYINT},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -245,6 +269,12 @@
       <if test="valid != null">
         valid = #{valid,jdbcType=TINYINT},
       </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -266,7 +296,9 @@
       create_uid = #{createUid,jdbcType=VARCHAR},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      valid = #{valid,jdbcType=TINYINT}
+      valid = #{valid,jdbcType=TINYINT},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

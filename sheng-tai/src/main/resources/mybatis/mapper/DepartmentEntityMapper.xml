@@ -36,6 +36,9 @@
       <if test="departmentName != null" >
         and department_name like "%"#{departmentName,jdbcType=VARCHAR}"%"
       </if>
+      <if test="departmentType != null" >
+        and department_type = #{departmentType,jdbcType=VARCHAR}
+      </if>
     </trim>
   </select>
 

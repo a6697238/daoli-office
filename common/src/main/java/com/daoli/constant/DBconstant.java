@@ -16,4 +16,9 @@ public class DBconstant {
 
     public final static float DEFAULT_SCORE = -1;
 
+    //部门类型
+    public final static String XIANG_ZHEN = "XIANG_ZHEN";
+    public final static String SHI_QU = "SHI_QU";
+
+
 }
