@@ -1,6 +1,7 @@
 package com.daoli.office.vo.sheng.tai;
 
 import java.util.Date;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -27,11 +28,16 @@ public class DepartmentScoreReportVo {
 
     private String departmentName;
 
-    private Integer scoredRecord;
+    private int scoredCount;
 
-    private Integer totalRecord;
+    private int totalCount;
 
-    private Float totalScore;
+    private float score;
 
+    private float totalScore;
+
+    private float completeRate;
+
+    private Map<String,DepartmentScoreReportInfoVo> info;
 
 }

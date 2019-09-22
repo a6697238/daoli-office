@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface ShengtaiExamRecordEntityMapper {
-
     int deleteByPrimaryKey(Integer id);
 
     int insert(ShengtaiExamRecordEntity record);
@@ -30,8 +29,8 @@ public interface ShengtaiExamRecordEntityMapper {
             @Param("departmentId") String departmentId);
 
     List<ShengtaiExamRecordEntity> queryExamRecordByDepartmentIdWithTime(
-            @Param("departmentId") String departmentId, @Param("startTime") Date startTime,
-            @Param("endTime") Date endTime);
+            @Param("departmentId") String departmentId, @Param("startTime") Long startTime,
+            @Param("endTime") Long endTime);
 
     List<ShengtaiExamRecordEntity> queryExamRecordByDepartmentIdAndDetailId(
             @Param("departmentId") String departmentId, @Param("detailId") String detailId);

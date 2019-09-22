@@ -86,7 +86,8 @@ create TABLE `tbl_shengtai_exam_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='考核记录';
 alter table tbl_shengtai_exam_record add COLUMN start_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开始时间';
 alter table tbl_shengtai_exam_record add COLUMN end_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '结束时间';
-
+alter table tbl_shengtai_exam_record add COLUMN exam_detail_name varchar(255) NOT NULL DEFAULT '' COMMENT '要点名称';
+alter table tbl_shengtai_exam_record add COLUMN exam_index_name varchar(255) NOT NULL DEFAULT '' COMMENT '指标名称';
 
 
 

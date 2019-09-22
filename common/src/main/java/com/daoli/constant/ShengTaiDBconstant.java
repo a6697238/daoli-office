@@ -7,13 +7,14 @@ package com.daoli.constant;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class DBconstant {
+public class ShengTaiDBconstant {
 
     public final static Byte VALID = 1;
 
     public final static Byte IN_VALID = 0;
 
 
+    //默认考试得分
     public final static float DEFAULT_SCORE = -1;
 
     //部门类型

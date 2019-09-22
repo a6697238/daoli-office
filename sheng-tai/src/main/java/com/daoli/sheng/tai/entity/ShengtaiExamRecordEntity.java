@@ -41,6 +41,10 @@ public class ShengtaiExamRecordEntity {
 
     private Date endTime;
 
+    private String examDetailName;
+
+    private String examIndexName;
+
     public Integer getId() {
         return id;
     }
@@ -191,5 +195,21 @@ public class ShengtaiExamRecordEntity {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public String getExamDetailName() {
+        return examDetailName;
+    }
+
+    public void setExamDetailName(String examDetailName) {
+        this.examDetailName = examDetailName;
+    }
+
+    public String getExamIndexName() {
+        return examIndexName;
+    }
+
+    public void setExamIndexName(String examIndexName) {
+        this.examIndexName = examIndexName;
     }
 }

@@ -3,6 +3,7 @@ package com.daoli.sheng.tai.mapper;
 import java.util.List;
 
 import com.daoli.sheng.tai.entity.DepartmentEntity;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,9 +20,9 @@ public interface DepartmentEntityMapper {
 
     int updateByPrimaryKey(DepartmentEntity record);
 
-    List<DepartmentEntity> selectByFields(DepartmentEntity record);
+    List<DepartmentEntity> queryDepartmentByFields(DepartmentEntity record);
 
-    DepartmentEntity selectByBusinessKey(DepartmentEntity record);
+    DepartmentEntity queryDepartmentByDepartmentId(@Param("departmentId")String departmentId);
 
 
 

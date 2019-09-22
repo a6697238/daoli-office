@@ -55,6 +55,7 @@ public class ExamRecordController extends BaseController {
     @Autowired
     private ExamRecordService examRecordService;
 
+
     @Value("${daoli.baseSavePath}")
     private String baseSavePath;
 
@@ -82,8 +83,8 @@ public class ExamRecordController extends BaseController {
     @ApiOperation(value = "给一条考核记录打分")
     @RequestMapping(value = "/score_exam_record", method = RequestMethod.POST)
     public JsonResponse scoreExamRecord(@RequestParam Float score,
-            @RequestParam Integer examRecordPid, @RequestParam String departmentId) {
-        examRecordService.scoreExamRecord(score, examRecordPid, departmentId);
+            @RequestParam String detailId, @RequestParam String departmentId) {
+        examRecordService.scoreExamRecord(score, detailId, departmentId);
         return new JsonResponse();
     }
 

@@ -1,7 +1,7 @@
 package com.daoli.sheng.tai.service;
 
-import static com.daoli.constant.DBconstant.IN_VALID;
-import static com.daoli.constant.DBconstant.VALID;
+import static com.daoli.constant.ShengTaiDBconstant.IN_VALID;
+import static com.daoli.constant.ShengTaiDBconstant.VALID;
 
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamVo;
@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 

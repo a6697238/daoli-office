@@ -32,13 +32,19 @@ public class ShengtaiExamRecordVo {
     @ApiModelProperty(value = "指标业务id", required = true, example = "36e3694b-d754-49f0-b927-e4c576df2029")
     private String examIndexId;
 
-    @ApiModelProperty(value = "指标描述", required = true, example = "xxx考核指标")
+    @ApiModelProperty(value = "指标名称", required = false, example = "xxx考核指标")
+    private String examIndexName;
+
+    @ApiModelProperty(value = "指标描述", required = false, example = "xxx考核指标")
     private String examIndexDesc;
 
     @ApiModelProperty(value = "要点业务id", required = true, example = "36e3694b-d754-49f0-b927-e4c576df2029")
     private String examDetailId;
 
-    @ApiModelProperty(value = "要点描述", required = true, example = "xxx要点")
+    @ApiModelProperty(value = "要点名称", required = false, example = "xxx考核指标")
+    private String examDetailName;
+
+    @ApiModelProperty(value = "要点描述", required = false, example = "xxx要点")
     private String examDetailDesc;
 
     @ApiModelProperty(value = "记录得分", required = false,example = "2.0")

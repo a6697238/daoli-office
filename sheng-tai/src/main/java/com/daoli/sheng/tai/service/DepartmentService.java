@@ -1,12 +1,11 @@
 package com.daoli.sheng.tai.service;
 
-import static com.daoli.constant.DBconstant.VALID;
-import static com.daoli.constant.DBconstant.IN_VALID ;
+import static com.daoli.constant.ShengTaiDBconstant.VALID;
+import static com.daoli.constant.ShengTaiDBconstant.IN_VALID ;
 
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
 import com.daoli.sheng.tai.entity.DepartmentEntity;
 import com.daoli.sheng.tai.mapper.DepartmentEntityMapper;
-import com.daoli.sheng.tai.mapper.DepartmentExamEntityMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,20 +60,10 @@ public class DepartmentService {
         return resVo;
     }
 
-    public DepartmentVo queryDepartmentByBusinessId(DepartmentVo vo){
-
-        DepartmentEntity argDepartmentEntity = new DepartmentEntity();
-        argDepartmentEntity.setDepartmentId(vo.getDepartmentId());
-        DepartmentEntity departmentEntity  =  departmentEntityMapper.selectByBusinessKey(argDepartmentEntity);
-        DepartmentVo resVo = new DepartmentVo();
-        BeanUtils.copyProperties(departmentEntity, resVo);
-        return resVo;
-    }
-
     public List<DepartmentVo> queryAllDepartment(){
         DepartmentEntity argEntry = new DepartmentEntity();
         argEntry.setDepartmentName("");
-        List<DepartmentEntity> resFromSql = departmentEntityMapper.selectByFields(argEntry);
+        List<DepartmentEntity> resFromSql = departmentEntityMapper.queryDepartmentByFields(argEntry);
         List<DepartmentVo> res = new ArrayList<>();
         for(DepartmentEntity iterEntry : resFromSql){
             DepartmentVo desVo =  new DepartmentVo();
