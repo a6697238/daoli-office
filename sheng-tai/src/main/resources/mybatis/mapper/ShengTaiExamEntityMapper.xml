@@ -369,8 +369,8 @@
         create_uid like "%"#{createUid,jdbcType=VARCHAR}"%" and
       </if>
       <if test="startTime != null and endTime != null" >
-        start_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP} and
-        end_time  between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+        start_time &gt;= #{startTime,jdbcType=TIMESTAMP}  and
+        end_time &lt;=  #{endTime,jdbcType=TIMESTAMP}
       </if>
     </trim>
   </select>
