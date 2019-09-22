@@ -1,6 +1,7 @@
 package com.daoli.office.vo.sheng.tai;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -23,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class ShengtaiExamRecordVo {
 
-    @ApiModelProperty(value = "记录id", required = false,example = "")
+    @ApiModelProperty(value = "记录id", required = false, example = "")
     private Integer id;
 
     @ApiModelProperty(value = "记录uuid", required = false, example = "修改时候必填，36e3694b-d754-49f0-b927-e4c576df2029")
@@ -47,22 +48,22 @@ public class ShengtaiExamRecordVo {
     @ApiModelProperty(value = "要点描述", required = false, example = "xxx要点")
     private String examDetailDesc;
 
-    @ApiModelProperty(value = "记录得分", required = false,example = "2.0")
+    @ApiModelProperty(value = "记录得分", required = false, example = "2.0")
     private Float examScore;
 
     @ApiModelProperty(value = "部门id", required = true, example = "36e3694b-d754-49f0-b927-e4c576df2029")
     private String departmentId;
 
-    @ApiModelProperty(value = "记录名称", required = true,example = "xxx考核记录")
+    @ApiModelProperty(value = "记录名称", required = true, example = "xxx考核记录")
     private String recordName;
 
-    @ApiModelProperty(value = "记录摘要", required = false,example = "xxx考核记录摘要")
+    @ApiModelProperty(value = "记录摘要", required = false, example = "xxx考核记录摘要")
     private String recordAbstract;
 
-    @ApiModelProperty(value = "负责人姓名", required = true,example = "xxxName")
+    @ApiModelProperty(value = "负责人姓名", required = true, example = "xxxName")
     private String recordMasterName;
 
-    @ApiModelProperty(value = "相关组织人员", required = true,example = "xxxName")
+    @ApiModelProperty(value = "相关组织人员", required = true, example = "xxxName")
     private String recordGroupName;
 
     @ApiModelProperty(value = "记录状态", required = false)
@@ -70,6 +71,7 @@ public class ShengtaiExamRecordVo {
 
     @ApiModelProperty(value = "创建者id", required = true)
     private String createUid;
+
 
     private Date modifyTime;
 
@@ -79,6 +81,7 @@ public class ShengtaiExamRecordVo {
 
     private Date endTime;
 
+    private List<Integer> additionId;
 
 
 }

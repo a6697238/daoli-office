@@ -39,7 +39,7 @@
       and department_name like "%"#{departmentName,jdbcType=VARCHAR}"%"
     </if>
     <if test="departmentType != null">
-      and department_type = #{departmentType,jdbcType=VARCHAR}
+      and department_type like "%"#{departmentType,jdbcType=VARCHAR}"%"
     </if>
   </select>
 

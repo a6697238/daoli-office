@@ -1,10 +1,11 @@
 package com.daoli.office.vo.sheng.tai;
+
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 /**
  * Created by wanglining on 2019/8/22.
@@ -13,7 +14,14 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShengtaiExamVo {
+public class ExamRecordUploadDetailVo {
+
+    private Integer indexPid;
+
+    private String indexName;
+
+    private String indexDesc;
+
     private Integer id;
 
     private String examId;
@@ -32,13 +40,13 @@ public class ShengtaiExamVo {
 
     private String createUid;
 
-    private long startTime;
+    private Date startTime;
 
-    private long endTime;
+    private Date endTime;
 
-    private long modifyTime;
+    private Date modifyTime;
 
-    private long createTime;
+    private Date createTime;
 
     private Integer assignedNum;
 

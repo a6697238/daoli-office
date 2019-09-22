@@ -1,5 +1,7 @@
 package com.daoli.office.vo;
 
+import java.util.UUID;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -56,4 +58,8 @@ public class JsonResponse {
         this.code = success200;
     }
 
+
+    public static void main(String[] args) {
+        System.out.println(UUID.randomUUID().toString());
+    }
 }

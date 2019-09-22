@@ -1,4 +1,4 @@
-package com.daoli.constant;
+package com.daoli.office.vo.sheng.tai.constant;
 
 /**
  * AUTO-GENERATED: houlu @ 2019/8/25 下午6:57

@@ -1,9 +1,12 @@
 package com.daoli.sheng.tai.service;
 
-import static com.daoli.constant.ShengTaiDBconstant.IN_VALID;
-import static com.daoli.constant.ShengTaiDBconstant.VALID;
+import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.IN_VALID;
+import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.VALID;
+import static com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant.KAO_HE_YAO_DIAN;
+import static com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant.KAO_HE_ZHI_BIAO;
 
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
+import com.daoli.office.vo.sheng.tai.ExamRecordUploadDetailVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamVo;
 import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamStatusConstant;
 import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant;
@@ -12,6 +15,7 @@ import com.daoli.sheng.tai.entity.DepartmentExamEntity;
 import com.daoli.sheng.tai.entity.ShengTaiExamEntity;
 import com.daoli.sheng.tai.mapper.DepartmentExamEntityMapper;
 import com.daoli.sheng.tai.mapper.ShengTaiExamEntityMapper;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -72,7 +76,7 @@ public class ShengTaiExamService {
 
             int res = examMapper.insertSelective(examEntity);
             if (res != 0) {
-                if (ShengTaiExamTypeConstant.KAO_HE_YAO_DIAN.equals(vo.getExamType())) {
+                if (KAO_HE_YAO_DIAN.equals(vo.getExamType())) {
                     examMapper.updateZhiBiaoScoreByYaoDianParentId(vo.getParentExamId());
                     examMapper.updateFenLeiScoreByYaoDianParentId(vo.getParentExamId());
                 }
@@ -213,8 +217,8 @@ public class ShengTaiExamService {
 
         int res = examMapper.updateByPrimaryKeySelective(examEntity);
 
-        ShengTaiExamEntity detailEntry= examMapper.selectByPrimaryKey(vo.getId());
-        if(ShengTaiExamTypeConstant.KAO_HE_YAO_DIAN.equals(detailEntry.getExamType())){
+        ShengTaiExamEntity detailEntry = examMapper.selectByPrimaryKey(vo.getId());
+        if (KAO_HE_YAO_DIAN.equals(detailEntry.getExamType())) {
             examMapper.updateZhiBiaoScoreByYaoDianParentId(detailEntry.getParentExamId());
             examMapper.updateFenLeiScoreByYaoDianParentId(detailEntry.getParentExamId());
         }
@@ -257,6 +261,29 @@ public class ShengTaiExamService {
         ShengtaiExamVo vo = ShengtaiExamVo.builder().build();
         BeanUtils.copyProperties(res, vo);
         return vo;
+    }
+
+    public List<ExamRecordUploadDetailVo> queryJinXingZhongExamByDepartmentId(String departmentId) {
+        List<ShengTaiExamEntity> shengTaiExamEntityList = examMapper
+                .queryJinXingZhongExamByDepartmentId(departmentId);
+        Map<Integer, ShengTaiExamEntity> zhibiaoMap = Maps.newHashMap();
+        List<ExamRecordUploadDetailVo> resList = Lists.newArrayList();
+        shengTaiExamEntityList.forEach(entity -> {
+            if (entity.getExamType().equals(KAO_HE_ZHI_BIAO)) {
+                zhibiaoMap.put(entity.getId(), entity);
+            }
+        });
+
+        shengTaiExamEntityList.forEach(entity -> {
+            if (entity.getExamType().equals(KAO_HE_YAO_DIAN)) {
+                ExamRecordUploadDetailVo vo = ExamRecordUploadDetailVo.builder().build();
+                BeanUtils.copyProperties(entity, vo);
+                vo.setIndexName(zhibiaoMap.get(vo.getParentExamId()).getExamName());
+                vo.setIndexDesc(zhibiaoMap.get(vo.getParentExamId()).getExamDesc());
+                resList.add(vo);
+            }
+        });
+        return resList;
     }
 
     public ShengtaiExamVo queryExamByExamId(String examId) {
