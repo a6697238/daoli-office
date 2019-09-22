@@ -383,8 +383,9 @@
       <if test="createUid != null">
         create_uid like "%"#{createUid,jdbcType=VARCHAR}"%" and
       </if>
-      <if test="startTime != null and endTime != null">
-        start_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+      <if test="startTime != null and endTime != null" >
+        start_time &gt;= #{startTime,jdbcType=TIMESTAMP}  and
+        end_time &lt;=  #{endTime,jdbcType=TIMESTAMP}
       </if>
     </trim>
   </select>
@@ -430,9 +431,9 @@
     (
       select sum(exam_score) as zhibiao_score
       from tbl_shengtai_exam
-      where  parent_exam_id= #{yaoDianParentId,jdbcType=INTEGER}
+      where   valid = "1" and parent_exam_id= #{yaoDianParentId,jdbcType=INTEGER}
     )b
-    set a.exam_score=b.zhibiao_score where a.id= #{yaoDianParentId,jdbcType=INTEGER}
+    set a.exam_score=IFNULL(b.zhibiao_score,0) where a.id= #{yaoDianParentId,jdbcType=INTEGER}
   </update>
 
   <update id="updateFenLeiScoreByYaoDianParentId" parameterType="java.lang.Integer" >
@@ -440,15 +441,15 @@
     (
     select sum(exam_score) as fenlei_score
     from tbl_shengtai_exam
-    where  parent_exam_id in (
-    select parent_exam_id from tbl_shengtai_exam  where id = #{yaoDianParentId,jdbcType=INTEGER}
-    )
+      where  parent_exam_id in (
+      select parent_exam_id from tbl_shengtai_exam  where  valid = "1" and  id = #{yaoDianParentId,jdbcType=INTEGER}
+      )
     )b,
     (
     select parent_exam_id
-    from tbl_shengtai_exam  where id = #{yaoDianParentId,jdbcType=INTEGER}
+    from tbl_shengtai_exam  where  id = #{yaoDianParentId,jdbcType=INTEGER}
     )c
-    set a.exam_score=b.fenlei_score where a.id=c.parent_exam_id;
+    set a.exam_score=IFNULL(b.fenlei_score,0) where a.id=c.parent_exam_id;
   </update>
 
 
