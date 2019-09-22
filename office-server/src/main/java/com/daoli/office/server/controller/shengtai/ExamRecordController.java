@@ -13,6 +13,7 @@ import java.util.UUID;
 import com.daoli.office.server.controller.BaseController;
 import com.daoli.office.vo.JsonResponse;
 import com.daoli.office.vo.sheng.tai.ExamRecordAdditionVo;
+import com.daoli.office.vo.sheng.tai.ScoreExamRecordVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
 import com.daoli.sheng.tai.service.ExamRecordService;
 import com.daoli.utils.FileUtils;
@@ -71,9 +72,8 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "修改一条考核记录")
     @RequestMapping(value = "/modify_exam_record", method = RequestMethod.POST)
-    public JsonResponse modifyExamRecord(@RequestBody ShengtaiExamRecordVo req,
-            @RequestParam List<Integer> additionId) {
-        examRecordService.modifyRecord(req, Lists.newArrayList(additionId));
+    public JsonResponse modifyExamRecord(@RequestBody ShengtaiExamRecordVo req) {
+        examRecordService.modifyRecord(req, Lists.newArrayList(req.getAdditionId()));
         return new JsonResponse();
     }
 
@@ -81,9 +81,8 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "给一条考核记录打分")
     @RequestMapping(value = "/score_exam_record", method = RequestMethod.POST)
-    public JsonResponse scoreExamRecord(@RequestParam Float score,
-            @RequestParam String detailId, @RequestParam String departmentId) {
-        examRecordService.scoreExamRecord(score, detailId, departmentId);
+    public JsonResponse scoreExamRecord(@RequestBody ScoreExamRecordVo vo) {
+        examRecordService.scoreExamRecord(vo.getScore(), vo.getDetailId(),vo.getDepartmentId());
         return new JsonResponse();
     }
 
@@ -119,8 +118,8 @@ public class ExamRecordController extends BaseController {
     @ApiOperation(value = "查询一条考核记录")
     @RequestMapping(value = "/query_exam_record", method = RequestMethod.GET)
     @ApiImplicitParam(value = "1(数据库自增主键)", name = "recordId", required = true, dataType = "String", paramType = "query")
-    public JsonResponse queryExamRecord(@RequestParam Integer recordId) {
-        ShengtaiExamRecordVo vo = examRecordService.queryExamRecord(recordId);
+    public JsonResponse queryExamRecord(@RequestParam Integer recordPId) {
+        ShengtaiExamRecordVo vo = examRecordService.queryExamRecord(recordPId);
         List<ExamRecordAdditionVo> additionVoList = examRecordService
                 .queryRecordAdditionList(vo.getId());
         return new JsonResponse(
