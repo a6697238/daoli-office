@@ -196,13 +196,20 @@
   <select id="queryNotAssignedDepartmentsByExamId"  resultMap="DepartmentResultMap"  parameterType="java.lang.String" >
 
     SELECT
-    tbl_d.id, tbl_d.department_id, tbl_d.department_name, tbl_d.modify_time , tbl_d.create_time
-    FROM tbl_department_exam tbl_d_e
-    LEFT JOIN
-    tbl_department tbl_d
-    ON tbl_d.department_id != tbl_d_e.department_id
-    WHERE exam_id = #{examId,jdbcType=VARCHAR} AND tbl_d_e.valid=1
-    AND tbl_d.valid=1
+      tbl_d.id, tbl_d.department_id, tbl_d.department_name, tbl_d.modify_time , tbl_d.create_time
+    FROM
+      tbl_department tbl_d
+    where
+      tbl_d.valid=1 and
+      tbl_d.department_id not in (
+        select
+          tbl_d_e.department_id
+        from
+          tbl_department_exam tbl_d_e
+        where tbl_d_e.valid=1 and
+          exam_id = #{examId,jdbcType=VARCHAR}
+      )
+
 
     <!--select-->
     <!--<include refid="DepartmentE_Column_List" />-->

@@ -1,11 +1,9 @@
 package com.daoli.sheng.tai.mapper;
 
 import com.daoli.sheng.tai.entity.ShengTaiExamEntity;
-import com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -33,4 +31,15 @@ public interface ShengTaiExamEntityMapper {
             @Param("departmentId") String departmentId,
             @Param("startTime") Long startTime, @Param("endTime") Long endTime,
             @Param("examType") String examType);
+
+
+    int updateZhiBiaoStatusByFenLeiPid(ShengTaiExamEntity record);
+
+    int updateYaoDianStatusByFenLeiPid(ShengTaiExamEntity record);
+
+    int updateZhiBiaoScoreByYaoDianParentId(Integer yaoDianParentId);
+
+    int updateFenLeiScoreByYaoDianParentId(Integer yaoDianParentId);
+    //ShengTaiExamEntity queryByExamId(String examId);
+
 }
