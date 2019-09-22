@@ -73,8 +73,8 @@
     <include refid="Base_Column_List"/>
     from tbl_shengtai_exam_record
     where department_id = #{departmentId,jdbcType=VARCHAR}
-    AND start_time &lt;= #{startTime,jdbcType=TIMESTAMP}
-    AND end_time &gt;= #{endTime,jdbcType=TIMESTAMP}
+    AND start_time &gt;= #{startTime,jdbcType=TIMESTAMP}
+    AND end_time &lt;= #{endTime,jdbcType=TIMESTAMP}
     AND valid = 1
   </select>
 

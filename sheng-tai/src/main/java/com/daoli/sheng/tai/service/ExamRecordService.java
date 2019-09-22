@@ -236,7 +236,10 @@ public class ExamRecordService {
             }
             float completeRate = totalCount > 0 ? scoredCount / totalCount : 0;
             reportVoList.add(DepartmentScoreReportVo.builder()
+                    .departmentId(departmentEntity.getDepartmentId())
+                    .departmentPid(departmentEntity.getId())
                     .departmentName(departmentEntity.getDepartmentName()).scoredCount(scoredCount)
+                    .info(info)
                     .totalCount(totalCount).score(score).totalScore(totalScore)
                     .completeRate(completeRate * 100).build());
 

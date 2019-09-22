@@ -145,9 +145,9 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "查询打分目录")
     @RequestMapping(value = "/query_department_score_report", method = RequestMethod.GET)
-    @ApiImplicitParam(value = "XIANG_ZHEN|SHI_QU||", name = "departmentType", required = true, dataType = "String", paramType = "query")
-    public JsonResponse queryDepartmentScoreReport(@RequestParam String departmentName,
-            @RequestParam String departmentType, @RequestParam long startTime,
+    @ApiImplicitParam(value = "XIANG_ZHEN|SHI_QU||", name = "departmentType", required = false, dataType = "String", paramType = "query")
+    public JsonResponse queryDepartmentScoreReport(@RequestParam(required = false) String departmentName,
+            @RequestParam(required = false) String departmentType, @RequestParam long startTime,
             @RequestParam long endTime) {
         return new JsonResponse(examRecordService.queryDepartmentScoreReport(departmentName,
                 departmentType, startTime,
