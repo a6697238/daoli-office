@@ -32,13 +32,13 @@ public class ShengtaiExamVo {
 
     private String createUid;
 
-    private Date startTime;
+    private long startTime;
 
-    private Date endTime;
+    private long endTime;
 
-    private Date modifyTime;
+    private long modifyTime;
 
-    private Date createTime;
+    private long createTime;
 
     private Integer assignedNum;
 
