@@ -172,6 +172,10 @@ public class ShengTaiExamService {
             ShengTaiExamEntity examEntity = examMapper.selectByPrimaryKey(id);
             examEntity.setValid(IN_VALID);
             if (examMapper.updateByPrimaryKeySelective(examEntity) > 0) {
+                if (ShengTaiExamTypeConstant.KAO_HE_YAO_DIAN.equals(examEntity.getExamType())) {
+                    examMapper.updateZhiBiaoScoreByYaoDianParentId(examEntity.getParentExamId());
+                    examMapper.updateFenLeiScoreByYaoDianParentId(examEntity.getParentExamId());
+                }
                 resMap.put(examEntity.getId(), true);
             }
         }
