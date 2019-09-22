@@ -16,8 +16,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ExamRecordUploadDetailVo {
 
-    private Integer indexPid;
-
     private String indexName;
 
     private String indexDesc;

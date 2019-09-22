@@ -117,9 +117,9 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "查询一条考核记录")
     @RequestMapping(value = "/query_exam_record", method = RequestMethod.GET)
-    @ApiImplicitParam(value = "1(数据库自增主键)", name = "recordId", required = true, dataType = "String", paramType = "query")
-    public JsonResponse queryExamRecord(@RequestParam Integer recordPId) {
-        ShengtaiExamRecordVo vo = examRecordService.queryExamRecord(recordPId);
+    @ApiImplicitParam(value = "1(数据库自增主键)", name = "recordPid", required = true, dataType = "String", paramType = "query")
+    public JsonResponse queryExamRecord(@RequestParam Integer recordPid) {
+        ShengtaiExamRecordVo vo = examRecordService.queryExamRecord(recordPid);
         List<ExamRecordAdditionVo> additionVoList = examRecordService
                 .queryRecordAdditionList(vo.getId());
         return new JsonResponse(
