@@ -55,6 +55,7 @@
     <if condition='isNull("logger.root")'>
         <then>
             <property name="ROOT_LEVEL" value="INFO"/>
+            <!--<property name="ROOT_LEVEL" value="DEBUG"/>-->
         </then>
         <else>
             <property name="ROOT_LEVEL" value="${logger.root}"/>

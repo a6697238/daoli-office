@@ -40,6 +40,10 @@ public interface ShengTaiExamEntityMapper {
     int updateZhiBiaoScoreByYaoDianParentId(Integer yaoDianParentId);
 
     int updateFenLeiScoreByYaoDianParentId(Integer yaoDianParentId);
+
+
+    List<ShengTaiExamEntity> queryJinXingZhongExamByDepartmentId(@Param("departmentId") String departmentId);
+
     //ShengTaiExamEntity queryByExamId(String examId);
 
 }

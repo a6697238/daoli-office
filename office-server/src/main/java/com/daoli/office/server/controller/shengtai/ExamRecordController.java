@@ -62,9 +62,8 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "上传一条考核记录")
     @RequestMapping(value = "/upload_exam_record", method = RequestMethod.POST)
-    public JsonResponse uploadExamRecord(@RequestBody ShengtaiExamRecordVo vo,
-            @RequestParam(required = false) List<Integer> additionId) {
-        examRecordService.uploadRecord(vo, Lists.newArrayList(additionId));
+    public JsonResponse uploadExamRecord(@RequestBody ShengtaiExamRecordVo vo) {
+        examRecordService.uploadRecord(vo, Lists.newArrayList(vo.getAdditionId()));
         return new JsonResponse();
     }
 
@@ -135,6 +134,7 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "根据部门查询考核记录")
     @RequestMapping(value = "/query_exam_record_by_department_id", method = RequestMethod.GET)
+
     public JsonResponse queryExamRecordByDepartmentId(@RequestParam String departmentId,
             @RequestParam long startTime,
             @RequestParam long endTime) {
@@ -146,6 +146,7 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "查询打分目录")
     @RequestMapping(value = "/query_department_score_report", method = RequestMethod.GET)
+    @ApiImplicitParam(value = "XIANG_ZHEN|SHI_QU||", name = "departmentType", required = true, dataType = "String", paramType = "query")
     public JsonResponse queryDepartmentScoreReport(@RequestParam String departmentName,
             @RequestParam String departmentType, @RequestParam long startTime,
             @RequestParam long endTime) {

@@ -1,7 +1,7 @@
 package com.daoli.sheng.tai.service;
 
-import static com.daoli.constant.ShengTaiDBconstant.VALID;
-import static com.daoli.constant.ShengTaiDBconstant.IN_VALID ;
+import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.VALID;
+import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.IN_VALID ;
 
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
 import com.daoli.sheng.tai.entity.DepartmentEntity;

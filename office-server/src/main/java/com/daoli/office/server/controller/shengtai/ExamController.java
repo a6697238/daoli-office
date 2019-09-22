@@ -162,6 +162,15 @@ public class ExamController {
         return new JsonResponse(shengTaiExamService.queryExamByPId(examPid));
     }
 
+
+    @RequestMapping(value = "/query_jin_xing_zhong_exam_by_department_id", method = RequestMethod.GET)
+    @ApiOperation(
+            value = "根据部门id正在进行中的考核要点"
+    )
+    public JsonResponse queryJinXingZhongExamByDepartmentId(@RequestParam String departmentId) {
+        return new JsonResponse(shengTaiExamService.queryJinXingZhongExamByDepartmentId(departmentId));
+    }
+
     @ResponseBody
     @ApiOperation(
             value = "按exam id 获得一条考核分类、考核指标或考核要点 详细信息，examId 表示 exam 的业务键"

@@ -37,6 +37,20 @@
   </select>
 
 
+  <select id="queryJinXingZhongExamByDepartmentId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Department_Exam_Column_List"/>
+    FROM
+    tbl_department_exam
+    left join tbl_shengtai_exam
+    ON tbl_department_exam.exam_id = tbl_shengtai_exam.exam_id
+    WHERE tbl_shengtai_exam.exam_status = '考核中'
+    AND tbl_department_exam.department_id = #{departmentId,jdbcType=VARCHAR}
+    AND tbl_shengtai_exam.valid = "1"
+  </select>
+
+
+
   <select id="queryExamByDepartmentIdWithTime" resultMap="BaseResultMap">
     select
     <include refid="Department_Exam_Column_List"/>
@@ -49,6 +63,7 @@
     AND tbl_shengtai_exam.end_time &lt;= #{endTime,jdbcType=TIMESTAMP}
     AND tbl_shengtai_exam.exam_type = #{examType,jdbcType=VARCHAR}
     AND tbl_department_exam.department_id = #{departmentId,jdbcType=VARCHAR}
+    AND tbl_shengtai_exam.valid = "1"
   </select>
 
 

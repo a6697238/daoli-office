@@ -1,7 +1,7 @@
 package com.daoli.sheng.tai.service;
 
-import static com.daoli.constant.ShengTaiDBconstant.DEFAULT_SCORE;
-import static com.daoli.constant.ShengTaiDBconstant.VALID;
+import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.DEFAULT_SCORE;
+import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.VALID;
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant.KAO_HE_ZHI_BIAO;
 
 import java.util.Date;
