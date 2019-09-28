@@ -55,7 +55,7 @@ public class ShengTaiReportService {
 //        return report;
     }
 
-    public Map<String, Object> queryTypeRadar() {
+    public Map<String, Object> queryTypeRadar(long startTime, long endTime) {
         Map<String, Object> res = Maps.newHashMap();
         List<Map<String, Object>> labelList = Lists.newArrayList();
         List<Map<String, Object>> dataList = Lists.newArrayList();
@@ -84,7 +84,7 @@ public class ShengTaiReportService {
 
         Map<String, Object> quzhi = Maps.newHashMap();
         List<String> quzhiScore = Arrays.asList("90", "90", "70", "95", "75");
-        quzhi.put("name", "quzhiScore");
+        quzhi.put("name", "quzhi");
         quzhi.put("value", quzhiScore);
 
         Map<String, Object> jiedao = Maps.newHashMap();
@@ -101,5 +101,78 @@ public class ShengTaiReportService {
         return res;
     }
 
+    public List<Map<String, Object>> queryRecordRate(long startTime, long endTime) {
+        Map<String, Object> res1 = Maps.newHashMap();
+        res1.put("name", "考核分类一");
+        res1.put("value", "40");
+
+        Map<String, Object> res2 = Maps.newHashMap();
+        res2.put("name", "考核分类二");
+        res2.put("value", "60");
+
+        Map<String, Object> res3 = Maps.newHashMap();
+        res3.put("name", "考核分类三");
+        res3.put("value", "79");
+
+        Map<String, Object> res4 = Maps.newHashMap();
+        res4.put("name", "考核分类四");
+        res4.put("value", "90");
+
+        List<Map<String, Object>> resList = Lists.newArrayList();
+        resList.add(res1);
+        resList.add(res2);
+        resList.add(res3);
+        resList.add(res4);
+        return resList;
+    }
+
+
+
+    public Map<String, Object> queryDepartmentScore(long startTime, long endTime) {
+        List<String> labelLsit = Arrays.asList("单位一", "单位二", "单位三", "单位四", "单位五");
+        List<Object> dataList = Lists.newArrayList();
+
+
+
+        List<String> fenleiscore1 = Arrays.asList("70", "90", "80", "70", "90");
+        Map<String, Object> res1 = Maps.newHashMap();
+        res1.put("name", "考核分类一");
+        res1.put("stack", "score");
+        res1.put("data", fenleiscore1);
+
+        List<String> fenleiscore2 = Arrays.asList("70", "90", "80", "70", "90");
+        Map<String, Object> res2 = Maps.newHashMap();
+        res2.put("name", "考核分类二");
+        res2.put("stack", "score");
+        res2.put("data", fenleiscore2);
+
+        List<String> fenleiscore3 = Arrays.asList("70", "90", "80", "70", "90");
+        Map<String, Object> res3 = Maps.newHashMap();
+        res3.put("name", "考核分类三");
+        res3.put("value", "79");
+        res3.put("stack", "score");
+        res3.put("data", fenleiscore3);
+
+
+        List<String> fenleiscore4 = Arrays.asList("70", "90", "80", "70", "90");
+        Map<String, Object> res4 = Maps.newHashMap();
+        res4.put("name", "考核分类四");
+        res4.put("value", "90");
+        res4.put("stack", "score");
+        res4.put("data", fenleiscore4);
+
+
+        dataList.add(res1);
+        dataList.add(res2);
+        dataList.add(res3);
+        dataList.add(res4);
+
+
+        Map<String,Object> res = Maps.newHashMap();
+        res.put("label",labelLsit);
+        res.put("data",dataList);
+
+        return res;
+    }
 
 }
