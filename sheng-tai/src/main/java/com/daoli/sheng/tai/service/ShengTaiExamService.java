@@ -179,6 +179,14 @@ public class ShengTaiExamService {
                     examMapper.updateZhiBiaoScoreByYaoDianParentId(examEntity.getParentExamId());
                     examMapper.updateFenLeiScoreByYaoDianParentId(examEntity.getParentExamId());
                 }
+                if(ShengTaiExamTypeConstant.KAO_HE_FEI_LEI.equals(examEntity.getExamType())){
+                    examMapper.delectYaoDianByFenLeiPid(examEntity.getId());
+                    examMapper.delectZhiBiaoByFenLeiPid(examEntity.getId());
+
+                }
+                if(ShengTaiExamTypeConstant.KAO_HE_ZHI_BIAO.equals(examEntity.getExamType())){
+                    examMapper.delectYaoDianByZhiBiaoPid(examEntity.getId());
+                }
                 resMap.put(examEntity.getId(), true);
             }
         }

@@ -47,6 +47,9 @@ public interface ShengTaiExamEntityMapper {
 
 
     List<ShengTaiExamEntity> queryJinXingZhongExamByDepartmentId(@Param("departmentId") String departmentId);
+    int delectZhiBiaoByFenLeiPid(Integer FenLeiPid);
+    int delectYaoDianByFenLeiPid(Integer FenLeiPid);
+    int delectYaoDianByZhiBiaoPid(Integer ZhiBiaoPid);
 
     //ShengTaiExamEntity queryByExamId(String examId);
 
