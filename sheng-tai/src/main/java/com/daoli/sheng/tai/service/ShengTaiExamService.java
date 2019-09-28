@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -72,8 +74,6 @@ public class ShengTaiExamService {
             examEntity.setCreateTime(new Date());
             examEntity.setModifyTime(new Date());
             examEntity.setExamStatus(ShengTaiExamStatusConstant.KAO_HE_DAI_FA_BU);
-            //examEntity.setStartTime(new Date());
-            //examEntity.setEndTime(new Date());
 
             int res = examMapper.insertSelective(examEntity);
             if (res != 0) {
