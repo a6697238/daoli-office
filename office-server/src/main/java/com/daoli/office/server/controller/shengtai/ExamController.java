@@ -22,7 +22,7 @@ import java.util.Map;
  * @since 1.0.0
  */
 @RestController(value = "考核的增删改查")
-@RequestMapping(value = "/api/web/manage/exam")
+@RequestMapping(value = "/api/web/sheng_tai/manage/exam")
 @Slf4j
 public class ExamController {
 

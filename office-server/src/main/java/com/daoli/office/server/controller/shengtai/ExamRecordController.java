@@ -49,7 +49,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @since 1.0.0
  */
 @RestController(value = "上传考核内容")
-@RequestMapping(value = "/api/web/exam_record")
+@RequestMapping(value = "/api/web/sheng_tai/exam_record")
 @Slf4j
 public class ExamRecordController extends BaseController {
 
@@ -65,6 +65,14 @@ public class ExamRecordController extends BaseController {
     @RequestMapping(value = "/upload_exam_record", method = RequestMethod.POST)
     public JsonResponse uploadExamRecord(@RequestBody ShengtaiExamRecordVo vo) {
         examRecordService.uploadRecord(vo, Lists.newArrayList(vo.getAdditionId()));
+        return new JsonResponse();
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "删除一条考核记录")
+    @RequestMapping(value = "/delete_exam_record", method = RequestMethod.POST)
+    public JsonResponse deleteExamRecord(@RequestBody Integer recordPid) {
+        examRecordService.deleteExamRecord(recordPid);
         return new JsonResponse();
     }
 

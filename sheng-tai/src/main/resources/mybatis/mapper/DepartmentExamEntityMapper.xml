@@ -164,22 +164,6 @@
     </trim>
   </select>
 
-  <!--<select id="queryAssignedDepartmentsByExamId"  resultMap="DepartmentResultMap"  parameterType="java.lang.String" >-->
-    <!--select-->
-    <!--from tbl_department where valid = 1 and department_id in-->
-    <!--(-->
-    <!--select-->
-    <!--<include refid="DepartmentE_Column_List" />-->
-    <!--department_id-->
-    <!--from tbl_department_exam-->
-    <!--where  valid = "1" and-->
-    <!--<trim prefix="(" suffix=")" suffixOverrides="and" >-->
-    <!--<if test="examId != null" >-->
-    <!--exam_id = #{examId,jdbcType=VARCHAR}-->
-    <!--</if>-->
-    <!--</trim>-->
-    <!--)-->
-  <!--</select>-->
 
 
   <select id="queryAssignedDepartmentsByExamId"  resultMap="DepartmentResultMap"  parameterType="java.lang.String" >

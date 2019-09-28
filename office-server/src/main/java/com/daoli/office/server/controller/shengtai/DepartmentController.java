@@ -21,7 +21,7 @@ import java.util.Map;
 
 
 @RestController(value = "部门的增删改查")
-@RequestMapping(value = "/api/web/manage/deparment")
+@RequestMapping(value = "/api/web/sheng_tai/manage/deparment")
 @Slf4j
 public class DepartmentController {
 

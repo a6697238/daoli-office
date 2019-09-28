@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 1.0.0
  */
 @RestController(value = "试卷的删查")
-@RequestMapping(value = "/api/web/manage/deparment_exam")
+@RequestMapping(value = "/api/web/manage/sheng_tai/deparment_exam")
 @Slf4j
 public class DepartmentExamController {
 

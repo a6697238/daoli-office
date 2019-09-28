@@ -25,12 +25,9 @@ public interface ShengtaiExamRecordEntityMapper {
             @Param("departmentId") String departmentId);
 
 
-    List<ShengtaiExamRecordEntity> queryExamRecordByDepartmentId(
-            @Param("departmentId") String departmentId);
-
     List<ShengtaiExamRecordEntity> queryExamRecordByDepartmentIdWithTime(
-            @Param("departmentId") String departmentId, @Param("startTime") Long startTime,
-            @Param("endTime") Long endTime);
+            @Param("departmentId") String departmentId, @Param("startTime") Date startTime,
+            @Param("endTime") Date endTime);
 
     List<ShengtaiExamRecordEntity> queryExamRecordByDepartmentIdAndDetailId(
             @Param("departmentId") String departmentId, @Param("detailId") String detailId);

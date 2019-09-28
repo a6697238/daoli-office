@@ -39,16 +39,6 @@
 
 
 
-  <select id="queryExamRecordByDepartmentId" resultMap="BaseResultMap"
-    parameterType="java.lang.String">
-    select
-    <include refid="Base_Column_List"/>
-    from tbl_shengtai_exam_record
-    where department_id = #{departmentId,jdbcType=VARCHAR}
-    and valid = 1
-  </select>
-
-
   <select id="queryExamRecordByDepartmentIdAndDetailId" resultMap="BaseResultMap"
     parameterType="java.lang.String">
     select

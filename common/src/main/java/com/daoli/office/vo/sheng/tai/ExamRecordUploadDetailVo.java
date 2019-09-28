@@ -24,6 +24,8 @@ public class ExamRecordUploadDetailVo {
 
     private String examId;
 
+    private String indexExamId;
+
     private Integer parentExamId;
 
     private String examType;

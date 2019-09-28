@@ -17,6 +17,7 @@ import com.daoli.sheng.tai.mapper.DepartmentExamEntityMapper;
 import com.daoli.sheng.tai.mapper.ShengTaiExamEntityMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -278,6 +279,7 @@ public class ShengTaiExamService {
             if (entity.getExamType().equals(KAO_HE_YAO_DIAN)) {
                 ExamRecordUploadDetailVo vo = ExamRecordUploadDetailVo.builder().build();
                 BeanUtils.copyProperties(entity, vo);
+                vo.setIndexExamId(zhibiaoMap.get(vo.getParentExamId()).getExamId());
                 vo.setIndexName(zhibiaoMap.get(vo.getParentExamId()).getExamName());
                 vo.setIndexDesc(zhibiaoMap.get(vo.getParentExamId()).getExamDesc());
                 resList.add(vo);
@@ -295,17 +297,23 @@ public class ShengTaiExamService {
 
 
     public List<ShengtaiExamVo> queryExamsByCondition(ShengtaiExamVo vo) {
-        ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
-        BeanUtils.copyProperties(vo, examEntry);
-        List<ShengTaiExamEntity> res = examMapper.queryExamsByFuzzyCondition(examEntry);
 
-        ArrayList<ShengtaiExamVo> voRes = new ArrayList<>();
-        for (int i = 0; i < res.size(); ++i) {
-            ShengtaiExamVo oneVo = new ShengtaiExamVo();
-            BeanUtils.copyProperties(res.get(i), oneVo);
-            voRes.add(oneVo);
-        }
-        return voRes;
+        List<ShengTaiExamEntity> allExam = examMapper.queryExamsByFuzzyCondition(
+                ShengtaiExamVo.builder().startTime(vo.getStartTime()).endTime(vo.getEndTime())
+                        .build());
+        List<ShengTaiExamEntity> queryExam = examMapper.queryExamsByFuzzyCondition(vo);
+        Set<Integer> queryExamSet = Sets.newHashSet();
+        queryExam.forEach(entity -> queryExamSet.add(entity.getId()));
+        List<ShengtaiExamVo> resList = Lists.newArrayList();
+        allExam.forEach(entity -> {
+            ShengtaiExamVo resVo = new ShengtaiExamVo();
+            BeanUtils.copyProperties(entity, resVo);
+            if (queryExamSet.contains(entity.getId())) {
+                resVo.setSearched(true);
+            }
+            resList.add(resVo);
+        });
+        return resList;
     }
 
 

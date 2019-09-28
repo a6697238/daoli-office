@@ -1,9 +1,11 @@
 package com.daoli.sheng.tai.mapper;
 
+import com.daoli.office.vo.sheng.tai.ShengtaiExamVo;
 import com.daoli.sheng.tai.entity.ShengTaiExamEntity;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -23,13 +25,15 @@ public interface ShengTaiExamEntityMapper {
 
     int updateByPrimaryKey(ShengTaiExamEntity record);
 
-    List<ShengTaiExamEntity> queryExamsByFuzzyCondition(ShengTaiExamEntity record);
+    List<ShengTaiExamEntity> queryExamsByFuzzyCondition(ShengtaiExamVo vo);
+
+    List<ShengTaiExamEntity> queryExamsByParentExamId(@Param("parentExamId")Integer parentExamId);
 
     List<ShengTaiExamEntity> queryAllExams();
 
     List<ShengTaiExamEntity> queryExamByDepartmentIdWithTime(
             @Param("departmentId") String departmentId,
-            @Param("startTime") Long startTime, @Param("endTime") Long endTime,
+            @Param("startTime") Date startTime, @Param("endTime") Date endTime,
             @Param("examType") String examType);
 
 

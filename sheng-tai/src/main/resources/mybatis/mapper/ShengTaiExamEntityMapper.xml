@@ -258,6 +258,14 @@
     where valid = "1" and exam_id = #{examId,jdbcType=VARCHAR}
   </select>
 
+  <select id="queryExamsByParentExamId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from tbl_shengtai_exam
+    where valid = "1" and parent_exam_id = #{parentExamId,jdbcType=INTEGER}
+  </select>
+
+
   <select id="queryExamsByCondition" resultMap="BaseResultMap"
     parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity">
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.daoli.sheng.tai.mapper.ShengTaiReportEntityMapper">
+
+  <select id="querytitleReport" resultType="java.util.HashMap">
+    SELECT  'upload_department_cnt' AS query_key
+            ,COUNT(DISTINCT department_id) AS query_res
+    FROM    tbl_shengtai_exam_record
+    UNION
+    SELECT  'total_department_cnt' AS query_key
+            ,COUNT(*) AS query_res
+    FROM    tbl_department
+    UNION
+    SELECT  'scored_record_cnt' AS query_key
+            ,COUNT(*) AS query_res
+    FROM    tbl_shengtai_exam_record
+    WHERE   valid = 1
+    AND start_time &gt;= #{startTime,jdbcType=TIMESTAMP}
+    AND end_time &lt;= #{endTime,jdbcType=TIMESTAMP}
+    UNION
+    SELECT  'total_record_cnt' AS query_key
+            ,COUNT(*) AS query_res
+    FROM    tbl_shengtai_exam_record
+    WHERE   valid = 1
+    AND start_time &gt;= #{startTime,jdbcType=TIMESTAMP}
+    AND end_time &lt;= #{endTime,jdbcType=TIMESTAMP}
+    AND exam_score > 0
+  </select>
+</mapper>

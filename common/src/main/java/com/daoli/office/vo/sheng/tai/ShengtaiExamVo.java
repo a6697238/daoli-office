@@ -42,4 +42,6 @@ public class ShengtaiExamVo {
 
     private Integer assignedNum;
 
+    private boolean searched;
+
 }
