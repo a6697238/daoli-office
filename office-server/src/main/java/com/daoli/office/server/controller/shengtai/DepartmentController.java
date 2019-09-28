@@ -30,20 +30,15 @@ public class DepartmentController {
 
     @ResponseBody
     @ApiOperation(value = "批量增加部门, departmentId、valid、create_time、modify_time 等后台自动填充")
-    @RequestMapping(value = "/add_department", method = RequestMethod.POST)
-    public JsonResponse addDepartment(@RequestBody DepartmentVo[] vos) {
+    @RequestMapping(value = "/batch_add_department", method = RequestMethod.POST)
+    public JsonResponse batchAddDepartment(@RequestBody String[] departmentNames) {
         Map<String, Boolean> resMap = new HashMap<>();
-        for (DepartmentVo vo : vos) {
-            int res = 0;
-            res = deparmentService.insertDeparment(vo);
-            if (res != 0) {
-                resMap.put(vo.getDepartmentName(), true);
-            } else {
-                resMap.put(vo.getDepartmentName(), false);
-            }
+        for (String name : departmentNames) {
+            deparmentService.batchInsertDeparment(name);
         }
         return new JsonResponse(resMap);
     }
+
 
     @ResponseBody
     @ApiOperation(value = "删除 部门")

@@ -19,7 +19,8 @@ public class ShengTaiDBconstant {
 
     //部门类型
     public final static String XIANG_ZHEN = "XIANG_ZHEN";
-    public final static String SHI_QU = "SHI_QU";
+    public final static String QU_ZHI = "QU_ZHI";
+    public final static String JIE_DAO = "JIE_DAO";
 
 
 }

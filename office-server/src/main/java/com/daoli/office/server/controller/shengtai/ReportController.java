@@ -57,5 +57,39 @@ public class ReportController extends BaseController {
         return new JsonResponse(reportService.queryTitle(startTime,endTime));
     }
 
+    @ResponseBody
+    @ApiOperation(value = "查询排名列表")
+    @RequestMapping(value = "/query_rank", method = RequestMethod.GET)
+    public JsonResponse queryRank(long startTime, long endTime) {
+        return new JsonResponse(reportService.queryRank(startTime,endTime));
+    }
+
+
+
+    @ResponseBody
+    @ApiOperation(value = "查询分类雷达")
+    @RequestMapping(value = "/query_type_radar", method = RequestMethod.GET)
+    public JsonResponse queryTypeRadar(long startTime, long endTime) {
+        return new JsonResponse(reportService.queryTypeRadar(startTime,endTime));
+    }
+
+
+
+    @ResponseBody
+    @ApiOperation(value = "查询记录占比饼图")
+    @RequestMapping(value = "/query_record_rate", method = RequestMethod.GET)
+    public JsonResponse queryRecordRate(long startTime, long endTime) {
+        return new JsonResponse(reportService.queryRecordRate(startTime,endTime));
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value = "查询部门柱状图")
+    @RequestMapping(value = "/query_department_score", method = RequestMethod.GET)
+    public JsonResponse queryDepartmentScore(long startTime, long endTime) {
+        return new JsonResponse(reportService.queryDepartmentScore(startTime,endTime));
+    }
+
+
 
 }
