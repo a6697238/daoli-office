@@ -40,6 +40,8 @@ public class DepartmentController {
     }
 
 
+
+
     @ResponseBody
     @ApiOperation(value = "删除 部门")
     @RequestMapping(value = "/delete_department", method = RequestMethod.POST)
@@ -52,6 +54,14 @@ public class DepartmentController {
         } else {
             return new JsonResponse(false, "fail");
         }
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value = "查询所有部门")
+    @RequestMapping(value = "/query_all_department", method = RequestMethod.GET)
+    public JsonResponse queryAllDepartment() {
+        return new JsonResponse(deparmentService.queryAllDepartment());
     }
 
 }
