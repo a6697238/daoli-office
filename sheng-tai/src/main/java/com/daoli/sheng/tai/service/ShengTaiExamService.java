@@ -2,6 +2,7 @@ package com.daoli.sheng.tai.service;
 
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.IN_VALID;
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.VALID;
+import static com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant.KAO_HE_FEI_LEI;
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant.KAO_HE_YAO_DIAN;
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant.KAO_HE_ZHI_BIAO;
 
@@ -43,23 +44,9 @@ public class ShengTaiExamService {
     @Autowired
     private DepartmentExamEntityMapper departmentExamEntityMapper;
 
-    // 考试状态单独类 done
-    // 只有在 考核未开始的状况可以删除 ，需要在deleteExam 验证一下。 done
-    // exam 在未开始的时候，可以修改的东西 done
-    // 开始 、 停止 接口 done
-    // 时间戳 <= >= done
-    // query done
 
-    // 模糊查询 done
-    // exma 删除，要用事务，删除子节点
-    // 部门的考核返回 树状结构，同时列出上传记录 json 怎么表示树状结构
-    // 考核 树状结构呈现，列出答题单位及上传情况
-
-    //public final static String kaoHeWeiKaiShi = "考核未开始";
-    //public final static  String kaoHeZhongTuTingZhi = "考核中途停止";
-    //public final static String kaoHeJinXingZhong = "考核进行中";
-    //public final static String kaoHeZhengChangJieShu = "考核正常结束";
-    //public final static String kaoHeYiChangJieShu = "考核异常结束";
+    private final static String[] EXAM_IGNORE_PROPERTIES = new String[]{"modifyTime",
+            "createTime"};
 
     /**
      * 批量添加 考试信息
@@ -179,18 +166,70 @@ public class ShengTaiExamService {
                     examMapper.updateZhiBiaoScoreByYaoDianParentId(examEntity.getParentExamId());
                     examMapper.updateFenLeiScoreByYaoDianParentId(examEntity.getParentExamId());
                 }
-                if(ShengTaiExamTypeConstant.KAO_HE_FEI_LEI.equals(examEntity.getExamType())){
+                if (ShengTaiExamTypeConstant.KAO_HE_FEI_LEI.equals(examEntity.getExamType())) {
                     examMapper.delectYaoDianByFenLeiPid(examEntity.getId());
                     examMapper.delectZhiBiaoByFenLeiPid(examEntity.getId());
 
                 }
-                if(ShengTaiExamTypeConstant.KAO_HE_ZHI_BIAO.equals(examEntity.getExamType())){
+                if (ShengTaiExamTypeConstant.KAO_HE_ZHI_BIAO.equals(examEntity.getExamType())) {
                     examMapper.delectYaoDianByZhiBiaoPid(examEntity.getId());
                 }
                 resMap.put(examEntity.getId(), true);
             }
         }
         return resMap;
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    public void modifyExam(ShengtaiExamVo vo) {
+        if (KAO_HE_FEI_LEI.equals(vo.getExamType())) {
+            updateFenleiNode(vo);
+        } else if (KAO_HE_ZHI_BIAO.equals(vo.getExamType())) {
+            updateZhiBiaoNode(vo);
+        } else if (KAO_HE_YAO_DIAN.equals(vo.getExamType())) {
+            updateYaodianNode(vo);
+        }
+    }
+
+    private void updateFenleiNode(ShengtaiExamVo modifyVo) {
+        ShengTaiExamEntity fenleiEntity = examMapper.selectByPrimaryKey(modifyVo.getId());
+        BeanUtils.copyProperties(modifyVo, fenleiEntity, EXAM_IGNORE_PROPERTIES);
+        List<ShengTaiExamEntity> zhibiaoList = examMapper
+                .queryExamsByParentExamId(modifyVo.getId());
+        for (ShengTaiExamEntity zhibiaoEntity : zhibiaoList) {
+            zhibiaoEntity.setStartTime(modifyVo.getStartTime());
+            zhibiaoEntity.setEndTime(modifyVo.getEndTime());
+            List<ShengTaiExamEntity> yaodianList = examMapper
+                    .queryExamsByParentExamId(modifyVo.getId());
+            for (ShengTaiExamEntity yaodianEntity : yaodianList) {
+                yaodianEntity.setStartTime(modifyVo.getStartTime());
+                yaodianEntity.setEndTime(modifyVo.getEndTime());
+                examMapper.updateByPrimaryKeySelective(yaodianEntity);
+            }
+            examMapper.updateByPrimaryKeySelective(zhibiaoEntity);
+        }
+        examMapper.updateByPrimaryKeySelective(fenleiEntity);
+    }
+
+    private void updateZhiBiaoNode(ShengtaiExamVo modifyVo) {
+        ShengTaiExamEntity zhibiaoEntity = examMapper.selectByPrimaryKey(modifyVo.getId());
+        BeanUtils.copyProperties(modifyVo, zhibiaoEntity, EXAM_IGNORE_PROPERTIES);
+        List<ShengTaiExamEntity> yaodianList = examMapper
+                .queryExamsByParentExamId(modifyVo.getId());
+        for (ShengTaiExamEntity yaodianEntity : yaodianList) {
+            zhibiaoEntity.setStartTime(modifyVo.getStartTime());
+            zhibiaoEntity.setEndTime(modifyVo.getEndTime());
+            examMapper.updateByPrimaryKeySelective(yaodianEntity);
+        }
+        examMapper.updateByPrimaryKeySelective(zhibiaoEntity);
+    }
+
+
+    private void updateYaodianNode(ShengtaiExamVo modifyVo) {
+        ShengTaiExamEntity yaodianEntity = examMapper.selectByPrimaryKey(modifyVo.getId());
+        BeanUtils.copyProperties(modifyVo, yaodianEntity, EXAM_IGNORE_PROPERTIES);
+        examMapper.updateByPrimaryKeySelective(yaodianEntity);
     }
 
     public List<DepartmentVo> queryAssignedDepartmentsByExamId(String examId) {
@@ -217,30 +256,23 @@ public class ShengTaiExamService {
         return listDepartmentVo;
     }
 
-    public int updateExam(ShengtaiExamVo vo) {
-        ShengTaiExamEntity examEntity = new ShengTaiExamEntity();
-        // vo 不设置某个属性，属性就不会被拷贝到新对象，满足selective。
-        BeanUtils.copyProperties(vo, examEntity);
-        examEntity.setValid(VALID);
-        examEntity.setModifyTime(new Date());
+//    public int updateExam(ShengtaiExamVo vo) {
+//        ShengTaiExamEntity examEntity = new ShengTaiExamEntity();
+//        // vo 不设置某个属性，属性就不会被拷贝到新对象，满足selective。
+//        BeanUtils.copyProperties(vo, examEntity);
+//        examEntity.setValid(VALID);
+//        examEntity.setModifyTime(new Date());
+//
+//        int res = examMapper.updateByPrimaryKeySelective(examEntity);
+//
+//        ShengTaiExamEntity detailEntry = examMapper.selectByPrimaryKey(vo.getId());
+//        if (KAO_HE_YAO_DIAN.equals(detailEntry.getExamType())) {
+//            examMapper.updateZhiBiaoScoreByYaoDianParentId(detailEntry.getParentExamId());
+//            examMapper.updateFenLeiScoreByYaoDianParentId(detailEntry.getParentExamId());
+//        }
+//        return res;
+//    }
 
-        int res = examMapper.updateByPrimaryKeySelective(examEntity);
-
-        ShengTaiExamEntity detailEntry = examMapper.selectByPrimaryKey(vo.getId());
-        if (KAO_HE_YAO_DIAN.equals(detailEntry.getExamType())) {
-            examMapper.updateZhiBiaoScoreByYaoDianParentId(detailEntry.getParentExamId());
-            examMapper.updateFenLeiScoreByYaoDianParentId(detailEntry.getParentExamId());
-        }
-        return res;
-    }
-
-    public int deleteExam(ShengtaiExamVo vo) {
-        ShengTaiExamEntity examEntry = new ShengTaiExamEntity();
-        BeanUtils.copyProperties(vo, examEntry);
-
-        examEntry.setValid(VALID);
-        return examMapper.updateByPrimaryKeySelective(examEntry);
-    }
 
     // 此 api 会直接删除数据库中的记录，不建议使用
     public int deleteExamByExamId(ShengtaiExamVo vo) {

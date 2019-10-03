@@ -24,18 +24,19 @@ import java.util.Map;
  */
 @Service
 public class ShengTaiDepartmentExamService {
+
     @Autowired
     private DepartmentExamEntityMapper departmentExamEntityMapper;
 
     @Autowired
-    private  ShengTaiExamService shengTaiExamService;
+    private ShengTaiExamService shengTaiExamService;
 
     @Autowired
     private DepartmentService deparmentService;
 
 
     @Transactional(rollbackFor = Exception.class)
-    public int deleteDeparmentExam(ShengtaiDepartmentExamVo vo){
+    public int deleteDeparmentExam(ShengtaiDepartmentExamVo vo) {
 
         // 获得 将来 删除 deparment_exam 的 exam_id
         ShengtaiDepartmentExamVo detailVo = selectDeparmentExamById(vo);
@@ -48,34 +49,24 @@ public class ShengTaiDepartmentExamService {
         examEntry.setId(vo.getId());
         examEntry.setValid(IN_VALID);
         //删除
-        int res = departmentExamEntityMapper.updateByPrimaryKeySelective(examEntry);
 
-        // 修改 exam 的 assigned_num
-        ShengtaiExamVo argShengtaiExamVo = new ShengtaiExamVo();
-        argShengtaiExamVo.setExamId(detailVo.getExamId());
-        ShengtaiExamVo detailShengtaiExamVo = shengTaiExamService.queryExamByExamId("aa");
-        ShengtaiExamVo updateShengtaiExamVo = new ShengtaiExamVo();
-        updateShengtaiExamVo.setId(detailShengtaiExamVo.getId());
-        updateShengtaiExamVo.setAssignedNum(detailShengtaiExamVo.getAssignedNum()-1);
-        res = shengTaiExamService.updateExam(updateShengtaiExamVo);
-
-        return  res;
+        return departmentExamEntityMapper.updateByPrimaryKeySelective(examEntry);
     }
 
-    public  Map<Integer,Object> deleteBatchDepartmentExam(ShengtaiDepartmentExamVo[] vos){
-        Map<Integer,Object> res = new HashMap<>();
-        for(ShengtaiDepartmentExamVo oneDepartmentExamVo : vos){
-          int effectRows = deleteDeparmentExam(oneDepartmentExamVo);
-          if (effectRows == 0){
-              res.put(oneDepartmentExamVo.getId(),false);
-          } else {
-              res.put(oneDepartmentExamVo.getId(),true);
-          }
+    public Map<Integer, Object> deleteBatchDepartmentExam(ShengtaiDepartmentExamVo[] vos) {
+        Map<Integer, Object> res = new HashMap<>();
+        for (ShengtaiDepartmentExamVo oneDepartmentExamVo : vos) {
+            int effectRows = deleteDeparmentExam(oneDepartmentExamVo);
+            if (effectRows == 0) {
+                res.put(oneDepartmentExamVo.getId(), false);
+            } else {
+                res.put(oneDepartmentExamVo.getId(), true);
+            }
         }
         return res;
     }
 
-    public List<DepartmentVo> queryDepartmentsByExamPrimaryId(ShengtaiExamVo vo){
+    public List<DepartmentVo> queryDepartmentsByExamPrimaryId(ShengtaiExamVo vo) {
 //        ShengtaiExamVo detailExamVo = new ShengtaiExamVo();
 //        detailExamVo.setExamId(vo.getExamId());
 //        detailExamVo = shengTaiExamService.queryExamByExamId(detailExamVo);
@@ -89,10 +80,10 @@ public class ShengTaiDepartmentExamService {
 //            argDepartmentVo.setDepartmentId(oneAssign.getDepartmentId());
 //          res.add(deparmentService.queryDepartmentByBusinessId(argDepartmentVo));
 //        }
-        return null ; // selectDeparmentExamByField(argAssingVo);
+        return null; // selectDeparmentExamByField(argAssingVo);
     }
 
-    public List<ShengtaiExamVo>  queryExamsDetailByDepartmentPrimaryId(Integer departmentPid){
+    public List<ShengtaiExamVo> queryExamsDetailByDepartmentPrimaryId(Integer departmentPid) {
         DepartmentVo filledDepartmentVo = deparmentService.queryDepartmentById(departmentPid);
 
         ShengtaiDepartmentExamVo argAssingVo = new ShengtaiDepartmentExamVo();
@@ -100,53 +91,53 @@ public class ShengTaiDepartmentExamService {
         List<ShengtaiDepartmentExamVo> listAssign = selectDeparmentExamByField(argAssingVo);
 
         List<ShengtaiExamVo> res = new ArrayList<>();
-        for (ShengtaiDepartmentExamVo oneAssign :listAssign){
+        for (ShengtaiDepartmentExamVo oneAssign : listAssign) {
             //ShengtaiExamVo argExamVo = new ShengtaiExamVo();
             //argExamVo.setExamId(oneAssign.getExamId());
             res.add(shengTaiExamService.queryExamByExamId(oneAssign.getExamId()));
         }
-       return res;
+        return res;
     }
     /////////--------------------///////////////------------------////////----------------//////
 
-    public int updateDeparmentExam(ShengtaiDepartmentExamVo vo){
+    public int updateDeparmentExam(ShengtaiDepartmentExamVo vo) {
         DepartmentExamEntity examEntry = new DepartmentExamEntity();
-        BeanUtils.copyProperties(vo,examEntry); // vo 不设置某个属性，属性就不会被拷贝到新对象，满足selective。
+        BeanUtils.copyProperties(vo, examEntry); // vo 不设置某个属性，属性就不会被拷贝到新对象，满足selective。
         return departmentExamEntityMapper.updateByPrimaryKeySelective(examEntry);
     }
 
-    public int updateDeparmentExam(DepartmentExamEntity entity){
+    public int updateDeparmentExam(DepartmentExamEntity entity) {
         return departmentExamEntityMapper.updateByPrimaryKeySelective(entity);
     }
 
-    public ShengtaiDepartmentExamVo selectDeparmentExamById(ShengtaiDepartmentExamVo vo){
+    public ShengtaiDepartmentExamVo selectDeparmentExamById(ShengtaiDepartmentExamVo vo) {
         DepartmentExamEntity examEntry = new DepartmentExamEntity();
-        BeanUtils.copyProperties(vo,examEntry);
-        ShengtaiDepartmentExamVo resVo =new ShengtaiDepartmentExamVo();
+        BeanUtils.copyProperties(vo, examEntry);
+        ShengtaiDepartmentExamVo resVo = new ShengtaiDepartmentExamVo();
         BeanUtils.copyProperties(departmentExamEntityMapper.selectByPrimaryKey(vo.getId()), resVo);
         return resVo;
     }
 
 
-    public ShengtaiDepartmentExamVo getIdVo(ShengtaiDepartmentExamVo vo){
+    public ShengtaiDepartmentExamVo getIdVo(ShengtaiDepartmentExamVo vo) {
         DepartmentExamEntity examEntry = new DepartmentExamEntity();
-        BeanUtils.copyProperties(vo,examEntry);
+        BeanUtils.copyProperties(vo, examEntry);
         ArrayList<DepartmentExamEntity> res = departmentExamEntityMapper.selectByField(examEntry);
         ShengtaiDepartmentExamVo voRes = new ShengtaiDepartmentExamVo();
 
-        if(res.size() > 1 || res.size() <= 0) {
+        if (res.size() > 1 || res.size() <= 0) {
             return null;
         }
-        BeanUtils.copyProperties(res.get(0),voRes);
+        BeanUtils.copyProperties(res.get(0), voRes);
         return voRes;
     }
 
-    public List<ShengtaiDepartmentExamVo> selectDeparmentExamByField(ShengtaiDepartmentExamVo vo){
+    public List<ShengtaiDepartmentExamVo> selectDeparmentExamByField(ShengtaiDepartmentExamVo vo) {
         DepartmentExamEntity examEntry = new DepartmentExamEntity();
-        BeanUtils.copyProperties(vo,examEntry);
+        BeanUtils.copyProperties(vo, examEntry);
         ArrayList<DepartmentExamEntity> res = departmentExamEntityMapper.selectByField(examEntry);
         List<ShengtaiDepartmentExamVo> voRes = new ArrayList<>();
-        for (int i = 0; i < res.size(); ++i){
+        for (int i = 0; i < res.size(); ++i) {
             ShengtaiDepartmentExamVo oneVo = new ShengtaiDepartmentExamVo();
             BeanUtils.copyProperties(res.get(i), oneVo);
             voRes.add(oneVo);
@@ -167,9 +158,9 @@ public class ShengTaiDepartmentExamService {
 //        return vo_res;
 //    }
 
-    public int insertDeparmentExam(ShengtaiDepartmentExamVo vo){
+    public int insertDeparmentExam(ShengtaiDepartmentExamVo vo) {
         DepartmentExamEntity depExamEntry = new DepartmentExamEntity();
-        BeanUtils.copyProperties(vo,depExamEntry);
+        BeanUtils.copyProperties(vo, depExamEntry);
         depExamEntry.setValid(VALID);
         return departmentExamEntityMapper.insertSelective(depExamEntry);
     }

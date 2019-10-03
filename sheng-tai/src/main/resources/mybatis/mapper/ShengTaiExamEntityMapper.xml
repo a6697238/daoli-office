@@ -37,7 +37,8 @@
   </select>
 
 
-  <select id="queryJinXingZhongExamByDepartmentId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  <select id="queryJinXingZhongExamByDepartmentId" resultMap="BaseResultMap"
+    parameterType="java.lang.String">
     select
     <include refid="Department_Exam_Column_List"/>
     FROM
@@ -48,7 +49,6 @@
     AND tbl_department_exam.department_id = #{departmentId,jdbcType=VARCHAR}
     AND tbl_shengtai_exam.valid = "1"
   </select>
-
 
 
   <select id="queryExamByDepartmentIdWithTime" resultMap="BaseResultMap">
@@ -367,35 +367,30 @@
 
   <select id="queryExamsByFuzzyCondition" resultMap="BaseResultMap"
     parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity">
-
     select
     <include refid="Base_Column_List"/>
     from tbl_shengtai_exam
     where
-
-    valid = "1" and
-    <trim prefix="(" suffix=")" suffixOverrides="and">
-
-      <if test="examType != null">
-        exam_type like "%"#{examType,jdbcType=VARCHAR}"%" and
-      </if>
-      <if test="examName != null">
-        exam_name like "%"#{examName,jdbcType=VARCHAR}"%" and
-      </if>
-      <if test="examDesc != null">
-        exam_desc like "%"#{examDesc,jdbcType=VARCHAR}"%" and
-      </if>
-      <if test="examStatus != null">
-        exam_status like "%"#{examStatus,jdbcType=VARCHAR}"%" and
-      </if>
-      <if test="createUid != null">
-        create_uid like "%"#{createUid,jdbcType=VARCHAR}"%" and
-      </if>
-      <if test="startTime != null and endTime != null" >
-        start_time &gt;= #{startTime,jdbcType=TIMESTAMP}  and
-        end_time &lt;=  #{endTime,jdbcType=TIMESTAMP}
-      </if>
-    </trim>
+    valid = "1"
+    <if test="examType != null">
+      and exam_type like "%"#{examType,jdbcType=VARCHAR}"%"
+    </if>
+    <if test="examName != null">
+      and exam_name like "%"#{examName,jdbcType=VARCHAR}"%"
+    </if>
+    <if test="examDesc != null">
+      and exam_desc like "%"#{examDesc,jdbcType=VARCHAR}"%"
+    </if>
+    <if test="examStatus != null">
+      and exam_status like "%"#{examStatus,jdbcType=VARCHAR}"%"
+    </if>
+    <if test="createUid != null">
+      and create_uid like "%"#{createUid,jdbcType=VARCHAR}"%"
+    </if>
+    <if test="startTime != null and endTime != null">
+      and start_time &gt;= #{startTime,jdbcType=TIMESTAMP}
+      and end_time &lt;= #{endTime,jdbcType=TIMESTAMP}
+    </if>
   </select>
 
   <select id="queryAllExams" resultMap="BaseResultMap"
@@ -410,7 +405,8 @@
   </select>
 
 
-  <update id="updateZhiBiaoStatusByFenLeiPid" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity" >
+  <update id="updateZhiBiaoStatusByFenLeiPid"
+    parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity">
     update  tbl_shengtai_exam a
     inner join(
       select tbl_shengtai_exam.id from tbl_shengtai_exam  where tbl_shengtai_exam.valid="1"  and tbl_shengtai_exam.parent_exam_id = #{id,jdbcType=INTEGER}
@@ -421,7 +417,8 @@
 
   </update>
 
-  <update id="updateYaoDianStatusByFenLeiPid" parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity" >
+  <update id="updateYaoDianStatusByFenLeiPid"
+    parameterType="com.daoli.sheng.tai.entity.ShengTaiExamEntity">
     update  tbl_shengtai_exam t1
     inner join (
     select  id from tbl_shengtai_exam where tbl_shengtai_exam.parent_exam_id =  #{id,jdbcType=INTEGER} and tbl_shengtai_exam.valid="1"
@@ -432,7 +429,7 @@
   </update>
 
 
-  <update id="updateZhiBiaoScoreByYaoDianParentId" parameterType="java.lang.Integer" >
+  <update id="updateZhiBiaoScoreByYaoDianParentId" parameterType="java.lang.Integer">
 
     update
     tbl_shengtai_exam a,
@@ -444,7 +441,7 @@
     set a.exam_score=IFNULL(b.zhibiao_score,0) where a.id= #{yaoDianParentId,jdbcType=INTEGER}
   </update>
 
-  <update id="updateFenLeiScoreByYaoDianParentId" parameterType="java.lang.Integer" >
+  <update id="updateFenLeiScoreByYaoDianParentId" parameterType="java.lang.Integer">
     update tbl_shengtai_exam a,
     (
     select sum(exam_score) as fenlei_score
@@ -481,7 +478,7 @@
 
   </update>
 
-  <update id="delectYaoDianByFenLeiPid" parameterType="java.lang.Integer" >
+  <update id="delectYaoDianByFenLeiPid" parameterType="java.lang.Integer">
     update  tbl_shengtai_exam t1
     inner join (
     select  id from tbl_shengtai_exam where tbl_shengtai_exam.parent_exam_id =  #{id,jdbcType=INTEGER} and tbl_shengtai_exam.valid="1"

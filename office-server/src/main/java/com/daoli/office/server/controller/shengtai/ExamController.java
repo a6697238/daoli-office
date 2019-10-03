@@ -83,13 +83,8 @@ public class ExamController {
     )
     @RequestMapping(value = "/modify_exam", method = RequestMethod.POST)
     public JsonResponse modifyExam(@RequestBody ShengtaiExamVo vo) {
-        ShengtaiExamVo shengtaiExamVo = shengTaiExamService.queryExamByPId(vo.getId());
-        if (ShengTaiExamStatusConstant.KAO_HE_DAI_FA_BU.equals(shengtaiExamVo.getExamStatus())) {
-            if (shengTaiExamService.updateExam(vo) > 0) {
-                return new JsonResponse();
-            }
-        }
-        return new JsonResponse(false);
+        shengTaiExamService.modifyExam(vo);
+        return new JsonResponse();
     }
 
 
@@ -168,7 +163,8 @@ public class ExamController {
             value = "根据部门id正在进行中的考核要点"
     )
     public JsonResponse queryJinXingZhongExamByDepartmentId(@RequestParam String departmentId) {
-        return new JsonResponse(shengTaiExamService.queryJinXingZhongExamByDepartmentId(departmentId));
+        return new JsonResponse(
+                shengTaiExamService.queryJinXingZhongExamByDepartmentId(departmentId));
     }
 
     @ResponseBody
