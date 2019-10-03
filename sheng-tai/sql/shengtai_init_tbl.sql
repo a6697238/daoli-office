@@ -21,17 +21,7 @@ create TABLE `tbl_shengtai_exam` (
 
 
 
-drop table IF EXISTS `tbl_user`;
-create TABLE `tbl_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` varchar(64) NOT NULL DEFAULT '' COMMENT '用户id',
-  `user_name` varchar(64) NOT NULL DEFAULT '' COMMENT '用户名称',
-  `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON update CURRENT_TIMESTAMP COMMENT '修改时间',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `valid` tinyint(4) NOT NULL DEFAULT '0' COMMENT '有效性 0删除，1有效',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_uid` (`uid`(10))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+
 
 
 
@@ -103,3 +93,32 @@ create TABLE `tbl_shengtai_exam_record_addition` (
   `valid` tinyint(4) NOT NULL DEFAULT '0' COMMENT '有效性 0删除，1有效',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='考核记录';
+
+
+
+drop table if exists `tbl_user`;
+create table `tbl_user` (
+ `id` int(11) NOT NULL  AUTO_INCREMENT,
+`user_id` varchar(64) NOT NULL DEFAULT '' COMMENT '用户 id',
+`user_name` varchar(64) NOT NULL  default  '' comment '姓名',
+`user_age` varchar(64) NOT NULL  default  '' comment '年龄',
+`user_sex` varchar(64) NOT NULL  default  '' comment '性别',
+`description` varchar (1024) not null  default  '' comment  '描述',
+`department_id` varchar (64) not null default '' comment  '单位',
+`ji_bie` varchar (128) not null  default '' comment  '级别',
+`zhi_wu` varchar (128) not null  default '' comment  '职务',
+`login_name` varchar(256) NOT NULL  default  '' comment '登录名',
+`login_password` varchar (256) not null  default '' comment  '登录密码',
+`login_phone` varchar (256) not null  default '' comment  '手机号',
+`login_wechat` varchar (256) not null  default '' comment  '微信号',
+`login_email` varchar (256) not null  default '' comment  '邮箱',
+`user_ext_info` varchar (256) not null  default '' comment  '用户拓展信息',
+`dian_zi_xin_xi` text not null  comment  '存放相关电子信息',
+`modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON update CURRENT_TIMESTAMP COMMENT '记录修改时间',
+`create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+`valid` tinyint (4) not null  default '0' comment  '有效性',
+
+PRIMARY KEY (`id`),
+UNIQUE KEY `idx_uid` (`user_id`(10))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+

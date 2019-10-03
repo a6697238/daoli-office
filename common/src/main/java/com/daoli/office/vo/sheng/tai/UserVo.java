@@ -1,8 +1,11 @@
-package com.daoli.sheng.tai.entity;
+package com.daoli.office.vo.sheng.tai;
 
 import java.util.Date;
 
-public class UserEntity {
+/**
+ * Created by wanglining on 2019/10/3.
+ */
+public class UserVo {
     private Integer id;
 
     private String userId;
@@ -36,8 +39,6 @@ public class UserEntity {
     private Date modifyTime;
 
     private Date createTime;
-
-    private Byte valid;
 
     private String dianZiXinXi;
 
@@ -177,13 +178,7 @@ public class UserEntity {
         this.createTime = createTime;
     }
 
-    public Byte getValid() {
-        return valid;
-    }
 
-    public void setValid(Byte valid) {
-        this.valid = valid;
-    }
 
     public String getDianZiXinXi() {
         return dianZiXinXi;

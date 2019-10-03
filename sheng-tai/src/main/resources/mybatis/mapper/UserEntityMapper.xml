@@ -3,32 +3,82 @@
 <mapper namespace="com.daoli.sheng.tai.mapper.UserEntityMapper" >
   <resultMap id="BaseResultMap" type="com.daoli.sheng.tai.entity.UserEntity" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_age" property="userAge" jdbcType="VARCHAR" />
+    <result column="user_sex" property="userSex" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="VARCHAR" />
+    <result column="ji_bie" property="jiBie" jdbcType="VARCHAR" />
+    <result column="zhi_wu" property="zhiWu" jdbcType="VARCHAR" />
+    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+    <result column="login_password" property="loginPassword" jdbcType="VARCHAR" />
+    <result column="login_phone" property="loginPhone" jdbcType="VARCHAR" />
+    <result column="login_wechat" property="loginWechat" jdbcType="VARCHAR" />
+    <result column="login_email" property="loginEmail" jdbcType="VARCHAR" />
+    <result column="user_ext_info" property="userExtInfo" jdbcType="VARCHAR" />
     <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="valid" property="valid" jdbcType="TINYINT" />
   </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.daoli.sheng.tai.entity.UserEntity" extends="BaseResultMap" >
+    <result column="dian_zi_xin_xi" property="dianZiXinXi" jdbcType="LONGVARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
-    id, uid, user_name, modify_time, create_time, valid
+    id, user_id, user_name, user_age, user_sex, description, department_id, ji_bie, zhi_wu, 
+    login_name, login_password, login_phone, login_wechat, login_email, user_ext_info, 
+    modify_time, create_time, valid
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <sql id="Blob_Column_List" >
+    dian_zi_xin_xi
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
     from tbl_user
     where id = #{id,jdbcType=INTEGER}
   </select>
+
+
+  <select id="selectByUserId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tbl_user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByUserName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tbl_user
+    where user_name = #{userName,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tbl_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.daoli.sheng.tai.entity.UserEntity" >
-    insert into tbl_user (id, uid, user_name, 
-      modify_time, create_time, valid
-      )
-    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
-      #{modifyTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT}
-      )
+    insert into tbl_user (id, user_id, user_name, 
+      user_age, user_sex, description, 
+      department_id, ji_bie, zhi_wu, 
+      login_name, login_password, login_phone, 
+      login_wechat, login_email, user_ext_info, 
+      modify_time, create_time, valid, 
+      dian_zi_xin_xi)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userAge,jdbcType=VARCHAR}, #{userSex,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{departmentId,jdbcType=VARCHAR}, #{jiBie,jdbcType=VARCHAR}, #{zhiWu,jdbcType=VARCHAR}, 
+      #{loginName,jdbcType=VARCHAR}, #{loginPassword,jdbcType=VARCHAR}, #{loginPhone,jdbcType=VARCHAR}, 
+      #{loginWechat,jdbcType=VARCHAR}, #{loginEmail,jdbcType=VARCHAR}, #{userExtInfo,jdbcType=VARCHAR}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT}, 
+      #{dianZiXinXi,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.daoli.sheng.tai.entity.UserEntity" >
     insert into tbl_user
@@ -36,11 +86,47 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="uid != null" >
-        uid,
+      <if test="userId != null" >
+        user_id,
       </if>
       <if test="userName != null" >
         user_name,
+      </if>
+      <if test="userAge != null" >
+        user_age,
+      </if>
+      <if test="userSex != null" >
+        user_sex,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="departmentId != null" >
+        department_id,
+      </if>
+      <if test="jiBie != null" >
+        ji_bie,
+      </if>
+      <if test="zhiWu != null" >
+        zhi_wu,
+      </if>
+      <if test="loginName != null" >
+        login_name,
+      </if>
+      <if test="loginPassword != null" >
+        login_password,
+      </if>
+      <if test="loginPhone != null" >
+        login_phone,
+      </if>
+      <if test="loginWechat != null" >
+        login_wechat,
+      </if>
+      <if test="loginEmail != null" >
+        login_email,
+      </if>
+      <if test="userExtInfo != null" >
+        user_ext_info,
       </if>
       <if test="modifyTime != null" >
         modify_time,
@@ -51,16 +137,55 @@
       <if test="valid != null" >
         valid,
       </if>
+      <if test="dianZiXinXi != null" >
+        dian_zi_xin_xi,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="uid != null" >
-        #{uid,jdbcType=VARCHAR},
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
       </if>
       <if test="userName != null" >
         #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAge != null" >
+        #{userAge,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null" >
+        #{userSex,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        #{departmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="jiBie != null" >
+        #{jiBie,jdbcType=VARCHAR},
+      </if>
+      <if test="zhiWu != null" >
+        #{zhiWu,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPassword != null" >
+        #{loginPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPhone != null" >
+        #{loginPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="loginWechat != null" >
+        #{loginWechat,jdbcType=VARCHAR},
+      </if>
+      <if test="loginEmail != null" >
+        #{loginEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userExtInfo != null" >
+        #{userExtInfo,jdbcType=VARCHAR},
       </if>
       <if test="modifyTime != null" >
         #{modifyTime,jdbcType=TIMESTAMP},
@@ -71,16 +196,55 @@
       <if test="valid != null" >
         #{valid,jdbcType=TINYINT},
       </if>
+      <if test="dianZiXinXi != null" >
+        #{dianZiXinXi,jdbcType=LONGVARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.daoli.sheng.tai.entity.UserEntity" >
     update tbl_user
     <set >
-      <if test="uid != null" >
-        uid = #{uid,jdbcType=VARCHAR},
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
       </if>
       <if test="userName != null" >
         user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAge != null" >
+        user_age = #{userAge,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null" >
+        user_sex = #{userSex,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="jiBie != null" >
+        ji_bie = #{jiBie,jdbcType=VARCHAR},
+      </if>
+      <if test="zhiWu != null" >
+        zhi_wu = #{zhiWu,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPassword != null" >
+        login_password = #{loginPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPhone != null" >
+        login_phone = #{loginPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="loginWechat != null" >
+        login_wechat = #{loginWechat,jdbcType=VARCHAR},
+      </if>
+      <if test="loginEmail != null" >
+        login_email = #{loginEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userExtInfo != null" >
+        user_ext_info = #{userExtInfo,jdbcType=VARCHAR},
       </if>
       <if test="modifyTime != null" >
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
@@ -91,13 +255,50 @@
       <if test="valid != null" >
         valid = #{valid,jdbcType=TINYINT},
       </if>
+      <if test="dianZiXinXi != null" >
+        dian_zi_xin_xi = #{dianZiXinXi,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.daoli.sheng.tai.entity.UserEntity" >
+    update tbl_user
+    set user_id = #{userId,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_age = #{userAge,jdbcType=VARCHAR},
+      user_sex = #{userSex,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=VARCHAR},
+      ji_bie = #{jiBie,jdbcType=VARCHAR},
+      zhi_wu = #{zhiWu,jdbcType=VARCHAR},
+      login_name = #{loginName,jdbcType=VARCHAR},
+      login_password = #{loginPassword,jdbcType=VARCHAR},
+      login_phone = #{loginPhone,jdbcType=VARCHAR},
+      login_wechat = #{loginWechat,jdbcType=VARCHAR},
+      login_email = #{loginEmail,jdbcType=VARCHAR},
+      user_ext_info = #{userExtInfo,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      valid = #{valid,jdbcType=TINYINT},
+      dian_zi_xin_xi = #{dianZiXinXi,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.daoli.sheng.tai.entity.UserEntity" >
     update tbl_user
-    set uid = #{uid,jdbcType=VARCHAR},
+    set user_id = #{userId,jdbcType=VARCHAR},
       user_name = #{userName,jdbcType=VARCHAR},
+      user_age = #{userAge,jdbcType=VARCHAR},
+      user_sex = #{userSex,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=VARCHAR},
+      ji_bie = #{jiBie,jdbcType=VARCHAR},
+      zhi_wu = #{zhiWu,jdbcType=VARCHAR},
+      login_name = #{loginName,jdbcType=VARCHAR},
+      login_password = #{loginPassword,jdbcType=VARCHAR},
+      login_phone = #{loginPhone,jdbcType=VARCHAR},
+      login_wechat = #{loginWechat,jdbcType=VARCHAR},
+      login_email = #{loginEmail,jdbcType=VARCHAR},
+      user_ext_info = #{userExtInfo,jdbcType=VARCHAR},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       valid = #{valid,jdbcType=TINYINT}
