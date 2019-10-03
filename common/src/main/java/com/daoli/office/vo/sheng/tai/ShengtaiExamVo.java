@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by wanglining on 2019/8/22.
@@ -41,6 +42,10 @@ public class ShengtaiExamVo {
     private Date createTime;
 
     private Integer assignedNum;
+
+    private List<DepartmentVo> assignedDepartment;
+
+    private List<DepartmentVo> unsignedDepartment;
 
     private boolean searched;
 

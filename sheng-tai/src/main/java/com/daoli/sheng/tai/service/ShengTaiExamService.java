@@ -14,6 +14,7 @@ import com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant;
 import com.daoli.sheng.tai.entity.DepartmentEntity;
 import com.daoli.sheng.tai.entity.DepartmentExamEntity;
 import com.daoli.sheng.tai.entity.ShengTaiExamEntity;
+import com.daoli.sheng.tai.mapper.DepartmentEntityMapper;
 import com.daoli.sheng.tai.mapper.DepartmentExamEntityMapper;
 import com.daoli.sheng.tai.mapper.ShengTaiExamEntityMapper;
 import com.google.common.collect.Lists;
@@ -43,6 +44,9 @@ public class ShengTaiExamService {
 
     @Autowired
     private DepartmentExamEntityMapper departmentExamEntityMapper;
+
+    @Autowired
+    private DepartmentEntityMapper departmentEntityMapper;
 
 
     private final static String[] EXAM_IGNORE_PROPERTIES = new String[]{"modifyTime",
@@ -383,14 +387,34 @@ public class ShengTaiExamService {
 
 
     public List<ShengtaiExamVo> queryAllExams() {
-        List<ShengTaiExamEntity> res = examMapper.queryAllExams();
-
-        List<ShengtaiExamVo> voRes = new ArrayList<>();
-        for (int i = 0; i < res.size(); ++i) {
+        List<ShengTaiExamEntity> examEntityList = examMapper.queryAllExams();
+        List<DepartmentEntity> allDepartment = departmentEntityMapper
+                .queryDepartmentByFields(new DepartmentEntity());
+        List<ShengtaiExamVo> resList = Lists.newArrayList();
+        for (ShengTaiExamEntity examEntity : examEntityList) {
             ShengtaiExamVo oneVo = new ShengtaiExamVo();
-            BeanUtils.copyProperties(res.get(i), oneVo);
-            voRes.add(oneVo);
+            Set<String> assignSet = Sets.newHashSet();
+            List<DepartmentVo> assignedDepartment = Lists.newArrayList();
+            List<DepartmentVo> unsignedDepartment = Lists.newArrayList();
+            departmentExamEntityMapper
+                    .queryAssignedDepartmentsByExamId(oneVo.getExamId())
+                    .forEach(departmentEntity -> assignSet.add(departmentEntity.getDepartmentId()));
+            allDepartment.forEach(departmentEntity -> {
+                if (assignSet.contains(departmentEntity.getDepartmentId())) {
+                    assignedDepartment.add(DepartmentVo.builder()
+                            .departmentId(departmentEntity.getDepartmentId())
+                            .departmentName(departmentEntity.getDepartmentName()).build());
+                } else {
+                    unsignedDepartment.add(DepartmentVo.builder()
+                            .departmentId(departmentEntity.getDepartmentId())
+                            .departmentName(departmentEntity.getDepartmentName()).build());
+                }
+            });
+            oneVo.setAssignedDepartment(assignedDepartment);
+            oneVo.setAssignedDepartment(unsignedDepartment);
+            BeanUtils.copyProperties(examEntity, oneVo);
+            resList.add(oneVo);
         }
-        return voRes;
+        return resList;
     }
 }
