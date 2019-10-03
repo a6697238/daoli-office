@@ -82,45 +82,58 @@ public class ShengTaiExamService {
      * 2.新增新的关系
      */
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> assignBatchExam(String examId,
+    public void assignBatchExam(String examId,
             List<String> departmentIds) {
-        Map<String, Object> resMap = Maps.newHashMap();
-        Map<String, Object> deleteMap = Maps.newHashMap();
-        Map<String, Object> addMap = Maps.newHashMap();
+        ShengTaiExamEntity examEntity = examMapper.queryByExamId(examId);
+        if (KAO_HE_FEI_LEI.equals(examEntity.getExamType())) {
+            assignFenleiExam(examId, departmentIds);
+        } else if (KAO_HE_ZHI_BIAO.equals(examEntity.getExamType())) {
+            assignZhibiaoExam(examId, departmentIds);
+        } else if (KAO_HE_YAO_DIAN.equals(examEntity.getExamType())) {
+            assignYaodianExam(examId, departmentIds);
+        }
+    }
 
-        List<DepartmentExamEntity> examEntityList = departmentExamEntityMapper
-                .queryDepartmentExamByExamId(examId);
-        for (DepartmentExamEntity entity : examEntityList) {
-            entity.setValid(IN_VALID);
-            if (departmentExamEntityMapper.updateByPrimaryKeySelective(entity) > 0) {
-                deleteMap.put(entity.getDepartmentId(), true);
-            } else {
-                deleteMap.put(entity.getDepartmentId(), false);
+    private void assignFenleiExam(String examId, List<String> departmentIds) {
+        ShengTaiExamEntity fenleiEntity = examMapper.queryByExamId(examId);
+        assignExam(examId, departmentIds);
+        List<ShengTaiExamEntity> zhibiaoList = examMapper
+                .queryExamsByParentExamId(fenleiEntity.getId());
+        for (ShengTaiExamEntity zhibiaoEntity : zhibiaoList) {
+            assignExam(zhibiaoEntity.getExamId(), departmentIds);
+            List<ShengTaiExamEntity> yaodianList = examMapper
+                    .queryExamsByParentExamId(zhibiaoEntity.getId());
+            for (ShengTaiExamEntity yaodianEntity : yaodianList) {
+                assignExam(yaodianEntity.getExamId(), departmentIds);
             }
         }
 
+    }
+
+    private void assignZhibiaoExam(String examId, List<String> departmentIds) {
+        ShengTaiExamEntity zhibiaoEntity = examMapper.queryByExamId(examId);
+        assignExam(zhibiaoEntity.getExamId(), departmentIds);
+        List<ShengTaiExamEntity> yaodianList = examMapper
+                .queryExamsByParentExamId(zhibiaoEntity.getId());
+        for (ShengTaiExamEntity yaodianEntity : yaodianList) {
+            assignExam(yaodianEntity.getExamId(), departmentIds);
+        }
+    }
+
+
+    private void assignYaodianExam(String examId, List<String> departmentIds) {
+        ShengTaiExamEntity yaodianEntity = examMapper.queryByExamId(examId);
+        assignExam(yaodianEntity.getExamId(), departmentIds);
+    }
+
+    private void assignExam(String examId, List<String> departmentIds) {
+        ShengTaiExamEntity examEntity = examMapper.queryByExamId(examId);
+        departmentExamEntityMapper.deleteDepartmentExamByExamId(examEntity.getExamId());
         for (String departmentId : departmentIds) {
-            DepartmentExamEntity entity = DepartmentExamEntity.builder().createTime(new Date())
-                    .examId(examId).departmentId(departmentId).valid(VALID).build();
-            int rt = departmentExamEntityMapper.insertSelective(entity);
-            if (rt != 0) {
-                addMap.put(departmentId, true);
-            } else {
-                addMap.put(departmentId, false);
-            }
+            departmentExamEntityMapper.insertSelective(
+                    DepartmentExamEntity.builder().examId(examId).departmentId(departmentId)
+                            .createTime(new Date()).valid(VALID).build());
         }
-        ShengTaiExamEntity filledExamEntity = examMapper.queryByExamId(examId);
-        ShengTaiExamEntity argExamEntity = new ShengTaiExamEntity();
-        argExamEntity.setId(filledExamEntity.getId());
-        argExamEntity.setAssignedNum(departmentIds.size());
-        examMapper.updateByPrimaryKeySelective(argExamEntity);
-
-        //filledExamEntity.setAssignedNum(departmentIds.size());
-        //examMapper.updateByPrimaryKeySelective(filledExamEntity);
-
-        resMap.put("addMap", addMap);
-        resMap.put("deleteMap", deleteMap);
-        return resMap;
     }
 
     public Map<Integer, Object> publishBatchExam(Integer[] examPIds) {
@@ -201,7 +214,7 @@ public class ShengTaiExamService {
             zhibiaoEntity.setStartTime(modifyVo.getStartTime());
             zhibiaoEntity.setEndTime(modifyVo.getEndTime());
             List<ShengTaiExamEntity> yaodianList = examMapper
-                    .queryExamsByParentExamId(modifyVo.getId());
+                    .queryExamsByParentExamId(zhibiaoEntity.getId());
             for (ShengTaiExamEntity yaodianEntity : yaodianList) {
                 yaodianEntity.setStartTime(modifyVo.getStartTime());
                 yaodianEntity.setEndTime(modifyVo.getEndTime());
@@ -218,8 +231,8 @@ public class ShengTaiExamService {
         List<ShengTaiExamEntity> yaodianList = examMapper
                 .queryExamsByParentExamId(modifyVo.getId());
         for (ShengTaiExamEntity yaodianEntity : yaodianList) {
-            zhibiaoEntity.setStartTime(modifyVo.getStartTime());
-            zhibiaoEntity.setEndTime(modifyVo.getEndTime());
+            yaodianEntity.setStartTime(modifyVo.getStartTime());
+            yaodianEntity.setEndTime(modifyVo.getEndTime());
             examMapper.updateByPrimaryKeySelective(yaodianEntity);
         }
         examMapper.updateByPrimaryKeySelective(zhibiaoEntity);
@@ -228,8 +241,20 @@ public class ShengTaiExamService {
 
     private void updateYaodianNode(ShengtaiExamVo modifyVo) {
         ShengTaiExamEntity yaodianEntity = examMapper.selectByPrimaryKey(modifyVo.getId());
+        float oldYaoDianScore = yaodianEntity.getExamScore();
         BeanUtils.copyProperties(modifyVo, yaodianEntity, EXAM_IGNORE_PROPERTIES);
         examMapper.updateByPrimaryKeySelective(yaodianEntity);
+
+        ShengTaiExamEntity zhibiaoEntity = examMapper
+                .selectByPrimaryKey(modifyVo.getParentExamId());
+        zhibiaoEntity.setExamScore(
+                zhibiaoEntity.getExamScore() - oldYaoDianScore + modifyVo.getExamScore());
+        examMapper.updateByPrimaryKeySelective(zhibiaoEntity);
+
+        ShengTaiExamEntity fenlei = examMapper.selectByPrimaryKey(zhibiaoEntity.getParentExamId());
+        fenlei.setExamScore(fenlei.getExamScore() - oldYaoDianScore + modifyVo.getExamScore());
+        examMapper.updateByPrimaryKeySelective(fenlei);
+
     }
 
     public List<DepartmentVo> queryAssignedDepartmentsByExamId(String examId) {

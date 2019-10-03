@@ -26,7 +26,7 @@ public class ShengtaiExamVo {
 
     private String examDesc;
 
-    private Integer examScore;
+    private Float examScore;
 
     private String examStatus;
 

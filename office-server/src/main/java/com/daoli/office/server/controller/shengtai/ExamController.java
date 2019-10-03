@@ -50,9 +50,10 @@ public class ExamController {
     @ApiOperation(value = "批量分配, examId 表示 exam 业务键，departmentId 部门业务键 list 。")
     @RequestMapping(value = "/assign_batch_exam", method = RequestMethod.POST)
     public JsonResponse assignBatchExam(@RequestBody Map<String, Object> reqMap) {
-        return new JsonResponse(shengTaiExamService
+        shengTaiExamService
                 .assignBatchExam((String) reqMap.get("examId"),
-                        (List<String>) reqMap.get("departmentId")));
+                        (List<String>) reqMap.get("departmentId"));
+        return new JsonResponse();
     }
 
     @ResponseBody

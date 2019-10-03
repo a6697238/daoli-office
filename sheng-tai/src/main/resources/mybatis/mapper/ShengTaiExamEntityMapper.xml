@@ -9,7 +9,7 @@
     <result column="exam_type" property="examType" jdbcType="VARCHAR"/>
     <result column="exam_name" property="examName" jdbcType="VARCHAR"/>
     <result column="exam_desc" property="examDesc" jdbcType="VARCHAR"/>
-    <result column="exam_score" property="examScore" jdbcType="INTEGER"/>
+    <result column="exam_score" property="examScore" jdbcType="REAL" />
     <result column="exam_status" property="examStatus" jdbcType="VARCHAR"/>
     <result column="create_uid" property="createUid" jdbcType="VARCHAR"/>
     <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
@@ -258,7 +258,7 @@
     where valid = "1" and exam_id = #{examId,jdbcType=VARCHAR}
   </select>
 
-  <select id="queryExamsByParentExamId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  <select id="queryExamsByParentExamId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
     from tbl_shengtai_exam

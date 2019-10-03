@@ -34,6 +34,14 @@
     delete from tbl_department_exam
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+  <delete id="deleteDepartmentExamByExamId" parameterType="java.lang.String" >
+    delete from tbl_department_exam
+    where exam_id = #{examId,jdbcType=VARCHAR}
+  </delete>
+
+
+
   <insert id="insert" parameterType="com.daoli.sheng.tai.entity.DepartmentExamEntity" >
     insert into tbl_department_exam (id, department_id, exam_id, 
       modify_time, create_time, valid
@@ -193,22 +201,6 @@
         where tbl_d_e.valid=1 and
           exam_id = #{examId,jdbcType=VARCHAR}
       )
-
-
-    <!--select-->
-    <!--<include refid="DepartmentE_Column_List" />-->
-    <!--from tbl_department where valid = 1 and department_id not in-->
-    <!--(-->
-    <!--select-->
-    <!--department_id-->
-    <!--from tbl_department_exam-->
-    <!--where  valid = "1" and-->
-    <!--<trim prefix="(" suffix=")" suffixOverrides="and" >-->
-      <!--<if test="examId != null" >-->
-        <!--exam_id = #{examId,jdbcType=VARCHAR}-->
-      <!--</if>-->
-    <!--</trim>-->
-    <!--)-->
   </select>
 
 </mapper>

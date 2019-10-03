@@ -17,7 +17,7 @@ public class ShengTaiExamEntity {
 
     private String examDesc;
 
-    private Integer examScore;
+    private Float examScore;
 
     private String examStatus;
 
@@ -83,11 +83,11 @@ public class ShengTaiExamEntity {
         this.examDesc = examDesc;
     }
 
-    public Integer getExamScore() {
+    public Float getExamScore() {
         return examScore;
     }
 
-    public void setExamScore(Integer examScore) {
+    public void setExamScore(Float examScore) {
         this.examScore = examScore;
     }
 

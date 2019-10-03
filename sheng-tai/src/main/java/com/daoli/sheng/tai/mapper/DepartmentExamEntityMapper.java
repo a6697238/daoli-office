@@ -33,4 +33,6 @@ public interface DepartmentExamEntityMapper {
 
     List<DepartmentEntity> queryNotAssignedDepartmentsByExamId(@Param("examId")String examId);
 
+    void deleteDepartmentExamByExamId(@Param("examId")String examId);
+
 }
