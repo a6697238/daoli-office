@@ -170,6 +170,17 @@ public class ExamRecordController extends BaseController {
 
 
     @ResponseBody
+    @ApiOperation(value = "查询上传目录")
+    @RequestMapping(value = "/query_department_upload_report", method = RequestMethod.GET)
+    public JsonResponse queryDepartmentUploadReport(@RequestParam long startTime,
+            @RequestParam long endTime) {
+        return new JsonResponse(examRecordService.queryDepartmentScoreReport("卫生办",
+                "", startTime,
+                endTime));
+    }
+
+
+    @ResponseBody
     @ApiOperation(value = "根据部门id,要点id,查询考核记录")
     @RequestMapping(value = "/query_exam_record_by_department_id_and_detail_id", method = RequestMethod.GET)
     public JsonResponse queryExamRecordByDepartmentIdAndDetailId(@RequestParam String departmentId,
