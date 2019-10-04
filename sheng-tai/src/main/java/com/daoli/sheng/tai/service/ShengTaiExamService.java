@@ -394,40 +394,43 @@ public class ShengTaiExamService {
 
         List<DepartmentEntity> allDepartment = departmentEntityMapper
                 .queryDepartmentByFields(new DepartmentEntity());
+        List<ShengtaiExamVo> resList = Lists.newArrayList();
 
         List<ShengTaiExamEntity> queryExam = examMapper.queryExamsByFuzzyCondition(vo);
-        Set<Integer> queryExamSet = Sets.newHashSet();
-        queryExam.forEach(entity -> queryExamSet.add(entity.getId()));
-        List<ShengtaiExamVo> resList = Lists.newArrayList();
-        allExam.forEach(entity -> {
-            ShengtaiExamVo resVo = new ShengtaiExamVo();
-            BeanUtils.copyProperties(entity, resVo);
-            if (queryExamSet.contains(entity.getId())) {
-                resVo.setSearched(true);
-            }
 
-            Set<String> assignSet = Sets.newHashSet();
-            List<DepartmentVo> assignedDepartment = Lists.newArrayList();
-            List<DepartmentVo> unsignedDepartment = Lists.newArrayList();
-            departmentExamEntityMapper
-                    .queryAssignedDepartmentsByExamId(resVo.getExamId())
-                    .forEach(departmentEntity -> assignSet.add(departmentEntity.getDepartmentId()));
-            allDepartment.forEach(departmentEntity -> {
-                if (assignSet.contains(departmentEntity.getDepartmentId())) {
-                    assignedDepartment.add(DepartmentVo.builder()
-                            .departmentId(departmentEntity.getDepartmentId())
-                            .departmentName(departmentEntity.getDepartmentName()).build());
-                } else {
-                    unsignedDepartment.add(DepartmentVo.builder()
-                            .departmentId(departmentEntity.getDepartmentId())
-                            .departmentName(departmentEntity.getDepartmentName()).build());
+        if(allExam.size()!=queryExam.size()){
+            Set<Integer> queryExamSet = Sets.newHashSet();
+            queryExam.forEach(entity -> queryExamSet.add(entity.getId()));
+            allExam.forEach(entity -> {
+                ShengtaiExamVo resVo = new ShengtaiExamVo();
+                BeanUtils.copyProperties(entity, resVo);
+                if (queryExamSet.contains(entity.getId())) {
+                    resVo.setSearched(true);
                 }
-            });
-            resVo.setAssignedDepartment(assignedDepartment);
-            resVo.setAssignedDepartment(unsignedDepartment);
 
-            resList.add(resVo);
-        });
+                Set<String> assignSet = Sets.newHashSet();
+                List<DepartmentVo> assignedDepartment = Lists.newArrayList();
+                List<DepartmentVo> unsignedDepartment = Lists.newArrayList();
+                departmentExamEntityMapper
+                        .queryAssignedDepartmentsByExamId(resVo.getExamId())
+                        .forEach(departmentEntity -> assignSet.add(departmentEntity.getDepartmentId()));
+                allDepartment.forEach(departmentEntity -> {
+                    if (assignSet.contains(departmentEntity.getDepartmentId())) {
+                        assignedDepartment.add(DepartmentVo.builder()
+                                .departmentId(departmentEntity.getDepartmentId())
+                                .departmentName(departmentEntity.getDepartmentName()).build());
+                    } else {
+                        unsignedDepartment.add(DepartmentVo.builder()
+                                .departmentId(departmentEntity.getDepartmentId())
+                                .departmentName(departmentEntity.getDepartmentName()).build());
+                    }
+                });
+                resVo.setAssignedDepartment(assignedDepartment);
+                resVo.setAssignedDepartment(unsignedDepartment);
+
+                resList.add(resVo);
+            });
+        }
         return resList;
     }
 }

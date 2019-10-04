@@ -1,41 +1,27 @@
 package com.daoli.office.server.controller.shengtai;
 
+import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.daoli.office.vo.JsonResponse;
 import com.daoli.office.vo.sheng.tai.UserVo;
 import com.daoli.sheng.tai.HttpUtils.PostTool;
 import com.daoli.sheng.tai.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 //import org.apache.tomcat.util.http.fileupload.FileItem;
 //import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 //import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
-import  org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * Created by wanglining on 2019/10/3.
@@ -75,12 +61,6 @@ public class UserController {
         String writePicToDisk = request.getParameter("write_pic_to_disk");
         MultipartHttpServletRequest mul = (MultipartHttpServletRequest)request;
         MultipartFile multipartFile = mul.getFile("image_content");
-
-
-        if(StringUtils.isNotEmpty(pid) == false  || StringUtils.isNotEmpty(userName) == false
-                || multipartFile == null){
-            return new JsonResponse("pid/user_name is empty; or camera has problem.");
-        }
 
         return new JsonResponse(userService.addUserFace(pid, userName, multipartFile));
     }
