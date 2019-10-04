@@ -86,9 +86,9 @@ public class UserController {
     }
 
     @ResponseBody
-    @ApiOperation(value = "用户登录, login_name/login_password ")
-    @RequestMapping(value = "/user_login", method = RequestMethod.POST)
-    public JsonResponse verifyUser(HttpServletRequest request,HttpServletResponse response){
+    @ApiOperation(value = "用户登录, 人脸登录")
+    @RequestMapping(value = "/user_login_by_face", method = RequestMethod.POST)
+    public JsonResponse verifyUserByFace(HttpServletRequest request,HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("'Access-Control-Allow-Headers","x-requested-with");
         response.setHeader("Access-Control-Allow-Methods","POST, GET, PUT, DELETE");
