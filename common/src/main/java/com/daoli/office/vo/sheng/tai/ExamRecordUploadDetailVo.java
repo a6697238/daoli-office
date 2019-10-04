@@ -34,7 +34,7 @@ public class ExamRecordUploadDetailVo {
 
     private String examDesc;
 
-    private Integer examScore;
+    private Float examScore;
 
     private String examStatus;
 
@@ -49,5 +49,7 @@ public class ExamRecordUploadDetailVo {
     private Date createTime;
 
     private Integer assignedNum;
+
+    private Float fullScore;
 
 }

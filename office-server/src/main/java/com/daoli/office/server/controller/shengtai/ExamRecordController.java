@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import com.daoli.office.server.controller.BaseController;
 import com.daoli.office.vo.JsonResponse;
+import com.daoli.office.vo.sheng.tai.DeleteRecordVo;
 import com.daoli.office.vo.sheng.tai.ExamRecordAdditionVo;
 import com.daoli.office.vo.sheng.tai.ScoreExamRecordVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
@@ -71,8 +72,8 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "删除一条考核记录")
     @RequestMapping(value = "/delete_exam_record", method = RequestMethod.POST)
-    public JsonResponse deleteExamRecord(@RequestBody Integer recordPid) {
-        examRecordService.deleteExamRecord(recordPid);
+    public JsonResponse deleteExamRecord(@RequestBody DeleteRecordVo deleteRecordVo) {
+        examRecordService.deleteExamRecord(deleteRecordVo.getRecordPid());
         return new JsonResponse();
     }
 
@@ -90,7 +91,7 @@ public class ExamRecordController extends BaseController {
     @ApiOperation(value = "给一条考核记录打分")
     @RequestMapping(value = "/score_exam_record", method = RequestMethod.POST)
     public JsonResponse scoreExamRecord(@RequestBody ScoreExamRecordVo vo) {
-        examRecordService.scoreExamRecord(vo.getScore(), vo.getDetailId(),vo.getDepartmentId());
+        examRecordService.scoreExamRecord(vo.getScore(), vo.getDetailId(), vo.getDepartmentId());
         return new JsonResponse();
     }
 
@@ -154,7 +155,8 @@ public class ExamRecordController extends BaseController {
     @ApiOperation(value = "查询打分目录")
     @RequestMapping(value = "/query_department_score_report", method = RequestMethod.GET)
     @ApiImplicitParam(value = "XIANG_ZHEN|SHI_QU||", name = "departmentType", required = false, dataType = "String", paramType = "query")
-    public JsonResponse queryDepartmentScoreReport(@RequestParam(required = false) String departmentName,
+    public JsonResponse queryDepartmentScoreReport(
+            @RequestParam(required = false) String departmentName,
             @RequestParam(required = false) String departmentType, @RequestParam long startTime,
             @RequestParam long endTime) {
         return new JsonResponse(examRecordService.queryDepartmentScoreReport(departmentName,
