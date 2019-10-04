@@ -22,10 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -97,6 +94,7 @@ public class UserController {
         MultipartFile multipartFile = mul.getFile("image_content");
 
         String verifyFaceResp = PostTool.postImage("http://localhost:8082/verify_video_picture",new HashMap<>(), multipartFile);
+
         return new JsonResponse(verifyFaceResp);
     }
 
