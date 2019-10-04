@@ -78,6 +78,11 @@ alter table tbl_shengtai_exam_record add COLUMN start_time timestamp NOT NULL DE
 alter table tbl_shengtai_exam_record add COLUMN end_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '结束时间';
 alter table tbl_shengtai_exam_record add COLUMN exam_detail_name varchar(255) NOT NULL DEFAULT '' COMMENT '要点名称';
 alter table tbl_shengtai_exam_record add COLUMN exam_index_name varchar(255) NOT NULL DEFAULT '' COMMENT '指标名称';
+alter table tbl_shengtai_exam_record add COLUMN assigned_num int(11) NOT NULL DEFAULT 0 COMMENT '考核上传的记录数量';
+alter table tbl_shengtai_exam_record add COLUMN assigned_num int(11) NOT NULL DEFAULT 0 COMMENT '考核上传的记录数量';
+alter table tbl_shengtai_exam_record add COLUMN work_start_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '工作开始时间';
+
+
 
 
 

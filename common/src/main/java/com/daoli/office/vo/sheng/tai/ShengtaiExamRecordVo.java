@@ -81,6 +81,10 @@ public class ShengtaiExamRecordVo {
 
     private Date endTime;
 
+    private Date workStartTime;
+
+    private Integer assignedNum;
+
     private List<Integer> additionId;
 
 

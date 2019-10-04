@@ -41,9 +41,13 @@ public class ShengtaiExamRecordEntity {
 
     private Date endTime;
 
+    private Date workStartTime;
+
     private String examDetailName;
 
     private String examIndexName;
+
+    private Integer assignedNum;
 
     public Integer getId() {
         return id;
@@ -211,5 +215,21 @@ public class ShengtaiExamRecordEntity {
 
     public void setExamIndexName(String examIndexName) {
         this.examIndexName = examIndexName;
+    }
+
+    public Integer getAssignedNum() {
+        return assignedNum;
+    }
+
+    public void setAssignedNum(Integer assignedNum) {
+        this.assignedNum = assignedNum;
+    }
+
+    public Date getWorkStartTime() {
+        return workStartTime;
+    }
+
+    public void setWorkStartTime(Date workStartTime) {
+        this.workStartTime = workStartTime;
     }
 }

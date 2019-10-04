@@ -21,14 +21,16 @@
     <result column="valid" property="valid" jdbcType="TINYINT" />
     <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
     <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="work_start_time" property="workStartTime" jdbcType="TIMESTAMP" />
     <result column="exam_detail_name" property="examDetailName" jdbcType="VARCHAR" />
     <result column="exam_index_name" property="examIndexName" jdbcType="VARCHAR" />
+    <result column="assigned_num" property="assignedNum" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, exam_record_id, exam_index_id, exam_index_desc, exam_detail_id, exam_detail_desc, 
     exam_score, department_id, record_name, record_abstract, record_master_name, record_group_name, 
     record_status, create_uid, modify_time, create_time, valid, start_time, end_time, 
-    exam_detail_name, exam_index_name
+    exam_detail_name, exam_index_name,assigned_num,work_start_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -74,24 +76,8 @@
     delete from tbl_shengtai_exam_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity" >
-    insert into tbl_shengtai_exam_record (id, exam_record_id, exam_index_id, 
-      exam_index_desc, exam_detail_id, exam_detail_desc, 
-      exam_score, department_id, record_name, 
-      record_abstract, record_master_name, record_group_name, 
-      record_status, create_uid, modify_time, 
-      create_time, valid, start_time, 
-      end_time, exam_detail_name, exam_index_name
-      )
-    values (#{id,jdbcType=INTEGER}, #{examRecordId,jdbcType=VARCHAR}, #{examIndexId,jdbcType=VARCHAR}, 
-      #{examIndexDesc,jdbcType=VARCHAR}, #{examDetailId,jdbcType=VARCHAR}, #{examDetailDesc,jdbcType=VARCHAR}, 
-      #{examScore,jdbcType=REAL}, #{departmentId,jdbcType=VARCHAR}, #{recordName,jdbcType=VARCHAR}, 
-      #{recordAbstract,jdbcType=VARCHAR}, #{recordMasterName,jdbcType=VARCHAR}, #{recordGroupName,jdbcType=VARCHAR}, 
-      #{recordStatus,jdbcType=VARCHAR}, #{createUid,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{valid,jdbcType=TINYINT}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{examDetailName,jdbcType=VARCHAR}, #{examIndexName,jdbcType=VARCHAR}
-      )
-  </insert>
+
+
   <insert id="insertSelective" parameterType="com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity" >
     insert into tbl_shengtai_exam_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -158,6 +144,12 @@
       <if test="examIndexName != null" >
         exam_index_name,
       </if>
+      <if test="assignedNum != null" >
+        assigned_num,
+      </if>
+      <if test="workStartTime != null" >
+        work_start_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -222,6 +214,12 @@
       </if>
       <if test="examIndexName != null" >
         #{examIndexName,jdbcType=VARCHAR},
+      </if>
+      <if test="assignedNum != null" >
+        #{assignedNum,jdbcType=INTEGER},
+      </if>
+      <if test="workStartTime != null" >
+        #{workStartTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -288,31 +286,14 @@
       <if test="examIndexName != null" >
         exam_index_name = #{examIndexName,jdbcType=VARCHAR},
       </if>
+      <if test="assignedNum != null" >
+        assigned_num = #{assignedNum,jdbcType=INTEGER},
+      </if>
+      <if test="assignedNum != null" >
+        work_start_time = #{workStartTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.daoli.sheng.tai.entity.ShengtaiExamRecordEntity" >
-    update tbl_shengtai_exam_record
-    set exam_record_id = #{examRecordId,jdbcType=VARCHAR},
-      exam_index_id = #{examIndexId,jdbcType=VARCHAR},
-      exam_index_desc = #{examIndexDesc,jdbcType=VARCHAR},
-      exam_detail_id = #{examDetailId,jdbcType=VARCHAR},
-      exam_detail_desc = #{examDetailDesc,jdbcType=VARCHAR},
-      exam_score = #{examScore,jdbcType=REAL},
-      department_id = #{departmentId,jdbcType=VARCHAR},
-      record_name = #{recordName,jdbcType=VARCHAR},
-      record_abstract = #{recordAbstract,jdbcType=VARCHAR},
-      record_master_name = #{recordMasterName,jdbcType=VARCHAR},
-      record_group_name = #{recordGroupName,jdbcType=VARCHAR},
-      record_status = #{recordStatus,jdbcType=VARCHAR},
-      create_uid = #{createUid,jdbcType=VARCHAR},
-      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      valid = #{valid,jdbcType=TINYINT},
-      start_time = #{startTime,jdbcType=TIMESTAMP},
-      end_time = #{endTime,jdbcType=TIMESTAMP},
-      exam_detail_name = #{examDetailName,jdbcType=VARCHAR},
-      exam_index_name = #{examIndexName,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
 </mapper>

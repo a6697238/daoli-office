@@ -7,11 +7,13 @@ import static com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant.KA
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant.KAO_HE_YAO_DIAN;
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant.KAO_HE_ZHI_BIAO;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import com.daoli.office.vo.sheng.tai.DepartmentScoreReportVo;
@@ -29,6 +31,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 1.0.0
  */
 @Service
+@Slf4j
 public class ExamRecordService {
 
     @Autowired
@@ -89,6 +93,7 @@ public class ExamRecordService {
 
     @Transactional(rollbackFor = Exception.class)
     public void uploadRecord(ShengtaiExamRecordVo vo, List<Integer> additionId) {
+
         ShengtaiExamRecordEntity examRecordEntity = new ShengtaiExamRecordEntity();
         vo.setExamRecordId(UUID.randomUUID().toString());
         BeanUtils.copyProperties(vo, examRecordEntity);
@@ -194,10 +199,11 @@ public class ExamRecordService {
             long endTime) {
         DepartmentEntity entity = DepartmentEntity.builder().departmentName(departmentName)
                 .departmentType(departmentType).build();
-        List<DepartmentEntity> entityList = departmentEntityMapper.queryDepartmentByFields(entity);
+        List<DepartmentEntity> departmentEntityList = departmentEntityMapper
+                .queryDepartmentByFields(entity);
         List<DepartmentScoreReportVo> reportVoList = Lists.newArrayList();
 
-        for (DepartmentEntity departmentEntity : entityList) {
+        for (DepartmentEntity departmentEntity : departmentEntityList) {
             int scoredCount = 0;
             int uploadCount = 0;
             float scoredCompleteRate = 0.0F;
@@ -221,14 +227,16 @@ public class ExamRecordService {
                     .queryExamByDepartmentIdWithTime(departmentEntity.getDepartmentId(),
                             new Date(startTime), new Date(endTime), KAO_HE_YAO_DIAN);
 
-            Set<String> examSet = Sets.newHashSet();
+            Map<String, ShengTaiExamEntity> examEntityMap = Maps.newHashMap();
             //1.求出 考核应上传记录数，应上传得分
             for (ShengTaiExamEntity examEntity : examEntityList) {
                 examTargetCount = examTargetCount + 1;
                 examTargetScore = examTargetScore + examEntity.getExamScore();
+                examEntityMap.put(examEntity.getExamId(), examEntity);
             }
 
             //2.求出 上传记录数得分
+            Set<String> examSet = Sets.newHashSet();
             for (ShengtaiExamRecordEntity examRecordEntity : recordEntityList) {
                 if (!examSet.contains(examRecordEntity.getExamDetailId())) {
                     examSet.add(examRecordEntity.getExamDetailId());
@@ -237,10 +245,11 @@ public class ExamRecordService {
                         realScore = realScore + examRecordEntity.getExamScore();
                     }
                     uploadCount = uploadCount + 1;
-                    uploadTargetScore = uploadTargetScore + examRecordEntity.getExamScore();
+                    uploadExamCount  = uploadExamCount + 1;
+                    uploadTargetScore = uploadTargetScore + examEntityMap
+                            .get(examRecordEntity.getExamDetailId()).getExamScore();
                 }
             }
-
 
             scoredCompleteRate = uploadCount > 0 ? scoredCount / uploadCount * 100 : 0;
             uploadTargetScoreRate = uploadTargetScore > 0 ? realScore / uploadTargetScore * 100 : 0;
@@ -270,11 +279,21 @@ public class ExamRecordService {
     }
 
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteExamRecord(Integer examRecordPid) {
         ShengtaiExamRecordEntity examRecordEntity = examRecordEntityMapper
                 .selectByPrimaryKey(examRecordPid);
         examRecordEntity.setValid(IN_VALID);
         examRecordEntityMapper.updateByPrimaryKeySelective(examRecordEntity);
+
+        List<ShengtaiExamRecordEntity> recordEntityList = examRecordEntityMapper
+                .queryExamRecordByDepartmentIdAndDetailId(
+                        examRecordEntity.getDepartmentId(), examRecordEntity.getExamDetailId());
+        for (ShengtaiExamRecordEntity recordEntity : recordEntityList) {
+            recordEntity.setAssignedNum(recordEntityList.size());
+            examRecordEntityMapper.updateByPrimaryKeySelective(examRecordEntity);
+        }
+
     }
 
 

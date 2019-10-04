@@ -7,6 +7,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -169,9 +173,17 @@ public class PostTool {
 
     public static void main(String[] args) {
 
-        Map<String,Object> arg_map = new HashMap<>();
-        arg_map.put("pid","4");
-        arg_map.put("user_name","吕行者");
-        post("http://localhost:8082/gen_welcome_audio?", arg_map);
+//        Map<String,Object> arg_map = new HashMap<>();
+//        arg_map.put("pid","4");
+//        arg_map.put("user_name","吕行者");
+//        post("http://localhost:8082/gen_welcome_audio?", arg_map);
+
+        getCurrentDate();
+    }
+
+    public static Date getCurrentDate() {
+        LocalDateTime datetime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
+        ZonedDateTime zdt = datetime.atZone(ZoneId.systemDefault());
+        return Date.from(zdt.toInstant());
     }
 }

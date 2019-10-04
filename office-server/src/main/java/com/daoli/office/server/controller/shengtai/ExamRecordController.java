@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import com.daoli.office.server.controller.BaseController;
 import com.daoli.office.vo.JsonResponse;
+import com.daoli.office.vo.sheng.tai.DeleteRecordVo;
 import com.daoli.office.vo.sheng.tai.ExamRecordAdditionVo;
 import com.daoli.office.vo.sheng.tai.ScoreExamRecordVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
@@ -40,6 +41,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 /**
  * AUTO-GENERATED: houlu @ 2019/8/20 下午8:52
@@ -71,8 +74,8 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "删除一条考核记录")
     @RequestMapping(value = "/delete_exam_record", method = RequestMethod.POST)
-    public JsonResponse deleteExamRecord(@RequestBody Integer recordPid) {
-        examRecordService.deleteExamRecord(recordPid);
+    public JsonResponse deleteExamRecord(@RequestBody DeleteRecordVo deleteRecordVo) {
+        examRecordService.deleteExamRecord(deleteRecordVo.getRecordPid());
         return new JsonResponse();
     }
 
@@ -90,7 +93,7 @@ public class ExamRecordController extends BaseController {
     @ApiOperation(value = "给一条考核记录打分")
     @RequestMapping(value = "/score_exam_record", method = RequestMethod.POST)
     public JsonResponse scoreExamRecord(@RequestBody ScoreExamRecordVo vo) {
-        examRecordService.scoreExamRecord(vo.getScore(), vo.getDetailId(),vo.getDepartmentId());
+        examRecordService.scoreExamRecord(vo.getScore(), vo.getDetailId(), vo.getDepartmentId());
         return new JsonResponse();
     }
 
@@ -98,9 +101,11 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "上传一条考核附件")
     @RequestMapping(value = "/upload_exam_addition", method = RequestMethod.POST)
-    public JsonResponse uploadExamAddition(@RequestParam String userId,
-            @RequestParam MultipartFile[] recordAdditionFile) throws IOException {
+    public JsonResponse uploadExamAddition(HttpServletRequest request) throws IOException {
         List<ExamRecordAdditionVo> resList = Lists.newArrayList();
+        List<MultipartFile> recordAdditionFile = ((MultipartHttpServletRequest) request)
+                .getFiles("recordAdditionFile");
+        String userId = request.getParameter("userId");
         for (MultipartFile file : recordAdditionFile) {
             if (!file.isEmpty()) {
                 String relativeFile = "/shengtai/" + userId + "/" + file.getOriginalFilename();
@@ -154,7 +159,8 @@ public class ExamRecordController extends BaseController {
     @ApiOperation(value = "查询打分目录")
     @RequestMapping(value = "/query_department_score_report", method = RequestMethod.GET)
     @ApiImplicitParam(value = "XIANG_ZHEN|SHI_QU||", name = "departmentType", required = false, dataType = "String", paramType = "query")
-    public JsonResponse queryDepartmentScoreReport(@RequestParam(required = false) String departmentName,
+    public JsonResponse queryDepartmentScoreReport(
+            @RequestParam(required = false) String departmentName,
             @RequestParam(required = false) String departmentType, @RequestParam long startTime,
             @RequestParam long endTime) {
         return new JsonResponse(examRecordService.queryDepartmentScoreReport(departmentName,
