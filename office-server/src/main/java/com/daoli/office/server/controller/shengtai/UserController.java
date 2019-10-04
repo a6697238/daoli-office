@@ -100,4 +100,15 @@ public class UserController {
         return new JsonResponse(verifyFaceResp);
     }
 
+    @ResponseBody
+    @ApiOperation(value = "用户登录, 密码登录")
+    @RequestMapping(value = "/user_login_by_pwd", method = RequestMethod.POST)
+    public JsonResponse verifyUserByPwd(HttpServletRequest request,HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("'Access-Control-Allow-Headers","x-requested-with");
+        response.setHeader("Access-Control-Allow-Methods","POST, GET, PUT, DELETE");
+
+
+        return new JsonResponse(true);
+    }
 }
