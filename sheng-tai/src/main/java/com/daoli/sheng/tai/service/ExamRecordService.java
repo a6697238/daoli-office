@@ -4,6 +4,7 @@ import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.DEFAULT_
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.IN_VALID;
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.VALID;
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant.KAO_HE_FEI_LEI;
+import static com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant.KAO_HE_YAO_DIAN;
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiExamTypeConstant.KAO_HE_ZHI_BIAO;
 
 import java.util.Date;
@@ -13,7 +14,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import com.daoli.office.vo.sheng.tai.DepartmentScoreReportInfoVo;
 import com.daoli.office.vo.sheng.tai.DepartmentScoreReportVo;
 import com.daoli.office.vo.sheng.tai.ExamRecordAdditionVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiExamRecordVo;
@@ -28,6 +28,7 @@ import com.daoli.sheng.tai.mapper.ShengtaiExamRecordEntityMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,7 +161,8 @@ public class ExamRecordService {
             long startTime, long endTime) {
         List<ShengtaiExamRecordVo> voList = Lists.newArrayList();
         for (ShengtaiExamRecordEntity entity : examRecordEntityMapper
-                .queryExamRecordByDepartmentIdWithTime(departmentId,new Date(startTime),new Date(endTime))) {
+                .queryExamRecordByDepartmentIdWithTime(departmentId, new Date(startTime),
+                        new Date(endTime))) {
             ShengtaiExamRecordVo vo = new ShengtaiExamRecordVo();
             BeanUtils.copyProperties(entity, vo);
             voList.add(vo);
@@ -196,59 +198,71 @@ public class ExamRecordService {
         List<DepartmentScoreReportVo> reportVoList = Lists.newArrayList();
 
         for (DepartmentEntity departmentEntity : entityList) {
+            int scoredCount = 0;
+            int uploadCount = 0;
+            float scoredCompleteRate = 0.0F;
+
+            float realScore = 0.0F;
+            float uploadTargetScore = 0.0F;
+            float uploadTargetScoreRate = 0.0F;
+
+            float examTargetScore = 0.0F;
+            float examTargetScoreRate = 0.0F;
+
+            int uploadExamCount = 0;
+            int examTargetCount = 0;
+            float uploadTargetCompleteRate = 0.0F;
+
             List<ShengtaiExamRecordEntity> recordEntityList = examRecordEntityMapper
                     .queryExamRecordByDepartmentIdWithTime(departmentEntity.getDepartmentId(),
                             new Date(startTime), new Date(endTime));
-            List<ShengTaiExamEntity> fenleiList = shengTaiExamEntityMapper
+
+            List<ShengTaiExamEntity> examEntityList = shengTaiExamEntityMapper
                     .queryExamByDepartmentIdWithTime(departmentEntity.getDepartmentId(),
-                            new Date(startTime), new Date(endTime), KAO_HE_FEI_LEI);
+                            new Date(startTime), new Date(endTime), KAO_HE_YAO_DIAN);
 
-            Map<String, DepartmentScoreReportInfoVo> info = Maps.newHashMap();
-            int scoredCount = 0;
-            int totalCount = 0;
-            float score = 0;
-            float totalScore = 0;
-            Set<String> indexSet = Sets.newHashSet();
-            for (ShengTaiExamEntity examEntity : fenleiList) {
-                Set<String> zhibiaoSet = Sets.newHashSet();
-                List<ShengTaiExamEntity> zhibiaoList = shengTaiExamEntityMapper
-                        .queryExamsByParentExamId(examEntity.getId());
-                zhibiaoList.forEach(zhibiao -> zhibiaoSet.add(zhibiao.getExamId()));
-
-                DepartmentScoreReportInfoVo vo = Optional
-                        .ofNullable(info.get(examEntity.getExamName()))
-                        .orElse(DepartmentScoreReportInfoVo.builder()
-                                .indexName(examEntity.getExamName())
-                                .indexScore(0)
-                                .indexScoredCount(0)
-                                .indexTotalCount(0)
-                                .indexTotalScore(examEntity.getExamScore()).build());
-                for (ShengtaiExamRecordEntity recordEntity : recordEntityList) {
-                    if (zhibiaoSet.contains(recordEntity.getExamIndexId())) {
-                        if (recordEntity.getExamScore() > DEFAULT_SCORE) {
-                            vo.setIndexScore(recordEntity.getExamScore());
-                            vo.setIndexScoredCount(vo.getIndexScoredCount() + 1);
-                            scoredCount++;
-                            if (!indexSet.contains(recordEntity.getExamDetailId())) {
-                                score = score + recordEntity.getExamScore();
-                                indexSet.add(recordEntity.getExamDetailId());
-                            }
-                        }
-                        totalCount++;
-                        vo.setIndexTotalCount(vo.getIndexTotalCount() + 1);
-                    }
-                }
-                totalScore = totalScore + examEntity.getExamScore();
-                info.put(vo.getIndexName(), vo);
+            Set<String> examSet = Sets.newHashSet();
+            //1.求出 考核应上传记录数，应上传得分
+            for (ShengTaiExamEntity examEntity : examEntityList) {
+                examTargetCount = examTargetCount + 1;
+                examTargetScore = examTargetScore + examEntity.getExamScore();
             }
-            float completeRate = totalCount > 0 ? scoredCount / totalCount : 0;
+
+            //2.求出 上传记录数得分
+            for (ShengtaiExamRecordEntity examRecordEntity : recordEntityList) {
+                if (!examSet.contains(examRecordEntity.getExamDetailId())) {
+                    examSet.add(examRecordEntity.getExamDetailId());
+                    if (examRecordEntity.getExamScore() > DEFAULT_SCORE) {
+                        scoredCount = scoredCount + 1;
+                        realScore = realScore + examRecordEntity.getExamScore();
+                    }
+                    uploadCount = uploadCount + 1;
+                    uploadTargetScore = uploadTargetScore + examRecordEntity.getExamScore();
+                }
+            }
+
+
+            scoredCompleteRate = uploadCount > 0 ? scoredCount / uploadCount * 100 : 0;
+            uploadTargetScoreRate = uploadTargetScore > 0 ? realScore / uploadTargetScore * 100 : 0;
+            examTargetScoreRate = examTargetScore > 0 ? realScore / examTargetScore * 100 : 0;
+            uploadTargetCompleteRate =
+                    examTargetCount > 0 ? uploadExamCount / examTargetCount * 100 : 0;
+
             reportVoList.add(DepartmentScoreReportVo.builder()
                     .departmentId(departmentEntity.getDepartmentId())
                     .departmentPid(departmentEntity.getId())
-                    .departmentName(departmentEntity.getDepartmentName()).scoredCount(scoredCount)
-                    .info(info)
-                    .totalCount(totalCount).score(score).totalScore(totalScore)
-                    .completeRate(completeRate * 100).build());
+                    .departmentName(departmentEntity.getDepartmentName())
+                    .scoredCount(scoredCount)
+                    .uploadCount(uploadCount)
+                    .scoredCompleteRate(scoredCompleteRate)
+                    .realScore(realScore)
+                    .uploadTargetScore(uploadTargetScore)
+                    .uploadTargetScoreRate(uploadTargetScoreRate)
+                    .examTargetScore(examTargetScore)
+                    .examTargetScoreRate(examTargetScoreRate)
+                    .uploadExamCount(uploadExamCount)
+                    .examTargetCount(examTargetCount)
+                    .uploadTargetCompleteRate(uploadTargetCompleteRate).build());
 
         }
 
@@ -256,8 +270,9 @@ public class ExamRecordService {
     }
 
 
-    public void deleteExamRecord(Integer examRecordPid){
-        ShengtaiExamRecordEntity examRecordEntity = examRecordEntityMapper.selectByPrimaryKey(examRecordPid);
+    public void deleteExamRecord(Integer examRecordPid) {
+        ShengtaiExamRecordEntity examRecordEntity = examRecordEntityMapper
+                .selectByPrimaryKey(examRecordPid);
         examRecordEntity.setValid(IN_VALID);
         examRecordEntityMapper.updateByPrimaryKeySelective(examRecordEntity);
     }
