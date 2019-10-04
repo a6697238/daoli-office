@@ -255,7 +255,7 @@ public class ExamRecordService {
             uploadTargetScoreRate = uploadTargetScore > 0 ? realScore / uploadTargetScore * 100 : 0;
             examTargetScoreRate = examTargetScore > 0 ? realScore / examTargetScore * 100 : 0;
             uploadTargetCompleteRate =
-                    examTargetCount > 0 ? uploadExamCount / examTargetCount * 100 : 0;
+                    examTargetCount > 0 ? (float) uploadExamCount / (float) examTargetCount * 100 : 0;
 
             reportVoList.add(DepartmentScoreReportVo.builder()
                     .departmentId(departmentEntity.getDepartmentId())

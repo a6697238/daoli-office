@@ -177,16 +177,7 @@ public class ExamController {
         return new JsonResponse(shengTaiExamService.queryExamByExamId(examId));
     }
 
-    @ResponseBody
-    @ApiOperation(
-            value = "query 所有的exam，没有参数"
-    )
-    @RequestMapping(value = "/query_all_exams", method = RequestMethod.POST)
-    public JsonResponse queryAllExam() {
 
-        List<ShengtaiExamVo> allVo = shengTaiExamService.queryAllExams();
-        return new JsonResponse(allVo);
-    }
 
 
 }
