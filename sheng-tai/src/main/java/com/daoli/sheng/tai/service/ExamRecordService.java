@@ -245,6 +245,7 @@ public class ExamRecordService {
                         realScore = realScore + examRecordEntity.getExamScore();
                     }
                     uploadCount = uploadCount + 1;
+                    uploadExamCount  = uploadExamCount + 1;
                     uploadTargetScore = uploadTargetScore + examEntityMap
                             .get(examRecordEntity.getExamDetailId()).getExamScore();
                 }

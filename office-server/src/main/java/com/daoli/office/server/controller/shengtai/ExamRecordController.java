@@ -41,6 +41,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 /**
  * AUTO-GENERATED: houlu @ 2019/8/20 下午8:52
@@ -99,9 +101,11 @@ public class ExamRecordController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "上传一条考核附件")
     @RequestMapping(value = "/upload_exam_addition", method = RequestMethod.POST)
-    public JsonResponse uploadExamAddition(@RequestParam String userId,
-            @RequestParam MultipartFile[] recordAdditionFile) throws IOException {
+    public JsonResponse uploadExamAddition(HttpServletRequest request) throws IOException {
         List<ExamRecordAdditionVo> resList = Lists.newArrayList();
+        List<MultipartFile> recordAdditionFile = ((MultipartHttpServletRequest) request)
+                .getFiles("recordAdditionFile");
+        String userId = request.getParameter("userId");
         for (MultipartFile file : recordAdditionFile) {
             if (!file.isEmpty()) {
                 String relativeFile = "/shengtai/" + userId + "/" + file.getOriginalFilename();
