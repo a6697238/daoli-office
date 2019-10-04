@@ -1,136 +1,167 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-    <meta charset="UTF-8">
-    <title>个人信息获取</title>
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/jquery.form/4.2.1/jquery.form.min.js"></script>
-    <script>
-        console.log("打印js 日志");
-        //判断浏览器是否支持HTML5的Canvas
-        window.onload = function () {
-            try {
-            }
-            catch (e) {
-            }
-        };
-        //获取摄像头的视频流并显示在Video 签中
-        window.addEventListener("DOMContentLoaded", function () {
-            console.log(" --- DOMContentLoaded ---");
-            var canvas = document.getElementById("canvas"),
-                context = canvas.getContext("2d"),
-                video = document.getElementById("video"),
-                videoObj = { "video": true },
-                errBack = function (error) {
-                    console.log("Video capture error: ", error.code);
-                };
-            $("#snap").click(function () {
-                context.drawImage(video, 0, 40, 330, 250);
-            })
-            if (navigator.getUserMedia) {
-                console.log(" --- navigator.getUserMedia ---");
-                navigator.getUserMedia(videoObj, function (stream) {
-                    video.srcObject = stream;
-                    video.play();
-                }, errBack);
-            } else if (navigator.webkitGetUserMedia) {
-                console.log(" --- navigator.webkitGetUserMedia ---");
-                navigator.webkitGetUserMedia(videoObj, function (stream) {
-                    video.src = window.webkitURL.createObjectURL(stream);
-                    video.play();
-                }, errBack);
-            } else {
-                console.log(" --- 获得摄像头失败---");
-            }
+  <meta charset="UTF-8">
+  <title>个人信息获取</title>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery.form/4.2.1/jquery.form.min.js"></script>
+  <script>
+    console.log("打印js 日志");
+    //判断浏览器是否支持HTML5的Canvas
+    window.onload = function () {
+      try {
+      }
+      catch (e) {
+      }
+    };
+    //获取摄像头的视频流并显示在Video 签中
+    window.addEventListener("DOMContentLoaded", function () {
+      console.log(" --- DOMContentLoaded ---");
+      var canvas = document.getElementById("canvas"),
+          context = canvas.getContext("2d"),
+          video = document.getElementById("video"),
+          videoObj = {"video": true},
+          errBack = function (error) {
+            console.log("Video capture error: ", error.code);
+          };
+      $("#snap").click(function () {
+        context.drawImage(video, 0, 40, 330, 250);
+      })
+      if (navigator.getUserMedia) {
+        console.log(" --- navigator.getUserMedia ---");
+        navigator.getUserMedia(videoObj, function (stream) {
+          video.srcObject = stream;
+          video.play();
+        }, errBack);
+      } else if (navigator.webkitGetUserMedia) {
+        console.log(" --- navigator.webkitGetUserMedia ---");
+        navigator.webkitGetUserMedia(videoObj, function (stream) {
+          video.src = window.webkitURL.createObjectURL(stream);
+          video.play();
+        }, errBack);
+      } else {
+        console.log(" --- 获得摄像头失败---");
+      }
 
-         }, false)
-
+    }, false)
 
     // 这是一个转换base64的一个方法
-    function convertBase64UrlToBlob(urlData){
+    function convertBase64UrlToBlob(urlData) {
 
-        //var bytes=window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte
+      //var bytes=window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte
 
-        ////处理异常,将ascii码小于0的转换为大于0
-        //var ab = new ArrayBuffer(bytes.length);
-        //var ia = new Uint8Array(ab);
-        //for (var i = 0; i < bytes.length; i++) {
-        //    ia[i] = bytes.charCodeAt(i);
-        //    ab[i] = bytes.charCodeAt(i);
-        //}
-        //return new Blob( [ab] , {type : 'image/jpeg'});
+      ////处理异常,将ascii码小于0的转换为大于0
+      //var ab = new ArrayBuffer(bytes.length);
+      //var ia = new Uint8Array(ab);
+      //for (var i = 0; i < bytes.length; i++) {
+      //    ia[i] = bytes.charCodeAt(i);
+      //    ab[i] = bytes.charCodeAt(i);
+      //}
+      //return new Blob( [ab] , {type : 'image/jpeg'});
 
-        var arr = urlData.split(','), mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-        while(n--){
-          u8arr[n] = bstr.charCodeAt(n);
-        }
-        console.log(mime)
-        return new Blob([u8arr], {type:mime});
+      var arr = urlData.split(','), mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      console.log(mime)
+      return new Blob([u8arr], {type: mime});
     }
 
-        function push() {
-            var data = new FormData($("#form1")[0]);
-            var canvans = document.getElementById("canvas");
-            var imgData = canvans.toDataURL();
-            var pid = document.getElementById("pid");
-            var user_name = document.getElementById("user_name");
-            console.log(canvans.toLocaleString());
-            data.append("pid",pid.value);
-            data.append("user_name",user_name.value)
-            var type = 'jpeg';
-            //在这里我直接将canvas中的内容转化为base64格式，传入到需要显示的img中
-            imgdata = canvas.toDataURL("image/jpeg")
-            //data.append("image_content",$("#canvas").val());
-            tmp = convertBase64UrlToBlob(imgdata)
-            if (!tmp && typeof(tmp)!="undefined" && tmp!=0)
-               alert("null"); 
-            //data.append("image_content", imgdata);
-            data.append("image_content", tmp);
-            console.log(canvas);
-            $.ajax({
-                //url: 'http://:8081/api/web/user/register_login/user_face_upload',
-                url: 'http://39.100.255.251/api/web/user/register_login/user_face_upload',
-                type: 'post',
-                contentType: false,
-                //data: {"name": "lvxingzhe", "image_content":convertBase64UrlToBlob(imgdata)},
-                data: data,
-                processData: false,
-                success:function(info){
-                    console.log(info)
-                },
-                error:function(err){
-                    console.log(err)
-                }
-            });
+    function push() {
+      var data = new FormData($("#form1")[0]);
+      var canvans = document.getElementById("canvas");
+      var imgData = canvans.toDataURL();
+      var pid = document.getElementById("pid");
+      var user_name = document.getElementById("user_name");
+
+      console.log(canvans.toLocaleString());
+      data.append("pid", pid.value);
+      data.append("user_name", user_name.value)
+      var type = 'jpeg';
+      //在这里我直接将canvas中的内容转化为base64格式，传入到需要显示的img中
+      imgdata = canvas.toDataURL("image/jpeg")
+      //data.append("image_content",$("#canvas").val());
+      tmp = convertBase64UrlToBlob(imgdata)
+      if (!tmp && typeof(tmp) != "undefined" && tmp != 0) {
+        alert("null");
+      }
+      //data.append("image_content", imgdata);
+      data.append("image_content", tmp);
+      console.log(canvas);
+      $.ajax({
+        // url: 'http://:8081/api/web/user/register_login/user_face_upload',
+        url: 'http://39.100.255.251/api/web/user/register_login/user_face_upload',
+        type: 'post',
+        contentType: false,
+        //data: {"name": "lvxingzhe", "image_content":convertBase64UrlToBlob(imgdata)},
+        data: data,
+        processData: false,
+        success: function (info) {
+          console.log(info)
+        },
+        error: function (err) {
+          console.log(err)
         }
+      });
+    }
 
-        function savea1(selector,name){
-            var a = document.createElement('a')
-            a.download = name || 'pic'
-            a.href = document.getElementById("canvas").toDataURL();
-            a.click();
-        }
+    function savea1(selector, name) {
+      var a = document.createElement('a')
+      a.download = name || 'pic'
+      a.href = document.getElementById("canvas").toDataURL();
+      a.click();
+    }
+
+    $(function () {
+      $("#upload_face").click(function () {
+        var formData = new FormData($('#form2')[0]);
+        $.ajax({
+          type: 'post',
+          // url: 'http://localhost:8081/api/web/user/register_login/user_face_upload',
+          url: 'http://39.100.255.251/api/web/user/register_login/user_face_upload',
+          data: formData,
+          cache: false,
+          processData: false,
+          contentType: false,
+        }).success(function (data) {
+          alert(data);
+        }).error(function () {
+          alert("上传失败");
+        });
+      });
+    });
 
 
-    </script>
+  </script>
 </head>
 <body>
 <form id="form1" method="post" enctype="multipart/form-data">
-<div id="contentHolder">
+  <div id="contentHolder">
     <video id="video" width="320" height="320" autoplay></video>
-    <input type="button" id="snap" style="width:100px;height:35px;" value="拍 照" />
+    <input type="button" id="snap" style="width:100px;height:35px;" value="拍 照"/>
     <canvas style="" id="canvas" width="320" height="320"></canvas>
     <input type="button" value="上传" id="ok" style="width:100px;height:35px;" onclick="push()"/>
-    <input type="button" value="保存到本地" id="baocun" style="width:100px;height:35px;" onclick="savea1('canvas')"/>
-
-
-</div>
-<div>
-  <p>pid：<input name="userName" type="text" id="pid" tabindex="1" size="15" value=""/></p>
-  <p>user_name：<input name="password" type="text" id="user_name" tabindex="2" size="16" value=""/></p>
-</div>
+    <input type="button" value="保存到本地" id="baocun" style="width:100px;height:35px;"
+           onclick="savea1('canvas')"/>
+  </div>
+  <div>
+    <p>pid：<input name="userName" type="text" id="pid" tabindex="1" size="15" value=""/></p>
+    <p>user_name：<input name="password" type="text" id="user_name" tabindex="2" size="16" value=""/>
+    </p>
+  </div>
 </form>
+
+
+<form id="form2" method="post" enctype="multipart/form-data">
+  <input type="file"  name="local_image" value="请上传图片"/>
+  <p>pid：<input name="userName" type="text" tabindex="1" size="15" value=""/></p>
+  <p>user_name：<input name="password" type="text" tabindex="2" size="16" value=""/>
+    <input type="button" style="width:100px;height:35px;" value="submit" id="upload_face"/>
+  </p>
+</form>
+
+
 </body>
 </html>
 

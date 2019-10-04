@@ -1,7 +1,9 @@
 package com.daoli.sheng.tai.mapper;
 
 import com.daoli.sheng.tai.entity.UserEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public interface UserEntityMapper {
     int deleteByPrimaryKey(Integer id);
 

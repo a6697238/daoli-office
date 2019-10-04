@@ -47,36 +47,41 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @RequestMapping(value = "/api/web/user/register_login")
 @Slf4j
 public class UserController {
+
     @Autowired
     private UserService userService;
 
     @ResponseBody
     @ApiOperation(value = "用户注册，user_name/user_age/user_sex/department_id/login_name/login_password 是必须的")
     @RequestMapping(value = "/user_register", method = RequestMethod.POST)
-    public JsonResponse registerUser(@RequestBody UserVo userVo){
+    public JsonResponse registerUser(@RequestBody UserVo userVo) {
         return new JsonResponse(userService.registerUser(userVo));
     }
 
     @ResponseBody
     @ApiOperation(value = "pid")
     @RequestMapping(value = "/query_user_has_face_info", method = RequestMethod.GET)
-    public JsonResponse registerUser(Integer pid){
+    public JsonResponse registerUser(Integer pid) {
         return new JsonResponse(userService.isUserHasFaceInfo(pid));
     }
 
     @ResponseBody
     @ApiOperation(value = "用户人脸上传接口，pid")
     @RequestMapping(value = "/user_face_upload", method = RequestMethod.POST)
-    public JsonResponse uploadUserFace( HttpServletRequest request, HttpServletResponse response){
+    public JsonResponse uploadUserFace(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("'Access-Control-Allow-Headers","x-requested-with");
-        response.setHeader("Access-Control-Allow-Methods","POST, GET, PUT, DELETE");
+        response.setHeader("'Access-Control-Allow-Headers", "x-requested-with");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
 
         String pid = request.getParameter("pid");
         String userName = request.getParameter("user_name");
         String writePicToDisk = request.getParameter("write_pic_to_disk");
-        MultipartHttpServletRequest mul = (MultipartHttpServletRequest)request;
-        MultipartFile multipartFile = mul.getFile("image_content");
+        MultipartHttpServletRequest mul = (MultipartHttpServletRequest) request;
+        MultipartFile multipartFile = null;
+        multipartFile = mul.getFile("local_image");
+        if (null == multipartFile) {
+            multipartFile = mul.getFile("image_content");
+        }
 
         return new JsonResponse(userService.addUserFace(pid, userName, multipartFile));
     }
@@ -84,15 +89,17 @@ public class UserController {
     @ResponseBody
     @ApiOperation(value = "用户登录, 人脸登录")
     @RequestMapping(value = "/user_login_by_face", method = RequestMethod.POST)
-    public JsonResponse verifyUserByFace(HttpServletRequest request,HttpServletResponse response){
+    public JsonResponse verifyUserByFace(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("'Access-Control-Allow-Headers","x-requested-with");
-        response.setHeader("Access-Control-Allow-Methods","POST, GET, PUT, DELETE");
+        response.setHeader("'Access-Control-Allow-Headers", "x-requested-with");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
 
-        MultipartHttpServletRequest mul = (MultipartHttpServletRequest)request;
+        MultipartHttpServletRequest mul = (MultipartHttpServletRequest) request;
         MultipartFile multipartFile = mul.getFile("image_content");
 
-        String verifyFaceResp = PostTool.postImage("http://localhost:8082/verify_video_picture",new HashMap<>(), multipartFile);
+        String verifyFaceResp = PostTool
+                .postImage("http://localhost:8082/verify_video_picture", new HashMap<>(),
+                        multipartFile);
 
         return new JsonResponse(verifyFaceResp);
     }
@@ -100,11 +107,10 @@ public class UserController {
     @ResponseBody
     @ApiOperation(value = "用户登录, 密码登录")
     @RequestMapping(value = "/user_login_by_pwd", method = RequestMethod.POST)
-    public JsonResponse verifyUserByPwd(HttpServletRequest request,HttpServletResponse response){
+    public JsonResponse verifyUserByPwd(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("'Access-Control-Allow-Headers","x-requested-with");
-        response.setHeader("Access-Control-Allow-Methods","POST, GET, PUT, DELETE");
-
+        response.setHeader("'Access-Control-Allow-Headers", "x-requested-with");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
 
         return new JsonResponse(true);
     }

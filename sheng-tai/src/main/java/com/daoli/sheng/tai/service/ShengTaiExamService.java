@@ -292,23 +292,6 @@ public class ShengTaiExamService {
         return listDepartmentVo;
     }
 
-//    public int updateExam(ShengtaiExamVo vo) {
-//        ShengTaiExamEntity examEntity = new ShengTaiExamEntity();
-//        // vo 不设置某个属性，属性就不会被拷贝到新对象，满足selective。
-//        BeanUtils.copyProperties(vo, examEntity);
-//        examEntity.setValid(VALID);
-//        examEntity.setModifyTime(new Date());
-//
-//        int res = examMapper.updateByPrimaryKeySelective(examEntity);
-//
-//        ShengTaiExamEntity detailEntry = examMapper.selectByPrimaryKey(vo.getId());
-//        if (KAO_HE_YAO_DIAN.equals(detailEntry.getExamType())) {
-//            examMapper.updateZhiBiaoScoreByYaoDianParentId(detailEntry.getParentExamId());
-//            examMapper.updateFenLeiScoreByYaoDianParentId(detailEntry.getParentExamId());
-//        }
-//        return res;
-//    }
-
 
     // 此 api 会直接删除数据库中的记录，不建议使用
     public int deleteExamByExamId(ShengtaiExamVo vo) {
@@ -365,8 +348,8 @@ public class ShengTaiExamService {
                 vo.setIndexDesc(zhibiaoMap.get(vo.getParentExamId()).getExamDesc());
                 vo.setAssignedNum(recordEntityList.size());
                 vo.setExamScore(0F);
-                for(ShengtaiExamRecordEntity examRecordEntity : recordEntityList){
-                    if(examRecordEntity.getExamScore() > DEFAULT_SCORE){
+                for (ShengtaiExamRecordEntity examRecordEntity : recordEntityList) {
+                    if (examRecordEntity.getExamScore() > DEFAULT_SCORE) {
                         vo.setExamScore(examRecordEntity.getExamScore());
                         break;
                     }
@@ -398,7 +381,7 @@ public class ShengTaiExamService {
 
         List<ShengTaiExamEntity> queryExam = examMapper.queryExamsByFuzzyCondition(vo);
 
-        if(allExam.size()!=queryExam.size()){
+        if (allExam.size() != queryExam.size()) {
             Set<Integer> queryExamSet = Sets.newHashSet();
             queryExam.forEach(entity -> queryExamSet.add(entity.getId()));
             allExam.forEach(entity -> {
@@ -413,7 +396,8 @@ public class ShengTaiExamService {
                 List<DepartmentVo> unsignedDepartment = Lists.newArrayList();
                 departmentExamEntityMapper
                         .queryAssignedDepartmentsByExamId(resVo.getExamId())
-                        .forEach(departmentEntity -> assignSet.add(departmentEntity.getDepartmentId()));
+                        .forEach(departmentEntity -> assignSet
+                                .add(departmentEntity.getDepartmentId()));
                 allDepartment.forEach(departmentEntity -> {
                     if (assignSet.contains(departmentEntity.getDepartmentId())) {
                         assignedDepartment.add(DepartmentVo.builder()
