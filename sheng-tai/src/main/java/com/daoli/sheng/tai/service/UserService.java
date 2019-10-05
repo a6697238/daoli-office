@@ -76,7 +76,6 @@ public class UserService {
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("pid", pid);
         paramsMap.put("user_name", userName);
-        System.out.println("arg from web: " + paramsMap.toString());
         String addFaceRespContent = PostTool
                 .postImage("http://localhost:8082/add_face", paramsMap, multipartFile);
 
@@ -85,8 +84,16 @@ public class UserService {
         if (addFaceResult) {
             String dianZiInfo = json.getString("content");
             UserEntity userEntity = userEntityMapper.selectByPrimaryKey(Integer.valueOf(pid));
-            userEntity.setDianZiXinXi(dianZiInfo);
-            userEntityMapper.updateByPrimaryKeySelective(userEntity);
+            if(null==userEntity){
+                userEntity = new UserEntity();
+                userEntity.setUserName(userName);
+                userEntity.setDianZiXinXi(dianZiInfo);
+                userEntityMapper.insertSelective(userEntity);
+            }else {
+                userEntity.setDianZiXinXi(dianZiInfo);
+                userEntityMapper.updateByPrimaryKeySelective(userEntity);
+            }
+
         }
     }
 
