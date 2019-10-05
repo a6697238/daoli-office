@@ -47,6 +47,18 @@ public class UserService {
         return userEntity;
     }
 
+    public String genWelecomAudio(String user_name){
+        Map<String, Object> argMap = Maps.newHashMap();
+        argMap.put("user_name", user_name);
+        String resp = PostTool.post("http://localhost:8082/gen_welcome_audio?",argMap);
+        JSONObject jo =  JSON.parseObject(resp);
+        String msg = jo.getString("msg");
+        if ("true".equals(msg)){
+            return jo.getString("welcom_audio");
+        }
+        return "";
+    }
+
     public boolean isUserHasFaceInfo(Integer pid) {
         UserEntity userEntity = userEntityMapper.selectByPrimaryKey(pid);
         if (userEntity == null) {
