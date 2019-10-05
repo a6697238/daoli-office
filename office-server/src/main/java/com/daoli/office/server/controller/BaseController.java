@@ -32,7 +32,7 @@ public class BaseController {
     public JsonResponse exceptionHandler(HttpServletRequest request,Exception e) {
         log.error("",e);
         JsonResponse response = new JsonResponse();
-        response.setMsg("error");
+        response.setMsg(e.getMessage());
         response.setCode(200);
         response.setStatus(false);
         //front not support, so set to null again...

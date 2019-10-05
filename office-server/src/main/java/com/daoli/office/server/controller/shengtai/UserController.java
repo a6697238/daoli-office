@@ -44,7 +44,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
  */
 
 @RestController(value = "用户注册和登录")
-@RequestMapping(value = "/api/web/user/register_login")
+@RequestMapping(value = "/api/web/sheng_tai/user")
 @Slf4j
 public class UserController {
 
@@ -53,16 +53,9 @@ public class UserController {
 
     @ResponseBody
     @ApiOperation(value = "用户注册，user_name/user_age/user_sex/department_id/login_name/login_password 是必须的")
-    @RequestMapping(value = "/user_register", method = RequestMethod.POST)
-    public JsonResponse registerUser(@RequestBody UserVo userVo) {
-        return new JsonResponse(userService.registerUser(userVo));
-    }
-
-    @ResponseBody
-    @ApiOperation(value = "pid")
-    @RequestMapping(value = "/query_user_has_face_info", method = RequestMethod.GET)
-    public JsonResponse registerUser(Integer pid) {
-        return new JsonResponse(userService.isUserHasFaceInfo(pid));
+    @RequestMapping(value = "/register_base_info", method = RequestMethod.POST)
+    public JsonResponse registerBaseInfo(@RequestBody UserVo userVo) {
+        return new JsonResponse(userService.registerBaseInfo(userVo));
     }
 
     @ResponseBody
@@ -77,6 +70,10 @@ public class UserController {
         String userName = request.getParameter("user_name");
         String writePicToDisk = request.getParameter("write_pic_to_disk");
         MultipartHttpServletRequest mul = (MultipartHttpServletRequest) request;
+
+        List<MultipartFile> recordAdditionFile = ((MultipartHttpServletRequest) request)
+                .getFiles("local_image");
+
         MultipartFile multipartFile = null;
         multipartFile = mul.getFile("local_image");
         if (null == multipartFile) {

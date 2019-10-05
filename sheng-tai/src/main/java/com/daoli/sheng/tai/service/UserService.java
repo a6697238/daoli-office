@@ -1,5 +1,6 @@
 package com.daoli.sheng.tai.service;
 
+import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.IN_VALID;
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.VALID;
 
 import com.alibaba.fastjson.JSON;
@@ -30,29 +31,20 @@ public class UserService {
     @Autowired
     private UserEntityMapper userEntityMapper;
 
-    public Map<String, Object> registerUser(UserVo userVo) {
-        Map<String, Object> resMap = Maps.newHashMap();
-        UserEntity userEntity = new UserEntity();
+    public UserEntity registerBaseInfo(UserVo userVo) {
+        UserEntity userEntity = userEntityMapper.queryUserByLoginName(userVo.getLoginName());
+        if (null != userEntity) {
+            throw new RuntimeException("该登录名已经被注册");
+        }
+        userEntity = new UserEntity();
         BeanUtils.copyProperties(userVo, userEntity);
-        String userId = UUID.randomUUID().toString();
-        userEntity.setUserId(userId);
+        userEntity.setUserId(UUID.randomUUID().toString());
         userEntity.setModifyTime(new Date());
         userEntity.setCreateTime(new Date());
         userEntity.setDianZiXinXi("{}");
-        userEntity.setValid(VALID);
-        int res = userEntityMapper.insertSelective(userEntity);
-        if (res != 0) {
-            resMap.put(userEntity.getUserName(), true);
-        } else {
-            resMap.put(userEntity.getUserName(), false);
-            return resMap;
-        }
-
-        UserEntity userEntityFromDb = userEntityMapper.selectByUserId(userId);
-        resMap.put("pid", userEntityFromDb.getId());
-        resMap.put("user_name", userEntityFromDb.getUserName());
-
-        return resMap;
+        userEntity.setValid(IN_VALID);
+        userEntityMapper.insertSelective(userEntity);
+        return userEntity;
     }
 
     public boolean isUserHasFaceInfo(Integer pid) {
@@ -84,12 +76,12 @@ public class UserService {
         if (addFaceResult) {
             String dianZiInfo = json.getString("content");
             UserEntity userEntity = userEntityMapper.selectByPrimaryKey(Integer.valueOf(pid));
-            if(null==userEntity){
+            if (null == userEntity) {
                 userEntity = new UserEntity();
                 userEntity.setUserName(userName);
                 userEntity.setDianZiXinXi(dianZiInfo);
                 userEntityMapper.insertSelective(userEntity);
-            }else {
+            } else {
                 userEntity.setDianZiXinXi(dianZiInfo);
                 userEntityMapper.updateByPrimaryKeySelective(userEntity);
             }
