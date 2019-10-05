@@ -62,7 +62,7 @@ public class UserService {
         JSONObject jo =  JSON.parseObject(resp);
         String msg = jo.getString("msg");
         if ("true".equals(msg)){
-            return jo.getString("welcom_audio");
+            return jo.getString("welcome_audio");
         }
         return "";
     }
