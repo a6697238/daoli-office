@@ -196,7 +196,7 @@ public class ExamRecordController extends BaseController {
     public ResponseEntity<byte[]> downloadAddition(@RequestParam Integer additionPId)
             throws Exception {
         ExamRecordAdditionVo vo = examRecordService.queryAdditionById(additionPId);
-        File file = new File(baseSavePath + "/" + vo.getAdditionLocation());
+        File file = new File(baseSavePath + vo.getAdditionLocation());
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment;filename*=utf-8'zh_cn'" + URLEncoder
                 .encode(file.getName(), "UTF-8"));

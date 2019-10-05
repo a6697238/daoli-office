@@ -27,4 +27,6 @@ public interface UserEntityMapper {
 
     UserEntity queryUserByLoginName(@Param(value = "loginName") String loginName);
 
+    UserEntity queryUserByUserId(@Param(value = "userId") String userId);
+
 }

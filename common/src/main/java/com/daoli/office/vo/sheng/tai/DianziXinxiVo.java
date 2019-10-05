@@ -16,11 +16,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DianziXinxiVo {
 
-    private String huanYingPath;
 
-    private String renLianPath;
+    private Integer pid;
 
+    private String userName;
 
+    private String facePathDir;
+
+    private String faceMainPic;
+
+    private String faceDescription;
+
+    private String welcomeAudioPath;
 
 
 }

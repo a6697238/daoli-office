@@ -20,52 +20,53 @@ import java.util.UUID;
  * Created by wanglining on 2019/10/3.
  */
 public class PostTool {
-    public static String post(String arg_url, Map<String,Object> params ){
+
+    public static String post(String arg_url, Map<String, Object> params) {
         String response = null;
         try {
-        URL url = new URL(arg_url);
+            URL url = new URL(arg_url);
 
-        //开始访问
-        StringBuilder postData = new StringBuilder();
-        for (Map.Entry<String,Object> param : params.entrySet()) {
-            if (postData.length() != 0) {
-                postData.append('&');
+            //开始访问
+            StringBuilder postData = new StringBuilder();
+            for (Map.Entry<String, Object> param : params.entrySet()) {
+                if (postData.length() != 0) {
+                    postData.append('&');
+                }
+                postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                postData.append('=');
+                postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
             }
-            postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
-            postData.append('=');
-            postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
-        }
-        byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+            byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
-        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
 
+            conn.setDoOutput(true);
+            conn.getOutputStream().write(postDataBytes);
 
-        conn.setDoOutput(true);
-        conn.getOutputStream().write(postDataBytes);
+            Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 
-        Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-
-        StringBuilder sb = new StringBuilder();
-        for (int c; (c = in.read()) >= 0;) {
-            sb.append((char) c);
-        }
-        response = sb.toString();
-        //System.out.println(response);
+            StringBuilder sb = new StringBuilder();
+            for (int c; (c = in.read()) >= 0; ) {
+                sb.append((char) c);
+            }
+            response = sb.toString();
+            //System.out.println(response);
         } catch (Exception e) {
-            System.out.println("发送 POST 请求出现异常！"+e);
+            System.out.println("发送 POST 请求出现异常！" + e);
             e.printStackTrace();
         }
         //使用finally块来关闭输出流、输入流
-        finally{
+        finally {
 
         }
         return response;
     }
 
-    public static String postImage(String arg_url, Map<String,Object> param, MultipartFile multipartFile ){
+    public static String postImage(String arg_url, Map<String, Object> param,
+            MultipartFile multipartFile) {
         String result = null;
         String BOUNDARY = UUID.randomUUID().toString();  //边界标识   随机生成
         String PREFIX = "--", LINE_END = "\r\n";
@@ -83,7 +84,8 @@ public class PostTool {
             conn.setRequestMethod("POST");  //请求方式
             conn.setRequestProperty("Charset", "UTF-8");  //设置编码 改
             conn.setRequestProperty("connection", "keep-alive");
-            conn.setRequestProperty("X-bocang-Authorization", "token"); //token可以是用户登录后的token等等......
+            conn.setRequestProperty("X-bocang-Authorization",
+                    "token"); //token可以是用户登录后的token等等......
             conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
             if (multipartFile != null) {
                 /**
@@ -136,7 +138,6 @@ public class PostTool {
                     dos.write(bytes, 0, len);
                 }
 
-
                 is.close();
                 //                dos.write(file);
                 dos.write(LINE_END.getBytes());
@@ -160,12 +161,9 @@ public class PostTool {
                     }
                     result = sb1.toString();
                     System.out.println("resp content: " + result);
-                } else {
                 }
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
@@ -178,12 +176,6 @@ public class PostTool {
 //        arg_map.put("user_name","吕行者");
 //        post("http://localhost:8082/gen_welcome_audio?", arg_map);
 
-        getCurrentDate();
     }
 
-    public static Date getCurrentDate() {
-        LocalDateTime datetime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
-        ZonedDateTime zdt = datetime.atZone(ZoneId.systemDefault());
-        return Date.from(zdt.toInstant());
-    }
 }
