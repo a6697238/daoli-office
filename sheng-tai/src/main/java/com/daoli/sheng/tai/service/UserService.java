@@ -47,14 +47,14 @@ public class UserService {
         return userEntity;
     }
 
-    public String genWelecomAudio(String user_name){
+    public String genWelecomAudio(String userName){
         Map<String, Object> argMap = Maps.newHashMap();
-        argMap.put("user_name", user_name);
+        argMap.put("user_name", userName);
         String resp = PostTool.post("http://localhost:8082/gen_welcome_audio?",argMap);
         JSONObject jo =  JSON.parseObject(resp);
         String msg = jo.getString("msg");
         if ("true".equals(msg)){
-            return jo.getString("welcom_audio");
+            return jo.getString("welcome_audio");
         }
         return "";
     }

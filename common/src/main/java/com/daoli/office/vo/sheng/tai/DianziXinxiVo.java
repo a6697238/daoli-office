@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DianziXinxiVo {
 
-    private String id;
+    private String huanYingPath;
 
-    private String userId;
+    private String renLianPath;
 
 
 
