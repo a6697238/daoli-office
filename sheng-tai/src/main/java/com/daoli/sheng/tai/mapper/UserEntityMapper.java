@@ -1,6 +1,7 @@
 package com.daoli.sheng.tai.mapper;
 
 import com.daoli.sheng.tai.entity.UserEntity;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,4 +24,7 @@ public interface UserEntityMapper {
     int updateByPrimaryKeyWithBLOBs(UserEntity record);
 
     int updateByPrimaryKey(UserEntity record);
+
+    UserEntity queryUserByLoginName(@Param(value = "loginName") String loginName);
+
 }

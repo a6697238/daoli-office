@@ -118,8 +118,8 @@
         var formData = new FormData($('#form2')[0]);
         $.ajax({
           type: 'post',
-          // url: 'http://localhost:8081/api/web/user/register_login/user_face_upload',
-          url: 'http://39.100.255.251/api/web/user/register_login/user_face_upload',
+          url: 'http://localhost:8081/api/web/user/register_login/user_face_upload',
+          // url: 'http://39.100.255.251/api/web/user/register_login/user_face_upload',
           data: formData,
           cache: false,
           processData: false,
@@ -154,9 +154,9 @@
 
 
 <form id="form2" method="post" enctype="multipart/form-data">
-  <input type="file"  name="local_image" value="请上传图片"/>
-  <p>pid：<input name="userName" type="text" tabindex="1" size="15" value=""/></p>
-  <p>user_name：<input name="password" type="text" tabindex="2" size="16" value=""/>
+  <input type="file"  name="local_image" value="请上传图片" multiple="multiple"/>
+  <p>pid：<input name="pid" type="text" tabindex="1" size="15" value=""/></p>
+  <p>user_name：<input name="user_name" type="text" tabindex="2" size="16" value=""/>
     <input type="button" style="width:100px;height:35px;" value="submit" id="upload_face"/>
   </p>
 </form>
