@@ -82,8 +82,8 @@ public class UserController {
         if (null == multipartFile) {
             multipartFile = mul.getFile("image_content");
         }
-
-        return new JsonResponse(userService.addUserFace(pid, userName, multipartFile));
+        userService.addUserFace(pid, userName, multipartFile);
+        return new JsonResponse();
     }
 
     @ResponseBody

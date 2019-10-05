@@ -70,7 +70,7 @@ public class UserService {
         return StringUtils.isNotEmpty(faceMainPic) && StringUtils.isNotEmpty(faceDescription);
     }
 
-    public Map<String, Object> addUserFace(String pid, String userName,
+    public void addUserFace(String pid, String userName,
             MultipartFile multipartFile) {
 
         Map<String, Object> paramsMap = new HashMap<>();
@@ -84,24 +84,12 @@ public class UserService {
         boolean addFaceResult = json.getBoolean("res");
         if (addFaceResult) {
             String dianZiInfo = json.getString("content");
-            return updateUserDianZiInfo(Integer.valueOf(pid), dianZiInfo);
+            UserEntity userEntity = userEntityMapper.selectByPrimaryKey(Integer.valueOf(pid));
+            userEntity.setDianZiXinXi(dianZiInfo);
+            userEntityMapper.updateByPrimaryKeySelective(userEntity);
         }
-        return new HashMap<>();
     }
 
-    public Map<String, Object> updateUserDianZiInfo(Integer pid, String dianZiInfo) {
-        Map<String, Object> resMap = Maps.newHashMap();
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(pid);
-        userEntity.setDianZiXinXi(dianZiInfo);
-        int res = userEntityMapper.updateByPrimaryKeySelective(userEntity);
-        if (res != 0) {
-            resMap.put(userEntity.getUserId(), true);
-        } else {
-            resMap.put(userEntity.getUserId(), false);
-        }
-        return resMap;
-    }
 
     public Map<String, Object> verifyUser(UserVo userVo) {
         Map<String, Object> resMap = Maps.newHashMap();

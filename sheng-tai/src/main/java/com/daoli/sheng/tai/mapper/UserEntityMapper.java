@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface UserEntityMapper {
+
     int deleteByPrimaryKey(Integer id);
 
     int insert(UserEntity record);
@@ -12,7 +13,9 @@ public interface UserEntityMapper {
     int insertSelective(UserEntity record);
 
     UserEntity selectByPrimaryKey(Integer id);
+
     UserEntity selectByUserId(String userId);
+
     UserEntity selectByUserName(String userName);
 
     int updateByPrimaryKeySelective(UserEntity record);
