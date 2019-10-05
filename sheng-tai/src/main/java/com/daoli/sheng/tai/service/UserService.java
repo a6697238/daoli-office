@@ -16,6 +16,7 @@ import com.daoli.office.vo.sheng.tai.UserVo;
 import com.daoli.sheng.tai.HttpUtils.PostTool;
 import com.daoli.sheng.tai.entity.UserEntity;
 import com.daoli.sheng.tai.mapper.UserEntityMapper;
+import com.daoli.utils.HttpUtils;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -57,9 +58,10 @@ public class UserService {
 
 
     private String genWelcomeAudio(String userName) {
-        Map<String, Object> argMap = Maps.newHashMap();
+        Map<String, String> argMap = Maps.newHashMap();
         argMap.put("user_name", userName);
-        String resp = PostTool.post("http://localhost:8082/gen_welcome_audio?", argMap);
+        String resp = HttpUtils.doPostRequest(argMap, "http://localhost:8082/gen_welcome_audio");
+//      PostTool.post("http://localhost:8082/gen_welcome_audio?", argMap);
         JSONObject jo = JSON.parseObject(resp);
         return jo.getString("welcome_audio");
     }
@@ -90,7 +92,7 @@ public class UserService {
         }
     }
 
-    public UserEntity queryUserByPid(Integer userPid){
+    public UserEntity queryUserByPid(Integer userPid) {
         return userEntityMapper.selectByPrimaryKey(userPid);
     }
 

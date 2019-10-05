@@ -1,5 +1,8 @@
 package com.daoli.sheng.tai.HttpUtils;
 
+import com.alibaba.fastjson.JSON;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -7,12 +10,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,6 +25,8 @@ import java.util.UUID;
  * Created by wanglining on 2019/10/3.
  */
 public class PostTool {
+
+
 
     public static String post(String arg_url, Map<String, Object> params) {
         String response = null;
