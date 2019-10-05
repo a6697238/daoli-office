@@ -47,7 +47,7 @@ public class UserService {
         return userEntity;
     }
 
-    public String genWelecomAudio(String user_name){
+    public String genWelcomeAudio(String user_name){
         Map<String, Object> argMap = Maps.newHashMap();
         argMap.put("user_name", user_name);
         String resp = PostTool.post("http://localhost:8082/gen_welcome_audio?",argMap);
