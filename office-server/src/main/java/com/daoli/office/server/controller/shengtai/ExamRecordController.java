@@ -174,7 +174,7 @@ public class ExamRecordController extends BaseController {
     @RequestMapping(value = "/query_department_upload_report", method = RequestMethod.GET)
     public JsonResponse queryDepartmentUploadReport(@RequestParam long startTime,
             @RequestParam long endTime) {
-        return new JsonResponse(examRecordService.queryDepartmentScoreReport("卫生办",
+        return new JsonResponse(examRecordService.queryDepartmentScoreReport("区委办",
                 "", startTime,
                 endTime));
     }

@@ -4,6 +4,7 @@ import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.IN_VALID
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.VALID;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.Date;
@@ -48,8 +49,12 @@ public class UserService {
         userEntity.setUserId(UUID.randomUUID().toString());
         userEntity.setModifyTime(new Date());
         userEntity.setCreateTime(new Date());
+//        userEntity.setDianZiXinXi(JSON.toJSONString(
+//                DianziXinxiVo.builder().welcomeAudioPath(genWelcomeAudio(userVo.getUserName()))
+//                        .build()));
+
         userEntity.setDianZiXinXi(JSON.toJSONString(
-                DianziXinxiVo.builder().welcomeAudioPath(genWelcomeAudio(userVo.getUserName()))
+                DianziXinxiVo.builder().welcomeAudioPath("/welcome_default.mp3")
                         .build()));
         userEntity.setValid(IN_VALID);
         userEntityMapper.insertSelective(userEntity);
@@ -61,7 +66,6 @@ public class UserService {
         Map<String, String> argMap = Maps.newHashMap();
         argMap.put("user_name", userName);
         String resp = HttpUtils.doPostRequest(argMap, "http://localhost:8082/gen_welcome_audio");
-//      PostTool.post("http://localhost:8082/gen_welcome_audio?", argMap);
         JSONObject jo = JSON.parseObject(resp);
         return jo.getString("welcome_audio");
     }
@@ -74,6 +78,7 @@ public class UserService {
         paramsMap.put("pid", userPid);
         paramsMap.put("user_id", userEntity.getUserId());
         paramsMap.put("user_name", userName);
+        paramsMap.put("login_name", userEntity.getLoginName());
         String addFaceRespContent = PostTool
                 .postImage("http://localhost:8082/add_face", paramsMap, multipartFile);
         JSONObject json = JSON.parseObject(addFaceRespContent);
@@ -84,6 +89,8 @@ public class UserService {
             vo.setWelcomeAudioPath(
                     JSON.parseObject(userEntity.getDianZiXinXi(), DianziXinxiVo.class)
                             .getWelcomeAudioPath());
+//            /apps/python_app/face_rec_server/resources/audio/welcome/welcome_default.mp3
+
             userEntity.setDianZiXinXi(JSON.toJSONString(vo));
             userEntityMapper.updateByPrimaryKeySelective(userEntity);
             return true;
@@ -104,9 +111,10 @@ public class UserService {
                         multipartFile);
         resMap.put("verifyRes", false);
         JSONObject json = JSON.parseObject(verifyFaceResp);
-        if ("true".equals(json.get("login_result"))) {
-            String userId = (String) json.get("user_id");
-            UserEntity userEntity = userEntityMapper.queryUserByUserId(userId);
+        if ("true".equals(json.get("msg")) && json.getJSONArray("sim_pids").size()>0) {
+            JSONArray array = json.getJSONArray("sim_pids");
+            Integer userPid = (Integer) array.get(0);
+            UserEntity userEntity = userEntityMapper.selectByPrimaryKey(userPid);
             resMap.put("verifyRes", true);
             resMap.put("userPid", userEntity.getId());
         }
