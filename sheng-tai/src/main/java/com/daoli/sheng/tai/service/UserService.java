@@ -19,6 +19,7 @@ import com.daoli.sheng.tai.entity.UserEntity;
 import com.daoli.sheng.tai.mapper.UserEntityMapper;
 import com.daoli.utils.HttpUtils;
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
  * Created by wanglining on 2019/10/3.
  */
 @Service
+@Slf4j
 public class UserService {
 
     @Autowired
@@ -88,6 +90,7 @@ public class UserService {
                     JSON.parseObject(userEntity.getDianZiXinXi(), DianziXinxiVo.class)
                             .getWelcomeAudioPath());
             userEntity.setDianZiXinXi(JSON.toJSONString(vo));
+            userEntity.setValid(VALID);
             userEntityMapper.updateByPrimaryKeySelective(userEntity);
             return true;
         } else {
@@ -105,14 +108,13 @@ public class UserService {
         String verifyFaceResp = PostTool
                 .postImage("http://localhost:8082/verify_video_picture", new HashMap<>(),
                         multipartFile);
+        log.info("login response is : {}",verifyFaceResp);
         resMap.put("verifyRes", false);
         JSONObject json = JSON.parseObject(verifyFaceResp);
         if ("true".equals(json.get("msg")) && json.getJSONArray("sim_pids").size()>0) {
             JSONArray array = json.getJSONArray("sim_pids");
-            Integer userPid = (Integer) array.get(0);
-            UserEntity userEntity = userEntityMapper.selectByPrimaryKey(userPid);
             resMap.put("verifyRes", true);
-            resMap.put("userPid", userEntity.getId());
+            resMap.put("userPid", array.get(0));
         }
         return resMap;
     }

@@ -43,6 +43,8 @@ public class ShengtaiExamVo {
 
     private Integer assignedNum;
 
+    private String departmentName;
+
     private List<DepartmentVo> assignedDepartment;
 
     private List<DepartmentVo> unsignedDepartment;
