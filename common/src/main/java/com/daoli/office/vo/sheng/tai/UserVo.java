@@ -22,6 +22,10 @@ public class UserVo {
 
     private String userId;
 
+    private String zhiWu;
+
+    private String departmentId;
+
     @ApiModelProperty(value = "姓名", required = true)
     private String userName;
 

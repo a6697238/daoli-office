@@ -23,4 +23,10 @@ public class ShengTaiDBconstant {
     public final static String JIE_DAO = "JIE_DAO";
 
 
+
+    //职务
+    public final static String ZHU_REN = "主任";
+    public final static String FU_ZHU_REN = "副主任";
+    public final static String KE_YUAN = "科员";
+
 }

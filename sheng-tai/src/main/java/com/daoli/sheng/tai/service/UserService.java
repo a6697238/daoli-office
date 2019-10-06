@@ -1,6 +1,7 @@
 package com.daoli.sheng.tai.service;
 
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.IN_VALID;
+import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.KE_YUAN;
 import static com.daoli.office.vo.sheng.tai.constant.ShengTaiDBconstant.VALID;
 
 import com.alibaba.fastjson.JSON;
@@ -15,7 +16,9 @@ import java.util.UUID;
 import com.daoli.office.vo.sheng.tai.DianziXinxiVo;
 import com.daoli.office.vo.sheng.tai.UserVo;
 import com.daoli.sheng.tai.HttpUtils.PostTool;
+import com.daoli.sheng.tai.entity.DepartmentEntity;
 import com.daoli.sheng.tai.entity.UserEntity;
+import com.daoli.sheng.tai.mapper.DepartmentEntityMapper;
 import com.daoli.sheng.tai.mapper.UserEntityMapper;
 import com.daoli.utils.HttpUtils;
 import com.google.common.collect.Maps;
@@ -37,6 +40,9 @@ public class UserService {
 
     @Autowired
     private UserEntityMapper userEntityMapper;
+
+    @Autowired
+    private DepartmentEntityMapper departmentEntityMapper;
 
     @Value("${daoli.baseSavePath}")
     private String baseSavePath;
@@ -61,10 +67,22 @@ public class UserService {
 
 
     private String genWelcomeAudio(UserEntity entity) {
+
+        DepartmentEntity departmentEntity = departmentEntityMapper
+                .queryDepartmentByDepartmentId(entity.getDepartmentId());
+
         Map<String, String> argMap = Maps.newHashMap();
         argMap.put("user_name", entity.getUserName());
         argMap.put("login_name", entity.getLoginName());
         argMap.put("user_id", entity.getUserId());
+        String audioContent = "";
+        audioContent = "欢迎" + departmentEntity.getDepartmentName()+entity.getUserName();
+        if(!KE_YUAN.equals(entity.getZhiWu())){
+            audioContent = audioContent + entity.getZhiWu() + "参与工作";
+        }else {
+            audioContent = audioContent + entity.getZhiWu() + "指导工作";
+        }
+        argMap.put("audio_content", audioContent);
         String resp = HttpUtils.doPostRequest(argMap, "http://localhost:8082/gen_welcome_audio");
         JSONObject jo = JSON.parseObject(resp);
         return jo.getString("welcome_audio");
@@ -108,10 +126,10 @@ public class UserService {
         String verifyFaceResp = PostTool
                 .postImage("http://localhost:8082/verify_video_picture", new HashMap<>(),
                         multipartFile);
-        log.info("login response is : {}",verifyFaceResp);
+        log.info("login response is : {}", verifyFaceResp);
         resMap.put("verifyRes", false);
         JSONObject json = JSON.parseObject(verifyFaceResp);
-        if ("true".equals(json.get("msg")) && json.getJSONArray("sim_pids").size()>0) {
+        if ("true".equals(json.get("msg")) && json.getJSONArray("sim_pids").size() > 0) {
             JSONArray array = json.getJSONArray("sim_pids");
             resMap.put("verifyRes", true);
             resMap.put("userPid", array.get(0));
