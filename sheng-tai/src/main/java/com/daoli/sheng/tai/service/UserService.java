@@ -49,12 +49,8 @@ public class UserService {
         userEntity.setUserId(UUID.randomUUID().toString());
         userEntity.setModifyTime(new Date());
         userEntity.setCreateTime(new Date());
-//        userEntity.setDianZiXinXi(JSON.toJSONString(
-//                DianziXinxiVo.builder().welcomeAudioPath(genWelcomeAudio(userVo.getUserName()))
-//                        .build()));
-
         userEntity.setDianZiXinXi(JSON.toJSONString(
-                DianziXinxiVo.builder().welcomeAudioPath("/welcome_default.mp3")
+                DianziXinxiVo.builder().welcomeAudioPath(genWelcomeAudio(userEntity))
                         .build()));
         userEntity.setValid(IN_VALID);
         userEntityMapper.insertSelective(userEntity);
@@ -62,9 +58,11 @@ public class UserService {
     }
 
 
-    private String genWelcomeAudio(String userName) {
+    private String genWelcomeAudio(UserEntity entity) {
         Map<String, String> argMap = Maps.newHashMap();
-        argMap.put("user_name", userName);
+        argMap.put("user_name", entity.getUserName());
+        argMap.put("login_name", entity.getLoginName());
+        argMap.put("user_id", entity.getUserId());
         String resp = HttpUtils.doPostRequest(argMap, "http://localhost:8082/gen_welcome_audio");
         JSONObject jo = JSON.parseObject(resp);
         return jo.getString("welcome_audio");
@@ -89,8 +87,6 @@ public class UserService {
             vo.setWelcomeAudioPath(
                     JSON.parseObject(userEntity.getDianZiXinXi(), DianziXinxiVo.class)
                             .getWelcomeAudioPath());
-//            /apps/python_app/face_rec_server/resources/audio/welcome/welcome_default.mp3
-
             userEntity.setDianZiXinXi(JSON.toJSONString(vo));
             userEntityMapper.updateByPrimaryKeySelective(userEntity);
             return true;
