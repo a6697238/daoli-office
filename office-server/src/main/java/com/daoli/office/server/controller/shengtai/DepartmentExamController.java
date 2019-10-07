@@ -1,5 +1,6 @@
 package com.daoli.office.server.controller.shengtai;
 
+import com.daoli.office.server.controller.BaseController;
 import com.daoli.office.vo.JsonResponse;
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
 import com.daoli.office.vo.sheng.tai.ShengtaiDepartmentExamVo;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController(value = "试卷的删查")
 @RequestMapping(value = "/api/web/manage/sheng_tai/deparment_exam")
 @Slf4j
-public class DepartmentExamController {
+public class DepartmentExamController extends BaseController {
 
     @Autowired
     private ShengTaiDepartmentExamService shengTaiDepartmentExamService;

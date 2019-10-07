@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.daoli.office.vo.JsonResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
@@ -29,17 +30,20 @@ public class BaseController {
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    public JsonResponse exceptionHandler(HttpServletRequest request,Exception e) {
-        log.error("",e);
+    public JsonResponse exceptionHandler(HttpServletRequest request, Exception e) {
+        log.error("", e);
         JsonResponse response = new JsonResponse();
-        response.setMsg(e.getMessage());
+        if (StringUtils.isEmpty(e.getMessage())) {
+            response.setMsg("请联系管理员");
+        } else {
+            response.setMsg(e.getMessage());
+        }
         response.setCode(200);
         response.setStatus(false);
         //front not support, so set to null again...
         response.setData(null);
         return response;
     }
-
 
 
 }

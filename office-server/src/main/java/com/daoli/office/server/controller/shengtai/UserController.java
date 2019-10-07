@@ -9,6 +9,7 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.daoli.office.server.controller.BaseController;
 import com.daoli.office.vo.JsonResponse;
 import com.daoli.office.vo.sheng.tai.DianziXinxiVo;
 import com.daoli.office.vo.sheng.tai.ExamRecordAdditionVo;
@@ -42,7 +43,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @RestController(value = "用户注册和登录")
 @RequestMapping(value = "/api/web/sheng_tai/user")
 @Slf4j
-public class UserController {
+public class UserController extends BaseController{
 
     @Autowired
     private UserService userService;

@@ -1,5 +1,6 @@
 package com.daoli.office.server.controller.shengtai;
 
+import com.daoli.office.server.controller.BaseController;
 import com.daoli.office.vo.JsonResponse;
 import com.daoli.office.vo.sheng.tai.DepartmentVo;
 import com.daoli.sheng.tai.service.DepartmentService;
@@ -23,7 +24,7 @@ import java.util.Map;
 @RestController(value = "部门的增删改查")
 @RequestMapping(value = "/api/web/sheng_tai/manage/deparment")
 @Slf4j
-public class DepartmentController {
+public class DepartmentController extends BaseController {
 
     @Autowired
     private DepartmentService deparmentService;
