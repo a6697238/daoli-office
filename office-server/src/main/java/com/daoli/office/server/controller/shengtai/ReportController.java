@@ -92,4 +92,43 @@ public class ReportController extends BaseController {
 
 
 
+    @ResponseBody
+    @ApiOperation(value = "查询收入比例饼图")
+    @RequestMapping(value = "/query_shou_ru_rate", method = RequestMethod.GET)
+    public JsonResponse queryShouRu() {
+        return new JsonResponse(reportService.queryShouRu());
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "查询财产透明饼图")
+    @RequestMapping(value = "/query_cai_chan_shou_ru", method = RequestMethod.GET)
+    public JsonResponse queryCaiChanTouMing() {
+        return new JsonResponse(reportService.queryCaiChanTouMing());
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value = "查询四种形态饼图")
+    @RequestMapping(value = "/query_si_zhong_xing_tai", method = RequestMethod.GET)
+    public JsonResponse querySiZhongXingTai() {
+        return new JsonResponse(reportService.querySiZhongXingTai());
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "查询社情民意柱状图")
+    @RequestMapping(value = "/query_she_qing_min_yi", method = RequestMethod.GET)
+    public JsonResponse querySheQingMinYi() {
+        return new JsonResponse(reportService.querySheQingMinYi());
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value = "查询政治生态档案标题")
+    @RequestMapping(value = "/query_zheng_zhi_sheng_tai_dang_an_titile", method = RequestMethod.GET)
+    public JsonResponse queryZhengZhiShengTaiDangAnTitle() {
+        return new JsonResponse(reportService.queryZhengZhiShengTaiDangAnTitle());
+    }
+
+
+
 }

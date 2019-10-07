@@ -78,9 +78,9 @@ public class UserService {
         String audioContent = "";
         audioContent = "欢迎" + departmentEntity.getDepartmentName()+entity.getUserName();
         if(!KE_YUAN.equals(entity.getZhiWu())){
-            audioContent = audioContent + entity.getZhiWu() + "参与工作";
-        }else {
             audioContent = audioContent + entity.getZhiWu() + "指导工作";
+        }else {
+            audioContent = audioContent + entity.getZhiWu() + "参与工作";
         }
         argMap.put("audio_content", audioContent);
         String resp = HttpUtils.doPostRequest(argMap, "http://localhost:8082/gen_welcome_audio");

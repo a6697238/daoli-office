@@ -192,10 +192,6 @@ public class ShengTaiReportService {
         List<String> labelLsit = Arrays.asList("中央大街", "顾乡开发办", "区人民法院", "区人民检察院", "区人民检察院","兆麟街道","尚志街道","通江街道","斯大林街道","太平镇");
         List<Object> dataList = Lists.newArrayList();
 
-
-
-
-
         List<String> fenleiscore1 = Arrays.asList("70", "90", "80", "70", "90","70", "90", "80", "30", "90");
         Map<String, Object> res1 = Maps.newHashMap();
         res1.put("name", "树立四个意识");
@@ -247,5 +243,102 @@ public class ShengTaiReportService {
 
         return res;
     }
+
+
+    public List<Map<String, Object>> queryShouRu() {
+        Map<String, Object> res1 = Maps.newHashMap();
+        res1.put("name", "领导班子收入");
+        res1.put("value", "15");
+
+        Map<String, Object> res2 = Maps.newHashMap();
+        res2.put("name", "群众收入");
+        res2.put("value", "8");
+
+
+        List<Map<String, Object>> resList = Lists.newArrayList();
+        resList.add(res1);
+        resList.add(res2);
+
+        return resList;
+    }
+
+
+    public List<Map<String, Object>> queryCaiChanTouMing() {
+        Map<String, Object> res1 = Maps.newHashMap();
+        res1.put("name", "已公开收入");
+        res1.put("value", "80");
+
+        Map<String, Object> res2 = Maps.newHashMap();
+        res2.put("name", "未公开收入");
+        res2.put("value", "20");
+
+        List<Map<String, Object>> resList = Lists.newArrayList();
+        resList.add(res1);
+        resList.add(res2);
+
+        return resList;
+    }
+
+
+    public List<Map<String, Object>> querySiZhongXingTai() {
+        Map<String, Object> res1 = Maps.newHashMap();
+        res1.put("name", "第一形态");
+        res1.put("value", "20");
+
+        Map<String, Object> res2 = Maps.newHashMap();
+        res2.put("name", "第二形态");
+        res2.put("value", "40");
+
+
+        Map<String, Object> res3 = Maps.newHashMap();
+        res3.put("name", "第三形态");
+        res3.put("value", "30");
+
+
+        Map<String, Object> res4 = Maps.newHashMap();
+        res4.put("name", "第四形态");
+        res4.put("value", "10");
+
+        List<Map<String, Object>> resList = Lists.newArrayList();
+        resList.add(res1);
+        resList.add(res2);
+        resList.add(res3);
+        resList.add(res4);
+
+        return resList;
+    }
+
+
+
+    public Map<String, Object> querySheQingMinYi() {
+        List<String> labelLsit = Arrays.asList("群众幸福率", "党风廉政建设满意率", "矛盾纠纷调节率");
+        List<Object> dataList = Lists.newArrayList();
+
+        List<String> fenleiscore1 = Arrays.asList("70", "90", "80");
+        Map<String, Object> res1 = Maps.newHashMap();
+        res1.put("data", fenleiscore1);
+
+        dataList.add(res1);
+
+
+        Map<String,Object> res = Maps.newHashMap();
+        res.put("label",labelLsit);
+        res.put("data",dataList);
+
+        return res;
+    }
+
+
+    public Map<String, Object> queryZhengZhiShengTaiDangAnTitle() {
+        Map<String, Object> report = Maps.newHashMap();
+        report.put("党费支出", 10);
+        report.put("党员人数", 20);
+        report.put("组织生活会数量", 140);
+        report.put("被举报数量", 160);
+        return report;
+    }
+
+
+
 
 }
