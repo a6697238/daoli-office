@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,6 +14,7 @@ import com.daoli.office.server.controller.BaseController;
 import com.daoli.office.vo.JsonResponse;
 import com.daoli.office.vo.sheng.tai.DianziXinxiVo;
 import com.daoli.office.vo.sheng.tai.ExamRecordAdditionVo;
+import com.daoli.office.vo.sheng.tai.LoginVo;
 import com.daoli.office.vo.sheng.tai.UserVo;
 import com.daoli.sheng.tai.HttpUtils.PostTool;
 import com.daoli.sheng.tai.entity.UserEntity;
@@ -43,7 +45,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @RestController(value = "用户注册和登录")
 @RequestMapping(value = "/api/web/sheng_tai/user")
 @Slf4j
-public class UserController extends BaseController{
+public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;
@@ -80,17 +82,20 @@ public class UserController extends BaseController{
         return new JsonResponse(userService.userLoginByFace(multipartFile));
     }
 
+
     @ResponseBody
     @ApiOperation(value = "用户登录, 密码登录")
     @RequestMapping(value = "/user_login_by_pwd", method = RequestMethod.POST)
-    public JsonResponse verifyUserByPwd(HttpServletRequest request, HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("'Access-Control-Allow-Headers", "x-requested-with");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
-
+    public JsonResponse userLoginByPwd(@RequestBody LoginVo loginVo) {
+        Map<String, String> res = userService.userLoginByPwd(loginVo.getLoginName(), loginVo.getLoginPassword());
+        if ("false".equals(res.get("res"))) {
+            JsonResponse response = new JsonResponse();
+            response.setStatus(false);
+            response.setMsg(res.get("msg"));
+            return response;
+        }
         return new JsonResponse(true);
     }
-
 
 
     @ApiOperation(value = "输出欢迎声音")

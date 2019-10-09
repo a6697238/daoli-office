@@ -136,4 +136,21 @@ public class UserService {
         }
         return resMap;
     }
+
+    public Map<String,String> userLoginByPwd(String loginName,String passWord){
+        Map<String,String> res = Maps.newHashMap();
+        res.put("res","false");
+        res.put("msg","账号密码错误");
+        UserEntity userEntity = userEntityMapper.queryUserByLoginName(loginName);
+        if(null==userEntity){
+            res.put("msg","账号不存在");
+            return res;
+        }
+        if(!userEntity.getLoginPassword().equals(passWord)){
+            res.put("msg","账号或密码错误");
+            return res;
+        }
+        res.put("res","true");
+        return res;
+    }
 }
