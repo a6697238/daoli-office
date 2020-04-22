@@ -247,11 +247,11 @@ public class ShengTaiReportService {
 
     public List<Map<String, Object>> queryShouRu() {
         Map<String, Object> res1 = Maps.newHashMap();
-        res1.put("name", "领导班子收入");
+        res1.put("name", "领导班子收入(单位: 万元/年)");
         res1.put("value", "15");
 
         Map<String, Object> res2 = Maps.newHashMap();
-        res2.put("name", "群众收入");
+        res2.put("name", "群众收入(单位: 万元/年)");
         res2.put("value", "8");
 
 
@@ -265,12 +265,12 @@ public class ShengTaiReportService {
 
     public List<Map<String, Object>> queryCaiChanTouMing() {
         Map<String, Object> res1 = Maps.newHashMap();
-        res1.put("name", "已公开收入");
-        res1.put("value", "80");
+        res1.put("name", "已公开收入(单位: 人数)");
+        res1.put("value", "73");
 
         Map<String, Object> res2 = Maps.newHashMap();
-        res2.put("name", "未公开收入");
-        res2.put("value", "20");
+        res2.put("name", "未公开收入(单位: 人数)");
+        res2.put("value", "27");
 
         List<Map<String, Object>> resList = Lists.newArrayList();
         resList.add(res1);
@@ -311,18 +311,18 @@ public class ShengTaiReportService {
 
 
     public Map<String, Object> querySheQingMinYi() {
-        List<String> labelLsit = Arrays.asList("群众幸福率", "党风廉政建设满意率", "矛盾纠纷调节率");
+        List<String> labelList = Arrays.asList("群众幸福率", "党风廉政建设满意率", "矛盾纠纷调节率");
         List<Object> dataList = Lists.newArrayList();
 
-        List<String> fenleiscore1 = Arrays.asList("70", "90", "80");
+        List<String> fenleiScore1 = Arrays.asList("70", "90", "80");
         Map<String, Object> res1 = Maps.newHashMap();
-        res1.put("data", fenleiscore1);
+        res1.put("data", fenleiScore1);
 
         dataList.add(res1);
 
 
         Map<String,Object> res = Maps.newHashMap();
-        res.put("label",labelLsit);
+        res.put("label",labelList);
         res.put("data",dataList);
 
         return res;
@@ -331,10 +331,10 @@ public class ShengTaiReportService {
 
     public Map<String, Object> queryZhengZhiShengTaiDangAnTitle() {
         Map<String, Object> report = Maps.newHashMap();
-        report.put("党费支出", 10);
-        report.put("党员人数", 20);
-        report.put("组织生活会数量", 140);
-        report.put("被举报数量", 160);
+        report.put("党费支出(单位: 万元)", 10);
+        report.put("党员人数(单位: 人)", 20);
+        report.put("组织生活会数量(单位: 次数)", 140);
+        report.put("被举报数量(单位: 次数)", 30);
         return report;
     }
 
